@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact-Rich Cleaning — Harsh Dhruva</title>
+    <meta name="description" content="ROS2 framework combining diffusion policy with classical state machines for surface cleaning.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<article class="project-page">
+    <a href="../index.html" class="project-back">All work</a>
+
+    <header class="project-page-header">
+        <div class="project-page-category">AI Robotics · In Progress</div>
+        <h1>Contact-rich cleaning with learned policies.</h1>
+        <p class="project-page-summary">
+            An open-source ROS2 framework for contact-rich surface cleaning manipulation —
+            combining diffusion policy with classical state machines, force feedback, and recovery
+            behaviors. Built on my SO-101 arm.
+        </p>
+    </header>
+
+    <div class="project-meta">
+        <div class="project-meta-item">
+            <span class="label">Status</span>
+            <span class="value">In Progress</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Type</span>
+            <span class="value">Open Source</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Hardware</span>
+            <span class="value">SO-101 Arm</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Stack</span>
+            <span class="value">ROS2 · LeRobot · PyTorch</span>
+        </div>
+    </div>
+
+    <div class="callout">
+        <strong>Work in progress.</strong> This page will evolve as the project does. Check back
+        for updates, or watch the <a href="#" target="_blank">GitHub repo</a> for the latest.
+    </div>
+
+    <section>
+        <h2>Motivation</h2>
+        <p>
+            Contact-rich manipulation — wiping, scrubbing, polishing — is exactly where pure
+            learned policies struggle and pure classical control is too brittle. The interesting
+            question isn't "which is better?" but <strong>"what's the right architecture for
+            combining them?"</strong>
+        </p>
+        <p>
+            I worked on a real cleaning manipulator at Peanut Robotics for two years using almost
+            entirely classical methods. This project is the inverse experiment: start from learned
+            policies, fall back to classical control where it earns its place, and find the
+            principled boundary between the two.
+        </p>
+    </section>
+
+    <section>
+        <h2>Approach</h2>
+        <p>
+            High-level architecture I'm exploring:
+        </p>
+        <ul>
+            <li><strong>Diffusion policy</strong> for the contact-rich core motion — the part that benefits from imitation learning across many demonstrations.</li>
+            <li><strong>Classical state machine</strong> for high-level task orchestration: approach, engage, clean, retract, recover.</li>
+            <li><strong>Force feedback</strong> in the inner loop to bound contact forces regardless of what the policy outputs.</li>
+            <li><strong>Recovery behaviors</strong> as classical fallbacks when the policy's predicted action falls outside a confidence envelope or when force/torque sensing detects an off-nominal interaction.</li>
+        </ul>
+    </section>
+
+    <!-- DIAGRAM PLACEHOLDER -->
+    <figure>
+        <img src="../assets/media/cleaning-policy/architecture.png" alt="System architecture diagram" onerror="this.style.display='none'">
+        <figcaption>[Architecture diagram — TODO]</figcaption>
+    </figure>
+
+    <section>
+        <h2>Current status</h2>
+        <p>
+            <strong>[TODO — keep this updated as you progress.]</strong> Working through
+            data collection on the SO-101, getting a baseline diffusion policy training pipeline
+            stood up via LeRobot, and beginning to scaffold the ROS2 framework.
+        </p>
+    </section>
+
+    <section>
+        <h2>What I'm hoping to learn</h2>
+        <ul>
+            <li>How small a demonstration dataset can produce a useful contact-rich policy</li>
+            <li>Where the principled boundary between learned and classical lives</li>
+            <li>What recovery looks like for a learned policy that has no built-in concept of "I don't know"</li>
+            <li>How to expose enough hooks in the framework that others can plug in their own policies and fallback behaviors</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Stack &amp; links</h2>
+        <div class="project-page-tags">
+            <span class="tag">ROS2</span>
+            <span class="tag">Diffusion Policy</span>
+            <span class="tag">LeRobot</span>
+            <span class="tag">PyTorch</span>
+            <span class="tag">Force Control</span>
+            <span class="tag">SO-101</span>
+        </div>
+        <div class="project-links">
+            <a href="https://github.com/harshdhruva" target="_blank" class="btn">GitHub (repo coming)</a>
+        </div>
+    </section>
+
+    <nav class="project-nav">
+        <a href="./moonranger.html">
+            <div class="nav-label">← Previous</div>
+            <div class="nav-title">MoonRanger</div>
+        </a>
+        <a href="./tripawd.html" class="next">
+            <div class="nav-label">Next →</div>
+            <div class="nav-title">Tripawd</div>
+        </a>
+    </nav>
+</article>
+
+<div id="site-footer"></div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

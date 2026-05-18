@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peanut Robotics — Harsh Dhruva</title>
+    <meta name="description" content="Arm software stack for a commercially deployed mobile cleaning manipulator.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<article class="project-page">
+    <a href="../index.html" class="project-back">All work</a>
+
+    <header class="project-page-header">
+        <div class="project-page-category">Mobile Manipulation · Peanut Robotics</div>
+        <h1>Arm software for a commercially deployed cleaning robot.</h1>
+        <p class="project-page-summary">
+            Owned the arm software stack on a mobile manipulator deployed in real hotel bathrooms —
+            trajectory generation, computer vision, depth camera integration, and operator tooling
+            that turned a 2–4 hour training process into a 15-minute one.
+        </p>
+    </header>
+
+    <div class="project-meta">
+        <div class="project-meta-item">
+            <span class="label">Role</span>
+            <span class="value">Robotics Engineer</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Timeline</span>
+            <span class="value">Jul 2022 — Apr 2024</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Team</span>
+            <span class="value">Peanut Robotics</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Stack</span>
+            <span class="value">C++ · ROS · TOPPRA · OpenCV</span>
+        </div>
+    </div>
+
+    <!-- HERO MEDIA: Replace YOUR_VIDEO_ID with actual YouTube video ID, or replace this block with a <figure><img></figure> -->
+    <div class="video-embed">
+        <iframe
+            src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
+            title="Peanut Robotics demo"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
+    </div>
+
+    <section>
+        <h2>Context</h2>
+        <p>
+            Peanut Robotics builds a mobile manipulator that cleans hotel bathrooms — a deceptively
+            hard task. Each bathroom has different geometry, fixtures, and floor heights. The arm
+            needs to track contact-rich cleaning trajectories, swap tools mid-task, and recover
+            gracefully when something doesn't go to plan. I was the engineer responsible for
+            making all of that work, day in and day out, in real hotels.
+        </p>
+    </section>
+
+    <section>
+        <h2>The problem</h2>
+        <p>
+            <strong>[TODO — write 1–2 paragraphs on the specific problem you owned.]</strong>
+            Talk about the gap between demos and reliable deployment. Operator training time was
+            the bottleneck. Each new surface required hours of manual trajectory tuning.
+            Geometric variation across bathrooms meant pre-recorded trajectories rarely transferred.
+            Depth cameras drifted, drooped, and occasionally died.
+        </p>
+    </section>
+
+    <section>
+        <h2>Approach</h2>
+        <p>
+            <strong>[TODO — explain the technical approach.]</strong> A high-level outline:
+        </p>
+        <ul>
+            <li><strong>Trajectory generation:</strong> TOPPRA for time-optimal parameterization, integrated with ros_control for synchronized tool actuation.</li>
+            <li><strong>Vision pipeline:</strong> ICP + RANSAC point cloud registration to handle geometric variation across bathrooms.</li>
+            <li><strong>Depth camera selection:</strong> Evaluated 6 systems against accuracy, range, noise, and ROS support; selected Orbbec Gemini2 and engineered a C++ bringup layer with auto-recovery for 4 simultaneous cameras.</li>
+            <li><strong>Calibration validation:</strong> Deployed Optitrack motion tracking to quantify arm droop profiles and verify calibration accuracy under load.</li>
+            <li><strong>Operator tooling:</strong> Designed and shipped a live trajectory recording system — the largest single win.</li>
+        </ul>
+    </section>
+
+    <!-- FIGURE EXAMPLE: drop diagrams, screenshots, or images here -->
+    <figure>
+        <img src="../assets/media/peanut/architecture.png" alt="System architecture" onerror="this.style.display='none'">
+        <figcaption>[Replace with a system architecture diagram or screenshot]</figcaption>
+    </figure>
+
+    <section>
+        <h2>What I built</h2>
+        <p>
+            <strong>[TODO — go into the specifics of your contributions.]</strong> Code-level
+            specifics, design decisions, things you discovered along the way. This is where
+            technical depth lives. Recruiters and engineering leads read this section closely.
+        </p>
+
+        <!-- Optional code snippet block -->
+        <div class="code-block">// Example trajectory parameterization with TOPPRA
+auto path = toppra::PiecewisePolyPath::CubicSpline(waypoints, times);
+auto constraints = std::make_shared&lt;LinearJointVelocity&gt;(vel_limits);
+toppra::PathParametrizationAlgorithm algo(constraints, path);
+auto trajectory = algo.computeTrajectory();</div>
+    </section>
+
+    <section>
+        <h2>Outcome</h2>
+        <div class="callout">
+            <strong>Operator training time: 2–4 hours → 15 minutes per surface.</strong>
+            The live trajectory recording system became the production standard for onboarding
+            new cleaning locations.
+        </div>
+        <p>
+            <strong>[TODO — anything else: lessons, what you'd do differently, what shipped.]</strong>
+        </p>
+    </section>
+
+    <section>
+        <h2>Stack &amp; links</h2>
+        <div class="project-page-tags">
+            <span class="tag">C++</span>
+            <span class="tag">ROS</span>
+            <span class="tag">TOPPRA</span>
+            <span class="tag">ros_control</span>
+            <span class="tag">ICP</span>
+            <span class="tag">RANSAC</span>
+            <span class="tag">OpenCV</span>
+            <span class="tag">Open3D</span>
+            <span class="tag">Optitrack</span>
+        </div>
+        <div class="project-links">
+            <a href="https://www.peanutrobotics.com/" target="_blank" class="btn">Peanut Robotics</a>
+            <!-- Add YouTube, blog posts, news coverage etc -->
+        </div>
+    </section>
+
+    <nav class="project-nav">
+        <a href="./tripawd.html">
+            <div class="nav-label">← Previous</div>
+            <div class="nav-title">Tripawd</div>
+        </a>
+        <a href="./autoroboto.html" class="next">
+            <div class="nav-label">Next →</div>
+            <div class="nav-title">Autoroboto · Google</div>
+        </a>
+    </nav>
+</article>
+
+<div id="site-footer"></div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

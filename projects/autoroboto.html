@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autoroboto · Google — Harsh Dhruva</title>
+    <meta name="description" content="Automated robotic system for hardware security testing on Pixel devices.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<article class="project-page">
+    <a href="../index.html" class="project-back">All work</a>
+
+    <header class="project-page-header">
+        <div class="project-page-category">System Integration · Google</div>
+        <h1>Automated biometric testing for Pixel.</h1>
+        <p class="project-page-summary">
+            Robotic system for hardware security testing on Pixel devices. Designed and built
+            trajectory libraries, led a full ROS1→ROS2 migration, and refactored the node
+            architecture for tight robot/camera synchronization.
+        </p>
+    </header>
+
+    <div class="project-meta">
+        <div class="project-meta-item">
+            <span class="label">Role</span>
+            <span class="value">Robotics Systems Engineer</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Timeline</span>
+            <span class="value">Jul 2024 — Present</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Team</span>
+            <span class="value">Autoroboto · Google</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Stack</span>
+            <span class="value">ROS2 · xArm · MoveIt · Python · C++</span>
+        </div>
+    </div>
+
+    <div class="callout">
+        <strong>Note:</strong> This project page is intentionally high-level. For details
+        about the work, feel free to reach out directly.
+    </div>
+
+    <section>
+        <h2>Context</h2>
+        <p>
+            Modern phone biometrics (face unlock, fingerprint) need to be tested against a wide
+            range of physical attack vectors. Doing that by hand is slow, inconsistent, and
+            limited in coverage. Autoroboto automates this — using a robotic arm to systematically
+            test biometric security across a large attack space.
+        </p>
+    </section>
+
+    <section>
+        <h2>What I work on</h2>
+        <ul>
+            <li><strong>Trajectory libraries:</strong> Designed a two-phase approach to robot motion — broad calibration sweeps to map the test space, followed by targeted motions at high-priority points. Built to mirror how a human security researcher would systematically explore vulnerabilities.</li>
+            <li><strong>ROS1 → ROS2 migration:</strong> Led the full upgrade of the system to ROS2 for modern tooling and long-term support. Tackled threading model changes, REST API integration, motion planner setup, and launch file rewrites.</li>
+            <li><strong>Node architecture refactor:</strong> Separated motion planning from motion execution to eliminate idle wait time — phone camera recording was starting before the robot moved. The new architecture ensures tight synchronization across robot and camera.</li>
+            <li><strong>System integration:</strong> Wire-up across robot, vision pipeline, device under test, and orchestration layer.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Themes I think about</h2>
+        <p>
+            Building test infrastructure forces a different mindset than building product robotics.
+            The robot isn't the deliverable — <strong>reliable coverage of an attack space is the
+            deliverable.</strong> That changes how I think about determinism, repeatability,
+            and what "good enough" means for trajectory quality.
+        </p>
+        <p>
+            <strong>[TODO — add more on what makes this interesting technically without revealing internals.]</strong>
+        </p>
+    </section>
+
+    <section>
+        <h2>Stack</h2>
+        <div class="project-page-tags">
+            <span class="tag">ROS2</span>
+            <span class="tag">xArm</span>
+            <span class="tag">MoveIt</span>
+            <span class="tag">Python</span>
+            <span class="tag">C++</span>
+            <span class="tag">System Integration</span>
+        </div>
+    </section>
+
+    <nav class="project-nav">
+        <a href="./peanut.html">
+            <div class="nav-label">← Previous</div>
+            <div class="nav-title">Peanut Robotics</div>
+        </a>
+        <a href="./moonranger.html" class="next">
+            <div class="nav-label">Next →</div>
+            <div class="nav-title">MoonRanger</div>
+        </a>
+    </nav>
+</article>
+
+<div id="site-footer"></div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

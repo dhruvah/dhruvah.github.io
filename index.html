@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harsh Dhruva — Robotics Engineer</title>
+    <meta name="description" content="Selected robotics work — manipulation, motion planning, learned policies. Currently at Google.">
+    <meta property="og:title" content="Harsh Dhruva — Robotics Engineer">
+    <meta property="og:description" content="Selected robotics work — manipulation, motion planning, learned policies.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/css/main.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<section class="home-hero">
+    <div class="home-hero-status">
+        <span class="dot"></span>
+        Open to conversations · Bay Area, CA
+    </div>
+
+    <h1>Robotics engineer building things that work in the real world.</h1>
+
+    <p>
+        I'm Harsh — currently a Robotics Systems Engineer at <strong>Google</strong>,
+        previously at <strong>Peanut Robotics</strong>. CMU &amp; NASA-trained, focused on the
+        intersection of classical robotics and learned policies.
+    </p>
+
+    <div class="home-hero-links">
+        <a href="mailto:hdhruva@alumni.cmu.edu" class="btn primary">Get in touch</a>
+        <a href="./about.html" class="btn">About</a>
+        <a href="https://linkedin.com/in/harshdhruva" target="_blank" class="btn">LinkedIn</a>
+        <a href="https://github.com/harshdhruva" target="_blank" class="btn">GitHub</a>
+    </div>
+</section>
+
+<section class="projects-section" id="projects">
+    <div class="projects-section-head">
+        <h2>Selected work</h2>
+        <span class="count">5 projects</span>
+    </div>
+
+    <div class="projects-grid">
+
+        <a href="./projects/peanut.html" class="project-card featured">
+            <div class="project-thumb">
+                <!-- Replace with: <video autoplay muted loop playsinline><source src="./assets/media/peanut/preview.mp4" type="video/mp4"></video> -->
+                <!-- Or:           <img src="./assets/media/peanut/hero.jpg" alt="Peanut Robotics mobile manipulator"> -->
+                <span class="project-thumb-placeholder">🤖</span>
+            </div>
+            <div class="project-body">
+                <div class="project-category">Mobile Manipulation · Peanut Robotics</div>
+                <div class="project-title">Arm software for a commercially deployed cleaning robot</div>
+                <div class="project-desc">
+                    Owned the arm software stack on a mobile manipulator for hotel bathroom cleaning —
+                    TOPPRA trajectory generation, ICP+RANSAC vision, depth camera integration, and a live
+                    trajectory recording system that cut operator training from hours to minutes.
+                </div>
+                <div class="project-tags">
+                    <span class="tag">TOPPRA</span>
+                    <span class="tag">ros_control</span>
+                    <span class="tag">ICP / RANSAC</span>
+                    <span class="tag">C++</span>
+                    <span class="tag">OpenCV</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="./projects/autoroboto.html" class="project-card">
+            <div class="project-thumb">
+                <span class="project-thumb-placeholder">📱</span>
+            </div>
+            <div class="project-body">
+                <div class="project-category">System Integration · Google</div>
+                <div class="project-title">Automated biometric testing for Pixel</div>
+                <div class="project-desc">
+                    Robotic system for hardware security testing on Pixel devices. Led ROS1→ROS2 migration
+                    and refactored the node architecture for tight robot/camera synchronization.
+                </div>
+                <div class="project-tags">
+                    <span class="tag">ROS2</span>
+                    <span class="tag">xArm</span>
+                    <span class="tag">MoveIt</span>
+                    <span class="tag">System Design</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="./projects/moonranger.html" class="project-card">
+            <div class="project-thumb">
+                <span class="project-thumb-placeholder">🌙</span>
+            </div>
+            <div class="project-body">
+                <div class="project-category">Space Robotics · CMU</div>
+                <div class="project-title">MoonRanger lunar micro-rover</div>
+                <div class="project-desc">
+                    Software perception team for one of the first truly autonomous micro-rovers
+                    targeted for the lunar surface. Built stereo reconstruction pipeline.
+                </div>
+                <div class="project-tags">
+                    <span class="tag">Stereo Vision</span>
+                    <span class="tag">C++</span>
+                    <span class="tag">Autonomy</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="./projects/cleaning-policy.html" class="project-card">
+            <div class="project-thumb">
+                <span class="project-thumb-placeholder">🧹</span>
+            </div>
+            <div class="project-body">
+                <div class="project-category">AI Robotics · In Progress</div>
+                <div class="project-title">Contact-rich cleaning with learned policies</div>
+                <div class="project-desc">
+                    Open-source ROS2 framework combining diffusion policy with classical state machines,
+                    force feedback, and recovery behaviors for robust surface cleaning manipulation.
+                </div>
+                <div class="project-tags">
+                    <span class="tag">ROS2</span>
+                    <span class="tag">Diffusion Policy</span>
+                    <span class="tag">LeRobot</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="./projects/tripawd.html" class="project-card">
+            <div class="project-thumb">
+                <span class="project-thumb-placeholder">🐕</span>
+            </div>
+            <div class="project-body">
+                <div class="project-category">Legged Locomotion · CMU</div>
+                <div class="project-title">Tripawd — the three-legged robot dog</div>
+                <div class="project-desc">
+                    Designed and built a functional three-legged robotic dog to compare natural gait vs.
+                    trajectory-optimized gait in cost of transport.
+                </div>
+                <div class="project-tags">
+                    <span class="tag">Dynamixel</span>
+                    <span class="tag">TrajOpt</span>
+                    <span class="tag">Arduino</span>
+                </div>
+            </div>
+        </a>
+
+    </div>
+</section>
+
+<div id="site-footer"></div>
+
+<script src="./assets/js/main.js"></script>
+</body>
+</html>
