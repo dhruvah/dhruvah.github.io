@@ -1,4 +1,4 @@
-# harshdhruva.github.io
+# dhruvah.github.io
 
 Personal portfolio site for Harsh Dhruva — robotics engineer.
 
@@ -37,18 +37,18 @@ so editing `components/header.html` updates the nav across the entire site.
 
 ## Deploying to GitHub Pages
 
-1. Create a new GitHub repo named exactly `harshdhruva.github.io`
+1. Create a new GitHub repo named exactly `dhruvah.github.io`
 2. Push this folder's contents to the repo:
    ```bash
    git init
    git add .
    git commit -m "Initial site"
    git branch -M main
-   git remote add origin https://github.com/harshdhruva/harshdhruva.github.io.git
+   git remote add origin https://github.com/dhruvah/dhruvah.github.io.git
    git push -u origin main
    ```
 3. In the repo settings → Pages → Source → select `main` branch / root
-4. After ~30 seconds, the site goes live at https://harshdhruva.github.io
+4. After ~30 seconds, the site goes live at https://dhruvah.github.io
 
 > ⚠️ **Important:** Because the site uses `fetch()` to load the shared header/footer,
 > opening `index.html` directly via `file://` will show broken nav locally.
@@ -131,8 +131,8 @@ Things to fill in / replace across the site:
 
 - [ ] **Replace all `YOUR_VIDEO_ID`** placeholders with real YouTube IDs
 - [ ] **Replace emoji placeholders** on home page cards with real images or video previews
-- [ ] **Update `linkedin.com/in/harshdhruva`** to actual LinkedIn URL (in `components/header.html`, `index.html`, `about.html`)
-- [ ] **Update `github.com/harshdhruva`** to actual GitHub URL (same files)
+- [ ] **Verify `linkedin.com/in/harshdhruva`** — check your LinkedIn profile URL and update in `components/header.html`, `index.html`, `about.html` if your handle differs
+- [x] **Update `github.com/dhruvah`** — done across header.html, index.html, about.html, cleaning-policy.html
 - [ ] **Fill in [TODO] sections** inside each project page with real writeup
 - [ ] **Add resume PDF** and enable the link in `about.html`
 - [ ] Customize the meta descriptions and og:title in each `<head>` for better link previews
@@ -141,7 +141,7 @@ Things to fill in / replace across the site:
 
 ## Future ideas
 
-- Custom domain (e.g. `harshdhruva.com`) — buy domain, add CNAME file pointing at `harshdhruva.github.io`, configure DNS
+- Custom domain (e.g. `harshdhruva.com`) — buy domain, add CNAME file pointing at `dhruvah.github.io`, configure DNS
 - Add a `/now` page (see https://nownownow.com) for current focus / what you're learning
 - Add a `writing/` directory for technical blog posts
 - Replace emoji thumbnails with looping preview clips (biggest visual upgrade)
