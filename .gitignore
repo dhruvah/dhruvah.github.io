@@ -1,0 +1,8 @@
+# OS cruft
+.DS_Store
+
+# Local / raw media (not committed to git)
+assets/media/local/
+
+# Raw Keynote / PDF source presentations (large; not for deploy)
+/peanut/

@@ -80,7 +80,11 @@
             and what "good enough" means for trajectory quality.
         </p>
         <p>
-            <strong>[TODO — add more on what makes this interesting technically without revealing internals.]</strong>
+            Most of the work is in the seams between subsystems — the robot, the device under test,
+            the camera capture, and the orchestration layer all run on different clocks, and a test
+            is only as trustworthy as the weakest synchronization point between them. A lot of my
+            time goes into making the system deterministic enough that a failed test means a real
+            finding, not a timing artifact.
         </p>
     </section>
 

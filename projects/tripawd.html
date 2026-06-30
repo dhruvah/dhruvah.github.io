@@ -46,15 +46,6 @@
         </div>
     </div>
 
-    <!-- HERO MEDIA -->
-    <div class="video-embed">
-        <iframe
-            src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
-            title="Tripawd robot dog walking"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen></iframe>
-    </div>
-
     <section>
         <h2>The research question</h2>
         <p>
@@ -69,32 +60,32 @@
     <section>
         <h2>What I built</h2>
         <p>
-            <strong>[TODO — describe the build. The mechanical design choices, the actuator
-            selection (Dynamixels), how the Arduino fits in, what made the three-legged
-            kinematic chain tricky.]</strong>
+            A three-legged platform driven by Dynamixel servos, with each leg a simple
+            multi-link chain. The hard part of a tripod isn't the legs — it's that with only three
+            contact points, the robot is always one lifted leg away from being statically unstable.
+            Unlike a quadruped, it can't just keep three feet on the ground and swing the fourth;
+            every step has to actively manage where the center of mass sits relative to the
+            remaining support. That constraint drove most of the mechanical layout and gait design.
         </p>
     </section>
-
-    <!-- BUILD PHOTO PLACEHOLDER -->
-    <figure>
-        <img src="../assets/media/tripawd/build.jpg" alt="Tripawd build photo" onerror="this.style.display='none'">
-        <figcaption>[Build photo — TODO]</figcaption>
-    </figure>
 
     <section>
         <h2>The experiment</h2>
         <p>
-            <strong>[TODO — how you defined "natural gait" vs. "optimized gait", what you
-            measured for cost of transport, what the trajectory optimization framework
-            looked like.]</strong>
+            We compared two gaits on the same hardware. The "natural" gait was hand-designed to
+            mimic how a real tripod dog moves — the pattern biology settles into. The "optimized"
+            gait came out of a trajectory optimization that minimized energy use subject to the
+            stability constraint. Cost of transport — energy spent per unit distance per unit weight —
+            was the common yardstick, so the two could be compared directly on the physical robot.
         </p>
     </section>
 
     <section>
         <h2>Results &amp; learnings</h2>
         <p>
-            <strong>[TODO — what did you find? What was surprising? What would you do
-            differently?]</strong>
+            <span class="pa-label">[INSERT — drop in the actual numbers and the takeaway: did the
+            optimized gait beat the natural one on cost of transport, and by how much? Anything
+            that surprised you about the gap between sim and the real robot?]</span>
         </p>
     </section>
 
@@ -105,9 +96,6 @@
             <span class="tag">Arduino</span>
             <span class="tag">Trajectory Optimization</span>
             <span class="tag">Legged Locomotion</span>
-        </div>
-        <div class="project-links">
-            <a href="#" target="_blank" class="btn">Watch on YouTube</a>
         </div>
     </section>
 

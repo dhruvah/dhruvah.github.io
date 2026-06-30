@@ -46,15 +46,6 @@
         </div>
     </div>
 
-    <!-- HERO MEDIA -->
-    <div class="video-embed">
-        <iframe
-            src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
-            title="MoonRanger overview"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen></iframe>
-    </div>
-
     <section>
         <h2>Context</h2>
         <p>
@@ -72,14 +63,22 @@
             inspection and debugging.
         </p>
         <p>
-            <strong>[TODO — add detail on the specific bug or capability you built. The "why" behind disk-writing disparity maps is more interesting than the "what" — talk about debugging stereo systems where the failure modes aren't visible in real-time.]</strong>
+            The motivation is that stereo failures are hard to debug live. A disparity map can look
+            plausible on a screen and still be quietly wrong — bad matches in low-texture regions,
+            edge fattening, holes where the lunar surface has too little contrast. Being able to dump
+            the raw disparity data to disk meant the perception team could replay a run frame by
+            frame against ground truth and actually see where the pipeline broke, instead of guessing
+            from a downstream navigation failure.
         </p>
     </section>
 
     <section>
         <h2>What I learned</h2>
         <p>
-            <strong>[TODO — Add learnings. Real-time perception in a constrained compute envelope. Working with a research codebase headed for space-grade hardening. What stereo vision actually looks like when you have to ship it.]</strong>
+            This was my first time inside a research codebase that was actually headed for flight
+            hardware. The bar for testing and reproducibility is different when the system has to run
+            autonomously on the moon with no one able to patch it — every capability needs a way to
+            be inspected and verified offline, and "it works on my machine" isn't a finish line.
         </p>
     </section>
 
