@@ -202,6 +202,60 @@ nav.site-nav.scrolled {
     color: var(--ink-muted);
 }
 
+/* Second section (Home lab) sits directly under the first — no double padding */
+.projects-section + .projects-section { padding-top: 0; }
+
+.projects-section-sub {
+    margin: -1.75rem 0 2.5rem;
+    max-width: 60ch;
+    color: var(--ink-soft);
+    line-height: 1.6;
+}
+
+/* Grouped "hub" project pages (CMU / Rose-Hulman) — many small projects per page */
+.coursework-group { margin: 2.5rem 0; }
+.coursework-group > h2 {
+    font-size: 1.5rem;
+    letter-spacing: -0.02em;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.5rem;
+}
+.coursework-item {
+    padding: 1.6rem 0;
+    border-bottom: 1px solid var(--border);
+}
+.coursework-group .coursework-item:last-child { border-bottom: none; }
+.coursework-course {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+}
+.coursework-item h3 {
+    font-size: 1.18rem;
+    letter-spacing: -0.02em;
+    margin: 0.3rem 0 0.55rem;
+}
+.coursework-item h3 a {
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    transition: border-color 0.15s ease;
+}
+.coursework-item h3 a:hover { border-color: var(--accent); }
+.coursement-item p,
+.coursework-item p {
+    color: var(--ink-soft);
+    line-height: 1.65;
+    margin-bottom: 0.75rem;
+    max-width: var(--reading-w);
+}
+.coursework-item .project-page-tags { margin-top: 0.25rem; }
+.coursework-item-links { margin-top: 0.6rem; font-size: 0.9rem; }
+.coursework-item-links a { color: var(--accent); }
+
 .projects-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));

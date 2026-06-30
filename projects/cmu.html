@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMU Projects — Harsh Dhruva</title>
+    <meta name="description" content="Graduate robotics work at Carnegie Mellon — NASA-sponsored research, lunar rover perception, legged locomotion, computer vision and SLAM coursework.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<article class="project-page">
+    <a href="../index.html" class="project-back">All work</a>
+
+    <header class="project-page-header">
+        <div class="project-page-category">Carnegie Mellon University · 2020–2022</div>
+        <h1>CMU projects.</h1>
+        <p class="project-page-summary">
+            Graduate robotics at Carnegie Mellon — NASA-sponsored research on robotic
+            post-processing, plus core graduate coursework in computer vision and SLAM. My two
+            biggest projects from this time, MoonRanger and Tripawd, have their own pages.
+        </p>
+    </header>
+
+    <div class="project-meta">
+        <div class="project-meta-item">
+            <span class="label">Program</span>
+            <span class="value">M.S. Mechanical Engineering, Robotics</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Timeline</span>
+            <span class="value">2020 — 2022</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Lab</span>
+            <span class="value">CERLAB</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Focus</span>
+            <span class="value">Perception · Planning · Manipulation</span>
+        </div>
+    </div>
+
+    <!-- ===================== RESEARCH ===================== -->
+    <div class="coursework-group">
+        <h2>Research</h2>
+
+        <div class="coursework-item">
+            <span class="coursework-course">NASA ULI · CERLAB</span>
+            <h3>Robotic post-processing of additive-manufacturing parts</h3>
+            <p>
+                NASA-sponsored research aimed at the post-processing and quality inspection of
+                complex, custom additively-manufactured parts — the kind eventually needed for
+                spacecraft and satellites, where each part is one-off and can't be inspected by a
+                fixed jig. The work centered on two coupled problems: planning an inspection path
+                that covers the full surface of an arbitrary part, and planning collision-free robot
+                motion to execute that coverage.
+            </p>
+            <div class="project-page-tags">
+                <span class="tag">Path Planning</span>
+                <span class="tag">Motion Planning</span>
+                <span class="tag">Inspection</span>
+                <span class="tag">Additive Manufacturing</span>
+            </div>
+            <div class="coursework-item-links">
+                <a href="https://engineering.cmu.edu/news-events/news/2019/06/28-nasa-uli.html" target="_blank">CMU news: NASA ULI ↗</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== FEATURED ===================== -->
+    <div class="coursework-group">
+        <h2>Featured projects</h2>
+
+        <div class="coursework-item">
+            <span class="coursework-course">Space Robotics</span>
+            <h3><a href="./moonranger.html">MoonRanger — lunar micro-rover perception →</a></h3>
+            <p>
+                Software perception for one of the first truly autonomous micro-rovers targeted for
+                the lunar surface. Worked on the stereo reconstruction pipeline, building tooling to
+                dump disparity data to disk for offline inspection of failures that aren't visible in
+                real time.
+            </p>
+            <div class="project-page-tags">
+                <span class="tag">Stereo Vision</span>
+                <span class="tag">C++</span>
+                <span class="tag">Autonomy</span>
+            </div>
+        </div>
+
+        <div class="coursework-item">
+            <span class="coursework-course">24-775 · Robot Design &amp; Experimentation</span>
+            <h3><a href="./tripawd.html">Tripawd — the three-legged robot dog →</a></h3>
+            <p>
+                Designed and built a functional three-legged robotic dog to study how a tripod's
+                natural gait compares to a trajectory-optimized gait in cost of transport — on the
+                same hardware, with stability actively managed at every step.
+            </p>
+            <div class="project-page-tags">
+                <span class="tag">Dynamixel</span>
+                <span class="tag">Trajectory Optimization</span>
+                <span class="tag">Legged Locomotion</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== COMPUTER VISION ===================== -->
+    <div class="coursework-group">
+        <h2>Computer vision (16-720)</h2>
+
+        <div class="coursework-item">
+            <span class="coursework-course">16-720 · Computer Vision</span>
+            <h3>Spatial pyramid matching for scene classification</h3>
+            <p>
+                Scene classifier that identifies the location type of a photograph by combining a
+                bag-of-visual-words representation with spatial pyramid matching, capturing both
+                global and local spatial structure to improve accuracy over flat bag-of-words.
+            </p>
+            <div class="project-page-tags">
+                <span class="tag">Bag of Words</span>
+                <span class="tag">Spatial Pyramid</span>
+                <span class="tag">Classification</span>
+            </div>
+        </div>
+
+        <div class="coursework-item">
+            <span class="coursework-course">16-720 · Computer Vision</span>
+            <h3>Augmented reality with planar homographies</h3>
+            <p>
+                Detected corresponding feature points between image pairs with BRIEF descriptors,
+                computed the homography between them, and warped virtual content onto a real object —
+                first overlaying a book cover onto a textbook, then extending it frame-by-frame to
+                video.
+            </p>
+            <div class="project-page-tags">
+                <span class="tag">BRIEF</span>
+                <span class="tag">Homography</span>
+                <span class="tag">AR</span>
+            </div>
+        </div>
+
+        <div class="coursework-item">
+            <span class="coursework-course">16-720 · Computer Vision</span>
+            <h3>Lucas-Kanade tracking</h3>
+            <p>
+                Optical-flow tracking across video: a 2D translation tracker that handles template
+                drift, dominant-motion estimation to find moving objects in aerial footage despite
+                camera motion, and an inverse-compositional variant for efficiency. Tested on ants
+                and vehicles in non-stationary footage.
+            </p>
+            <div class="project-page-tags">
+                <span class="tag">Optical Flow</span>
+                <span class="tag">Tracking</span>
+                <span class="tag">Motion Estimation</span>
+            </div>
+        </div>
+
+        <div class="coursework-item">
+            <span class="coursework-course">16-720 · Computer Vision</span>
+            <h3>Two-view 3D reconstruction</h3>
+            <p>
+                Recovered 3D structure from two viewpoints: matched features, estimated the
+                fundamental matrix with the eight-point algorithm, derived the essential matrix from
+                calibration, and triangulated correspondences into a point cloud — with automatic
+                matching driven by epipolar constraints.
+            </p>
+            <div class="project-page-tags">
+                <span class="tag">Eight-Point</span>
+                <span class="tag">Epipolar Geometry</span>
+                <span class="tag">Triangulation</span>
+            </div>
+        </div>
+
+        <div class="coursework-item">
+            <span class="coursework-course">16-720 · Computer Vision</span>
+            <h3>Neural networks for character recognition</h3>
+            <p>
+                Handwritten-character recognition on NIST36. A from-scratch fully-connected network
+                reached 76% test accuracy via morphological segmentation and bounding-box extraction;
+                a PyTorch CNN improved this to 90.2% validation accuracy. A trained autoencoder for
+                image compression reached an average PSNR of 15.68.
+            </p>
+            <div class="project-page-tags">
+                <span class="tag">PyTorch</span>
+                <span class="tag">CNN</span>
+                <span class="tag">Autoencoders</span>
+            </div>
+        </div>
+
+        <div class="coursework-item">
+            <span class="coursework-course">16-720 · Computer Vision</span>
+            <h3>Photometric stereo</h3>
+            <p>
+                Recovered shape from appearance under varying illumination. Calibrated photometric
+                stereo extracted albedo and surface normals, integrated via Frankot-Chellappa into a
+                depth map. The uncalibrated case estimated lighting with SVD and ran into the
+                bas-relief ambiguity, where a family of depth configurations produce identical images.
+            </p>
+            <div class="project-page-tags">
+                <span class="tag">Surface Normals</span>
+                <span class="tag">SVD</span>
+                <span class="tag">Bas-Relief Ambiguity</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== SLAM ===================== -->
+    <div class="coursework-group">
+        <h2>SLAM (16-833)</h2>
+
+        <div class="coursework-item">
+            <span class="coursework-course">16-833 · SLAM</span>
+            <h3>Robot localization with particle filters</h3>
+            <p>
+                Global localization for a lost indoor robot in Wean Hall using only odometry and a
+                laser rangefinder against a known map. Implemented Monte Carlo localization — a
+                non-parametric recursive Bayes filter — and validated it across three robot datasets.
+            </p>
+            <div class="project-page-tags">
+                <span class="tag">Particle Filter</span>
+                <span class="tag">Monte Carlo Localization</span>
+                <span class="tag">LiDAR</span>
+            </div>
+        </div>
+
+        <div class="coursework-item">
+            <span class="coursework-course">16-833 · SLAM</span>
+            <h3>Dense SLAM with point-based fusion</h3>
+            <p>
+                Dense surface reconstruction fusing per-frame depth into a global point-based map.
+            </p>
+            <div class="project-page-tags">
+                <span class="tag">Dense SLAM</span>
+                <span class="tag">Point-Based Fusion</span>
+                <span class="tag">RGB-D</span>
+            </div>
+        </div>
+    </div>
+
+    <nav class="project-nav">
+        <a href="./tripawd.html">
+            <div class="nav-label">← Related</div>
+            <div class="nav-title">Tripawd</div>
+        </a>
+        <a href="./rose-hulman.html" class="next">
+            <div class="nav-label">Next →</div>
+            <div class="nav-title">Rose-Hulman Projects</div>
+        </a>
+    </nav>
+</article>
+
+<div id="site-footer"></div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

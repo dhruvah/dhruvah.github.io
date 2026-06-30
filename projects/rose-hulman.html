@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rose-Hulman Projects — Harsh Dhruva</title>
+    <meta name="description" content="Undergraduate mechanical engineering at Rose-Hulman — an assistive-robotics capstone, controls and machine-learning coursework, and CAD.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<article class="project-page">
+    <a href="../index.html" class="project-back">All work</a>
+
+    <header class="project-page-header">
+        <div class="project-page-category">Rose-Hulman Institute of Technology · 2016–2020</div>
+        <h1>Rose-Hulman projects.</h1>
+        <p class="project-page-summary">
+            Undergraduate mechanical engineering — a year-long assistive-robotics capstone that
+            represented the USA in South Korea, plus controls, machine-learning, and CAD coursework.
+        </p>
+    </header>
+
+    <div class="project-meta">
+        <div class="project-meta-item">
+            <span class="label">Program</span>
+            <span class="value">B.S. Mechanical Engineering</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Timeline</span>
+            <span class="value">2016 — 2020</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Honors</span>
+            <span class="value">Magna Cum Laude</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Focus</span>
+            <span class="value">Mechatronics · Controls · CAD</span>
+        </div>
+    </div>
+
+    <!-- ===================== CAPSTONE ===================== -->
+    <div class="coursework-group">
+        <h2>Senior capstone</h2>
+
+        <div class="coursework-item">
+            <span class="coursework-course">Year-long capstone · 4-person team</span>
+            <h3>Automated eating apparatus for a quadriplegic patient</h3>
+            <p>
+                Our client, Gary Wallace, was quadriplegic and needed help with every meal, three
+                times a day. Commercial robotic feeding arms ran $5,000–$10,000 — out of reach. Over
+                three iterative prototypes across the year, our four-person team built a low-cost
+                alternative: an Arduino MEGA driving stepper motors and (later) a linear actuator,
+                with a magnetic, swappable spoon head, a joystick that mounts to the client's chair,
+                limit switches for positioning, and adjustable legs for different table heights.
+            </p>
+            <p>
+                The first prototype took us to the E²Festa global capstone competition in South
+                Korea, representing Rose-Hulman and the USA and placing 10th, recognized for
+                innovative, cost-effective design. The final working prototype came in at roughly
+                $150 — a fraction of the commercial options — with full documentation: parts lists,
+                engineering drawings, assembly instructions, and code. Gary passed away before the
+                final prototype was finished; the team's intent was to keep developing the design for
+                broader use by people living with paralysis.
+            </p>
+            <div class="project-page-tags">
+                <span class="tag">Arduino</span>
+                <span class="tag">Stepper Motors</span>
+                <span class="tag">Linear Actuators</span>
+                <span class="tag">Mechanical Design</span>
+                <span class="tag">Assistive Robotics</span>
+            </div>
+            <div class="coursework-item-links">
+                <a href="https://docs.google.com/document/d/1s8KHg6yI-dU0KyfgtHoei1mhYxFEDVfeGZKbxttXNFY/edit?usp=sharing" target="_blank">Project work pack ↗</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== AI / ML / CONTROLS =====================
+         NOTE (Harsh): I grouped these three under Rose-Hulman as undergrad
+         controls/AI coursework — move any that were actually CMU grad work. -->
+    <div class="coursework-group">
+        <h2>AI / ML / controls</h2>
+
+        <div class="coursework-item">
+            <span class="coursework-course">Controls · MATLAB</span>
+            <h3>Inverse kinematics via a distal-teacher network</h3>
+            <p>
+                Learned the inverse kinematics of a 3-DOF planar manipulator. First trained a network
+                on the forward kinematics from 100 random joint configurations, then added an inverse
+                network and trained both together with the distal-teacher method and
+                Levenberg-Marquardt optimization. Given a desired end-effector position, the
+                controller network returns a valid set of joint angles — built from scratch in MATLAB
+                without any neural-network libraries.
+            </p>
+            <div class="project-page-tags">
+                <span class="tag">Neural Networks</span>
+                <span class="tag">Distal Teacher</span>
+                <span class="tag">MATLAB</span>
+            </div>
+        </div>
+
+        <div class="coursework-item">
+            <span class="coursework-course">Controls · Simulink</span>
+            <h3>Fuzzy-logic controllers for autonomous parking</h3>
+            <p>
+                Mamdani fuzzy controllers for autonomous back-up and parallel parking. The back-parking
+                controller used three input membership functions and 27 rules and stayed robust across
+                hard cases like double-diamond starts; the parallel-parking controller used four inputs
+                and 43 rules, adding front-axle displacement. Built with the MATLAB Fuzzy Toolbox and
+                Simulink.
+            </p>
+            <div class="project-page-tags">
+                <span class="tag">Fuzzy Logic</span>
+                <span class="tag">Mamdani</span>
+                <span class="tag">Simulink</span>
+            </div>
+        </div>
+
+        <div class="coursework-item">
+            <span class="coursework-course">Machine Learning</span>
+            <h3>Diabetic retinopathy detection with a CNN</h3>
+            <p>
+                Multi-class image classification to detect the stages of diabetic retinopathy, a
+                diabetes-related retinal complication that can cause vision loss, using convolutional
+                neural networks.
+            </p>
+            <div class="project-page-tags">
+                <span class="tag">CNN</span>
+                <span class="tag">Medical Imaging</span>
+                <span class="tag">Classification</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== CAD ===================== -->
+    <div class="coursework-group">
+        <h2>CAD</h2>
+
+        <div class="coursework-item">
+            <span class="coursework-course">Intro CAD · Freshman year</span>
+            <h3>Taj Mahal CAD model</h3>
+            <p>
+                A detailed CAD model of the Taj Mahal built for a freshman intro-CAD competition — a
+                fun way to learn the fundamentals of solid modeling and rendering.
+            </p>
+            <div class="project-page-tags">
+                <span class="tag">CAD</span>
+                <span class="tag">Solid Modeling</span>
+            </div>
+        </div>
+
+        <div class="coursework-item">
+            <span class="coursework-course">C++ · OpenGL</span>
+            <h3>Taj Mahal OpenGL visualization</h3>
+            <p>
+                Turned the CAD model into a dynamic drawing: extracted the model's coordinate points
+                and sorted them with nearest-neighbors to produce a continuous drawing effect,
+                rendered in C++ with OpenGL.
+            </p>
+            <div class="project-page-tags">
+                <span class="tag">C++</span>
+                <span class="tag">OpenGL</span>
+            </div>
+            <div class="coursework-item-links">
+                <a href="https://youtu.be/sK-2GuYaORY" target="_blank">Watch demo ↗</a>
+            </div>
+        </div>
+    </div>
+
+    <nav class="project-nav">
+        <a href="./cmu.html">
+            <div class="nav-label">← Previous</div>
+            <div class="nav-title">CMU Projects</div>
+        </a>
+        <a href="../index.html" class="next">
+            <div class="nav-label">Next →</div>
+            <div class="nav-title">All work</div>
+        </a>
+    </nav>
+</article>
+
+<div id="site-footer"></div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
