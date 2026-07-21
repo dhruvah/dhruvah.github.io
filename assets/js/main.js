@@ -5,27 +5,37 @@
     const isProject = window.location.pathname.includes('/projects/');
     const basePath = isProject ? '../' : './';
 
-    // Inject shared header
-    fetch(basePath + 'assets/components/header.html')
-        .then(r => r.text())
-        .then(html => {
-            // Rewrite paths in header based on depth
-            const adjusted = html.replace(/href="\.\//g, `href="${basePath}`);
-            document.getElementById('site-header').innerHTML = adjusted;
-            initNav();
-        })
-        .catch(() => {
-            // If fetch fails (e.g. file://), nav won't load — that's expected locally without a server
-            console.warn('Header fetch failed — run with a local server for full experience');
-        });
+    // Shared header/footer are built here (not fetched) so the nav works
+    // everywhere — including opening the pages directly via file://, where
+    // fetch() is blocked by the browser.
+    const headerHTML = `
+<nav class="site-nav">
+    <a href="${basePath}index.html" class="nav-logo">Harsh Dhruva</a>
+    <button class="nav-mobile-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links">
+        <li><a href="${basePath}index.html">Work</a></li>
+        <li><a href="${basePath}about.html">About</a></li>
+        <li><a href="https://linkedin.com/in/harshdhruva" target="_blank">LinkedIn</a></li>
+        <li><a href="https://github.com/dhruvah" target="_blank">GitHub</a></li>
+    </ul>
+</nav>`;
 
-    // Inject shared footer
-    fetch(basePath + 'assets/components/footer.html')
-        .then(r => r.text())
-        .then(html => {
-            document.getElementById('site-footer').innerHTML = html;
-        })
-        .catch(() => {});
+    const footerHTML = `
+<footer class="site-footer">
+    © 2026 Harsh Dhruva · <a href="mailto:hdhruva@alumni.cmu.edu">hdhruva@alumni.cmu.edu</a>
+</footer>`;
+
+    const headerMount = document.getElementById('site-header');
+    if (headerMount) {
+        headerMount.innerHTML = headerHTML;
+        initNav();
+    }
+    const footerMount = document.getElementById('site-footer');
+    if (footerMount) {
+        footerMount.innerHTML = footerHTML;
+    }
 
     function initNav() {
         const navbar = document.querySelector('nav.site-nav');
