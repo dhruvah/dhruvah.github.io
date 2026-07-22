@@ -56,7 +56,7 @@
              style="object-position: center 65%;">
     </figure>
 
-    <!-- ── INTRO + SPINE ── -->
+    <!-- ── INTRO ── -->
     <section>
         <p>
             I joined Peanut right out of CMU. The office was a single room in San Francisco —
@@ -89,68 +89,9 @@
         </figure>
     </div>
 
-    <!-- ── 1. ARM & END EFFECTOR ── -->
+    <!-- ── 1. LIVE TRAJECTORY ── -->
     <section>
-        <h2>1. Owning the arm and end effector</h2>
-
-        <div class="pa">
-            <div class="pa-label">The problem</div>
-            <p>
-                The arm is built in-house, so its dynamics aren't perfect — and it's what physically
-                does the cleaning. It has to follow smooth, time-optimal trajectories while the scrubber
-                actuates in sync, hold steady against a surface, and stay well-behaved across hardware
-                upgrades. The scrubber end effector adds its own problem: an open-loop motor bogs down
-                when pressed into a surface, which hurts cleaning quality, and a stalled motor in contact
-                is a safety risk.
-            </p>
-        </div>
-
-        <div class="pa">
-            <div class="pa-label">What I did</div>
-            <p>
-                Used <strong>TOPPRA</strong> for time-optimal path parameterization, integrated with
-                <strong>ros_control</strong> so the 6-DOF arm executed smooth trajectories with the tool
-                in sync. Tuned and analyzed the position, velocity, and compliance controllers — critical
-                work on an in-house arm, especially through controller upgrades. For the end effector, I
-                built a <strong>closed-loop scrubber</strong> using a hall sensor, magnets, and DC motor:
-                PID control, stall detection in contact, and a hall-sensor safety system. I also held
-                deep knowledge of the core control stack and was a point person when robots were deployed
-                in the field.
-            </p>
-        </div>
-
-        <div class="callout">
-            <strong>Outcome — a reliable, closed-loop manipulation subsystem.</strong>
-            The scrubber held cleaning speed steady under contact instead of bogging down — better clean
-            quality — with the safety and reliability you don't get from an open-loop system.
-        </div>
-    </section>
-
-    <figure class="fig-row one">
-        <img src="../assets/media/peanut/arch-diagram.png"
-             alt="Hand-drawn architecture diagram of the arm trajectory generation pipeline">
-        <figcaption>Arm trajectory generation architecture — from move request to TOPPRA execution.</figcaption>
-    </figure>
-
-    <div class="fig-row one">
-        <figure>
-            <video controls muted playsinline>
-                <source src="../assets/media/peanut/arm-calibration.mp4" type="video/mp4">
-            </video>
-            <figcaption>Arm calibration script running (sped up).</figcaption>
-        </figure>
-    </div>
-
-    <figure class="portrait-single">
-        <video controls muted playsinline>
-            <source src="../assets/media/peanut/arm-vibration.mp4" type="video/mp4">
-        </video>
-        <figcaption>Tuning controllers to fix an arm vibration issue — the kind of bug you only find on real hardware.</figcaption>
-    </figure>
-
-    <!-- ── 2. LIVE TRAJECTORY (FLAGSHIP) ── -->
-    <section>
-        <h2>2. Making teaching fast — live trajectory</h2>
+        <h2>1. Live Trajectory</h2>
 
         <div class="pa">
             <div class="pa-label">The problem</div>
@@ -169,9 +110,10 @@
                 Built a <strong>live trajectory</strong> system that let operators teleoperate the arm
                 <strong>by hand</strong> — physically guiding it through the cleaning motion while it
                 recorded the trajectory directly. The work wasn't just capture: I had to plug into the
-                existing system's recovery behaviors for failure cases, spraying logic, and more. Getting
-                it right meant going deep on the operators' actual pain points and building something they
-                would genuinely use.
+                existing system's recovery behaviors for failure cases, spraying logic, and more. Under
+                the hood the captured path is time-parameterized with <strong>TOPPRA</strong> and executed
+                through <strong>ros_control</strong> with the tool actuating in sync. Getting it right meant
+                going deep on the operators' actual pain points and building something they would genuinely use.
             </p>
         </div>
 
@@ -186,6 +128,12 @@
         <img src="../assets/media/peanut/keyframe-planning.png"
              alt="Path planning diagram — operator keyframes and robot motion">
         <figcaption>Path planning — operator positions keyframes, robot interpolates and executes.</figcaption>
+    </figure>
+
+    <figure class="fig-row one">
+        <img src="../assets/media/peanut/arch-diagram.png"
+             alt="Hand-drawn architecture diagram of the arm trajectory generation pipeline">
+        <figcaption>Arm trajectory generation architecture — from move request to TOPPRA execution.</figcaption>
     </figure>
 
     <div class="fig-row">
@@ -210,9 +158,25 @@
         <figcaption>Result — robot scrubbing a surface using a live-recorded trajectory.</figcaption>
     </figure>
 
-    <!-- ── 3. ROOM-TO-ROOM VARIATION ── -->
+    <div class="fig-row one">
+        <figure>
+            <video controls muted playsinline>
+                <source src="../assets/media/peanut/arm-calibration.mp4" type="video/mp4">
+            </video>
+            <figcaption>Arm calibration script running (sped up).</figcaption>
+        </figure>
+    </div>
+
+    <figure class="portrait-single">
+        <video controls muted playsinline>
+            <source src="../assets/media/peanut/arm-vibration.mp4" type="video/mp4">
+        </video>
+        <figcaption>Tuning controllers to fix an arm vibration issue — the kind of bug you only find on real hardware.</figcaption>
+    </figure>
+
+    <!-- ── 2. ROOM TO ROOM VARIATION ── -->
     <section>
-        <h2>3. Surviving room-to-room variation</h2>
+        <h2>2. Room to Room Variation</h2>
 
         <div class="pa">
             <div class="pa-label">The problem</div>
@@ -255,9 +219,8 @@
         <figcaption>Registration results — aligning the captured cloud to the reference to measure the shift, with error against ground truth.</figcaption>
     </figure>
 
-    <!-- ── 4. DEPTH SENSING ── -->
     <section>
-        <h2>4. Getting reliable depth in a bathroom</h2>
+        <h3>Getting reliable depth in a bathroom</h3>
 
         <div class="pa">
             <div class="pa-label">The problem</div>
@@ -302,9 +265,9 @@
         </figure>
     </div>
 
-    <!-- ── 5. OPTITRACK CALIBRATION ── -->
+    <!-- ── 3. OPTITRACK ── -->
     <section>
-        <h2>5. Calibrating the in-house arm</h2>
+        <h2>3. Optitrack</h2>
 
         <div class="pa">
             <div class="pa-label">The problem</div>
@@ -350,9 +313,11 @@
         </figure>
     </div>
 
-    <!-- ── 6. MANUFACTURING TESTS ── -->
+    <!-- ── 4. OTHER ── -->
     <section>
-        <h2>6. Keeping deployed robots alive — the test suite</h2>
+        <h2>4. Other</h2>
+
+        <h3>Manufacturing test suite</h3>
 
         <div class="pa">
             <div class="pa-label">The problem</div>
@@ -378,37 +343,31 @@
             <strong>Outcome — operators could self-diagnose a robot in the field.</strong>
             Faster triage of broken robots, and far less dependence on an engineer to figure out what went wrong.
         </div>
-    </section>
 
-    <!-- ── 7. NAVIGATION ── -->
-    <section>
-        <h2>7. Getting the robot around the space</h2>
+        <h3>Navigation</h3>
         <p>
             Alongside the manipulation work, I spent time on the navigation stack — SLAM mapping with
             gmapping, testing <code>move_base</code> and then <strong>Nav2 with the MPPI controller</strong>
             in simulation and on the real robot, including obstacle-avoidance and wall-following runs. The
             robot has to get itself to and around the work area reliably before the arm can do anything.
         </p>
-    </section>
 
-    <div class="fig-row">
-        <figure>
-            <video controls muted playsinline>
-                <source src="../assets/media/peanut/nav2-outside.mp4" type="video/mp4">
-            </video>
-            <figcaption>Nav2 testing outside the office.</figcaption>
-        </figure>
-        <figure>
-            <video controls muted playsinline>
-                <source src="../assets/media/peanut/nav-obstacle.mp4" type="video/mp4">
-            </video>
-            <figcaption>Obstacle avoidance test (sped up).</figcaption>
-        </figure>
-    </div>
+        <div class="fig-row">
+            <figure>
+                <video controls muted playsinline>
+                    <source src="../assets/media/peanut/nav2-outside.mp4" type="video/mp4">
+                </video>
+                <figcaption>Nav2 testing outside the office.</figcaption>
+            </figure>
+            <figure>
+                <video controls muted playsinline>
+                    <source src="../assets/media/peanut/nav-obstacle.mp4" type="video/mp4">
+                </video>
+                <figcaption>Obstacle avoidance test (sped up).</figcaption>
+            </figure>
+        </div>
 
-    <!-- ── 8. HARDWARE & SENSORS ── -->
-    <section>
-        <h2>8. The hardware underneath it all</h2>
+        <h3>Hardware &amp; sensors</h3>
         <p>
             A mobile manipulator is many subsystems — arm, base, elevator, scrubber, and a stack of
             sensors — and a deployed robot only works if all of them do. I did bring-up and debugging
@@ -418,38 +377,38 @@
             optimizing Dynamixel <strong>syncRead from 15 ms to 10 ms</strong> to tighten the arm's
             control-loop rate.
         </p>
-    </section>
 
-    <div class="portrait-gallery">
-        <figure>
-            <img src="../assets/media/peanut/dynamixel-joint.jpg" alt="Dynamixel motor joint close-up">
-            <figcaption>Dynamixel joint — end effector.</figcaption>
-        </figure>
-        <figure>
-            <video controls muted playsinline>
-                <source src="../assets/media/peanut/hall-sensor.mp4" type="video/mp4">
-            </video>
-            <figcaption>Hall sensor — end effector feedback.</figcaption>
-        </figure>
-        <figure>
-            <video controls muted playsinline>
-                <source src="../assets/media/peanut/elevator-stepper.mp4" type="video/mp4">
-            </video>
-            <figcaption>Elevator stepper motor.</figcaption>
-        </figure>
-        <figure>
-            <video controls muted playsinline>
-                <source src="../assets/media/peanut/bldc-motor.mp4" type="video/mp4">
-            </video>
-            <figcaption>BLDC motor — base.</figcaption>
-        </figure>
-        <figure>
-            <video controls muted playsinline>
-                <source src="../assets/media/peanut/limit-switch.mp4" type="video/mp4">
-            </video>
-            <figcaption>Limit switch — arm position.</figcaption>
-        </figure>
-    </div>
+        <div class="portrait-gallery">
+            <figure>
+                <img src="../assets/media/peanut/dynamixel-joint.jpg" alt="Dynamixel motor joint close-up">
+                <figcaption>Dynamixel joint — end effector.</figcaption>
+            </figure>
+            <figure>
+                <video controls muted playsinline>
+                    <source src="../assets/media/peanut/hall-sensor.mp4" type="video/mp4">
+                </video>
+                <figcaption>Hall sensor — end effector feedback.</figcaption>
+            </figure>
+            <figure>
+                <video controls muted playsinline>
+                    <source src="../assets/media/peanut/elevator-stepper.mp4" type="video/mp4">
+                </video>
+                <figcaption>Elevator stepper motor.</figcaption>
+            </figure>
+            <figure>
+                <video controls muted playsinline>
+                    <source src="../assets/media/peanut/bldc-motor.mp4" type="video/mp4">
+                </video>
+                <figcaption>BLDC motor — base.</figcaption>
+            </figure>
+            <figure>
+                <video controls muted playsinline>
+                    <source src="../assets/media/peanut/limit-switch.mp4" type="video/mp4">
+                </video>
+                <figcaption>Limit switch — arm position.</figcaption>
+            </figure>
+        </div>
+    </section>
 
     <!-- ── CLOSING ── -->
     <section>

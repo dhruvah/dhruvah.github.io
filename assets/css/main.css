@@ -543,6 +543,15 @@ nav.site-nav.scrolled {
     .media-grid-2, .media-grid-3 { grid-template-columns: 1fr; }
     .media-grid figure img, .media-grid figure video { height: 200px; }
 }
+/* Sub-topic heading within a numbered project section */
+.project-page h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin: 2.25rem 0 0.75rem;
+}
+
 /* Problem / Approach sub-structure within a project section */
 .pa { margin: 1.25rem 0; }
 .pa-label {
