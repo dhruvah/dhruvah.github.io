@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peanut Robotics — Harsh Dhruva</title>
-    <meta name="description" content="Robotics engineer at Peanut Robotics — arm software, sensor integration, and operator tooling on a commercially deployed mobile manipulator.">
+    <title>Peanut Robotics · Harsh Dhruva</title>
+    <meta name="description" content="Robotics engineer at Peanut Robotics: arm software, sensor integration, and operator tooling on a commercially deployed mobile manipulator.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -24,7 +24,7 @@
         </div>
         <h1>My first job out of grad school was building robots that clean hotel bathrooms.</h1>
         <p class="project-page-summary">
-            1.75 years at Peanut Robotics as a Robotics Engineer — owning the manipulation subsystem,
+            1.75 years at Peanut Robotics as a Robotics Engineer, owning the manipulation subsystem,
             sensor integration, perception, and operator tooling on a mobile manipulator deployed in real hotels.
         </p>
     </header>
@@ -36,7 +36,7 @@
         </div>
         <div class="project-meta-item">
             <span class="label">Timeline</span>
-            <span class="value">Jul 2022 — Apr 2024</span>
+            <span class="value">Jul 2022 to Apr 2024</span>
         </div>
         <div class="project-meta-item">
             <span class="label">Stack</span>
@@ -59,7 +59,7 @@
     <!-- ── INTRO ── -->
     <section>
         <p>
-            I joined Peanut right out of CMU. The office was a single room in San Francisco —
+            I joined Peanut right out of CMU. The office was a single room in San Francisco -
             around 19 people, and a lot of robots. Peanut built custom mobile manipulators tasked
             for cleaning bathrooms in commercial hotels. We were deployed in 2 hotels, with 10
             active robot cleaning and getting paid by the hour.
@@ -75,8 +75,8 @@
     <div class="media-grid media-grid-2">
         <figure>
             <img src="../assets/media/peanut/startup-hq.jpg"
-                 alt="StartupHQ building directory — 880 Harrison Street, Peanut Robotics listed">
-            <figcaption>880 Harrison St — Peanut's first office.</figcaption>
+                 alt="StartupHQ building directory, 880 Harrison Street, Peanut Robotics listed">
+            <figcaption>880 Harrison St, Peanut's first office.</figcaption>
         </figure>
         <figure>
             <img src="../assets/media/peanut/robot-fleet.jpg"
@@ -94,7 +94,7 @@
             <p>
                 Operators taught trajectories with a <strong>joystick</strong>, jogging the arm to
                 capture joint positions one at a time and chaining them into a path. For a complex object
-                like a toilet, that took a skilled operator <strong>2–4 hours</strong> — plus a lot of
+                like a toilet, that took a skilled operator <strong>2 to 4 hours</strong>, plus a lot of
                 retraining. Since every new location had to be taught this way, teaching speed was a hard
                 ceiling on how fast Peanut could scale.
             </p>
@@ -104,7 +104,7 @@
             <div class="pa-label">What I did</div>
             <p>
                 Built a <strong>live trajectory</strong> system that let operators teleoperate the arm
-                <strong>by hand</strong> — physically guiding it through the cleaning motion while it
+                <strong>by hand</strong>, physically guiding it through the cleaning motion while it
                 recorded the trajectory directly. The work wasn't just capture: I had to plug into the
                 existing system's recovery behaviors for failure cases, spraying logic, and more. Under
                 the hood the captured path is time-parameterized with <strong>TOPPRA</strong> and executed
@@ -114,22 +114,22 @@
         </div>
 
         <div class="callout">
-            <strong>Outcome — teaching time: 2–4 hours → ~15 minutes per surface.</strong>
-            A small change with outsized impact — it unlocked rapid prototyping of trajectories and became
+            <strong>Outcome: teaching time went from 2 to 4 hours down to about 15 minutes per surface.</strong>
+            A small change with outsized impact. It unlocked rapid prototyping of trajectories and became
             the way operators built cleaning behavior, removing engineering as a bottleneck on deployment.
         </div>
     </section>
 
     <figure class="fig-row one">
         <img src="../assets/media/peanut/keyframe-planning.png"
-             alt="Path planning diagram — operator keyframes and robot motion">
-        <figcaption>Path planning — operator positions keyframes, robot interpolates and executes.</figcaption>
+             alt="Path planning diagram, operator keyframes and robot motion">
+        <figcaption>Path planning: the operator positions keyframes, and the robot interpolates and executes.</figcaption>
     </figure>
 
     <figure class="fig-row one">
         <img src="../assets/media/peanut/arch-diagram.png"
              alt="Hand-drawn architecture diagram of the arm trajectory generation pipeline">
-        <figcaption>Arm trajectory generation architecture — from move request to TOPPRA execution.</figcaption>
+        <figcaption>Arm trajectory generation architecture, from move request to TOPPRA execution.</figcaption>
     </figure>
 
     <div class="fig-row">
@@ -137,13 +137,13 @@
             <video controls muted playsinline>
                 <source src="../assets/media/peanut/live-recording-wrist.mp4" type="video/mp4">
             </video>
-            <figcaption>Live trajectory recording — guiding the wrist by hand.</figcaption>
+            <figcaption>Live trajectory recording, guiding the wrist by hand.</figcaption>
         </figure>
         <figure>
             <video controls muted playsinline>
                 <source src="../assets/media/peanut/live-recording-scrubber.mp4" type="video/mp4">
             </video>
-            <figcaption>Live trajectory — scrubber actuation (sped up).</figcaption>
+            <figcaption>Live trajectory: scrubber actuation (sped up).</figcaption>
         </figure>
     </div>
 
@@ -151,23 +151,7 @@
         <video controls muted playsinline>
             <source src="../assets/media/peanut/live-scrubbing.mp4" type="video/mp4">
         </video>
-        <figcaption>Result — robot scrubbing a surface using a live-recorded trajectory.</figcaption>
-    </figure>
-
-    <div class="fig-row one">
-        <figure>
-            <video controls muted playsinline>
-                <source src="../assets/media/peanut/arm-calibration.mp4" type="video/mp4">
-            </video>
-            <figcaption>Arm calibration script running (sped up).</figcaption>
-        </figure>
-    </div>
-
-    <figure class="portrait-single">
-        <video controls muted playsinline>
-            <source src="../assets/media/peanut/arm-vibration.mp4" type="video/mp4">
-        </video>
-        <figcaption>Tuning controllers to fix an arm vibration issue — the kind of bug you only find on real hardware.</figcaption>
+        <figcaption>Result: the robot scrubbing a surface using a live-recorded trajectory.</figcaption>
     </figure>
 
     <!-- ── 2. ROOM TO ROOM VARIATION ── -->
@@ -177,7 +161,7 @@
         <div class="pa">
             <div class="pa-label">The problem</div>
             <p>
-                Even hotel bathrooms with the <em>same</em> layout vary — fixtures sit a little
+                Even hotel bathrooms with the <em>same</em> layout vary, since fixtures sit a little
                 differently from room to room. A trajectory taught in one bathroom doesn't directly
                 transfer to the next: run it as-is and the arm collides or misses the surface, and the
                 system can't scale to many rooms. I ran an in-depth study of where the variation actually
@@ -190,15 +174,15 @@
             <p>
                 Built a <strong>point cloud registration</strong> pipeline that measures how far the
                 toilet has shifted in a given bathroom, then applies that delta to the cleaning
-                trajectory — either by moving the base or by shifting the arm trajectory itself. Used
+                trajectory, either by moving the base or by shifting the arm trajectory itself. Used
                 passive stereo depth (ZEDx) for the scan, and experimented with Cartesian planning through
                 mission control to apply the correction.
             </p>
         </div>
 
         <div class="callout">
-            <strong>Outcome — one taught trajectory generalizes across rooms.</strong>
-            Instead of re-teaching every bathroom, the robot measures the shift and adapts — turning the
+            <strong>Outcome: one taught trajectory generalizes across rooms.</strong>
+            Instead of re-teaching every bathroom, the robot measures the shift and adapts, turning the
             operator-taught approach into something that can actually scale across a hotel.
         </div>
     </section>
@@ -206,13 +190,13 @@
     <figure class="fig-row one">
         <img src="../assets/media/peanut/r2r-variation.png"
              alt="Top-down bathroom maps showing toilet pose variation between rooms">
-        <figcaption>The toilet pose varies the most between bathrooms — the result of the variance study.</figcaption>
+        <figcaption>The toilet pose varies the most between bathrooms, the result of the variance study.</figcaption>
     </figure>
 
     <figure class="fig-row one">
         <img src="../assets/media/peanut/point-cloud-registration.png"
              alt="RANSAC + ICP point cloud registration results with error table">
-        <figcaption>Registration results — aligning the captured cloud to the reference to measure the shift, with error against ground truth.</figcaption>
+        <figcaption>Registration results: aligning the captured cloud to the reference to measure the shift, with error against ground truth.</figcaption>
     </figure>
 
     <section>
@@ -222,7 +206,7 @@
             <div class="pa-label">The problem</div>
             <p>
                 Registration is only as good as the depth behind it, and bathrooms are a worst case for
-                depth cameras. Light bounces off glossy plastic seats and porcelain — specular surfaces —
+                depth cameras. Light bounces off glossy plastic seats and porcelain (specular surfaces)
                 and you get wavy, unreliable point clouds. On top of that, the robot needed four cameras
                 running at once without one silently dropping out and degrading the whole stack.
             </p>
@@ -231,18 +215,17 @@
         <div class="pa">
             <div class="pa-label">What I did</div>
             <p>
-                Ran a careful evaluation of four depth systems —
-                <strong>Orbbec, RealSense, Luxonis, and ZEDx</strong> — weighing specular performance,
-                range, width, and software tradeoffs, and chose the Orbbec (it had the best filtering for
-                the bouncing light). Then built the integration: <strong>robust bringup of four
-                cameras</strong> with a system heartbeat and an <strong>auto-recovery</strong> system,
-                plus easy toggling and selection of depth streams to manage compute — debugging deep into
-                the Orbbec SDK along the way.
+                Ran a careful evaluation of four depth systems (<strong>Orbbec, RealSense, Luxonis, and
+                ZEDx</strong>), weighing specular performance, range, width, and software tradeoffs, and
+                chose the Orbbec, which had the best filtering for the bouncing light. Then built the
+                integration: <strong>robust bringup of four cameras</strong> with a system heartbeat and an
+                <strong>auto-recovery</strong> system, plus easy toggling and selection of depth streams to
+                manage compute, debugging deep into the Orbbec SDK along the way.
             </p>
         </div>
 
         <div class="callout">
-            <strong>Outcome — four cameras the perception stack could trust.</strong>
+            <strong>Outcome: four cameras the perception stack could trust.</strong>
             Reliable multi-camera depth that recovered on its own when a camera failed, instead of taking
             the system down with it.
         </div>
@@ -251,13 +234,13 @@
     <div class="fig-row">
         <figure>
             <img src="../assets/media/peanut/depth-cameras.jpg"
-                 alt="All four depth cameras evaluated — ZED, Luxonis, RealSense, Orbbec — laid out side by side">
+                 alt="All four depth cameras evaluated: ZED, Luxonis, RealSense, Orbbec, laid out side by side">
             <figcaption>The four systems evaluated: ZED, Luxonis, RealSense, and Orbbec.</figcaption>
         </figure>
         <figure>
             <img src="../assets/media/peanut/specularity.png"
                  alt="Point cloud showing depth camera challenges with specular surfaces">
-            <figcaption>Specular surfaces — glossy plastic and porcelain — bounce light and produce wavy point clouds.</figcaption>
+            <figcaption>Specular surfaces like glossy plastic and porcelain bounce light and produce wavy point clouds.</figcaption>
         </figure>
     </div>
 
@@ -268,8 +251,8 @@
         <div class="pa">
             <div class="pa-label">The problem</div>
             <p>
-                Because the arm is built in-house, there were real inconsistencies to chase down — most
-                notably <strong>droop</strong>, where the arm sags from its commanded position under load.
+                Because the arm is built in-house, there were real inconsistencies to chase down. The most
+                notable was <strong>droop</strong>, where the arm sags from its commanded position under load.
                 For contact cleaning, a few millimeters of error directly hurts clean quality, and it
                 breaks sim-to-real because the model stops matching the physical robot.
             </p>
@@ -279,17 +262,25 @@
             <div class="pa-label">What I did</div>
             <p>
                 Set up an <strong>Optitrack motion capture</strong> rig on the arm in-house and connected
-                it to ROS — building out the kinematic chain, a lot of transform and frame math, and URDF
-                cleanup. Profiled droop under different loads, used the profiles to correct it and
+                it to ROS, building out the kinematic chain, a lot of transform and frame math, and URDF
+                cleanup. Profiled droop under different loads, then used the profiles to correct it and
                 <strong>update the kinematic model</strong>.
             </p>
         </div>
 
         <div class="callout">
-            <strong>Outcome — a corrected kinematic model that improved accuracy everywhere downstream, including simulation.</strong>
+            <strong>Outcome: a corrected kinematic model that improved accuracy everywhere downstream, including simulation.</strong>
             More accurate motion meant more accurate cleaning, and a model that downstream tooling could
             actually rely on.
         </div>
+
+        <p>
+            Optitrack didn't stay a one-off droop fix. Once the rig was up, it became our ground-truth
+            measurement tool across a whole range of arm, elevator, and base work: end effector and joint
+            errors, controller and tracking accuracy, arm vibration, tower vibration on the elevator, and
+            base drift and repeatability. The board below was our running list of things to measure with
+            it, and the highlighted cells are the ones I dug into.
+        </p>
     </section>
 
     <figure class="fig-row one">
@@ -298,16 +289,11 @@
         <figcaption>Optitrack markers on each arm joint, tracked in real time.</figcaption>
     </figure>
 
-    <div class="media-grid media-grid-2">
-        <figure>
-            <img src="../assets/media/peanut/optitrack-before.jpg" alt="Arm before calibration">
-            <figcaption>Before calibration.</figcaption>
-        </figure>
-        <figure>
-            <img src="../assets/media/peanut/optitrack-after.jpg" alt="Arm after calibration">
-            <figcaption>After calibration.</figcaption>
-        </figure>
-    </div>
+    <figure class="fig-row one">
+        <img src="../assets/media/peanut/optitrack-projects.png"
+             alt="Project ideas board mapping Optitrack measurements across arm, elevator, and base subsystems">
+        <figcaption>Our running board of Optitrack measurement projects across the arm, elevator, and base. Highlighted cells are the ones I worked on.</figcaption>
+    </figure>
 
     <!-- ── 4. OTHER ── -->
     <section>
@@ -328,7 +314,7 @@
             <div class="pa-label">What I did</div>
             <p>
                 Built a <strong>manufacturing test suite</strong> operators could run as scripts to get a
-                clear report of what was and wasn't working — from the low level (individual arm motors,
+                clear report of what was and wasn't working, from the low level (individual arm motors,
                 IDs, baud rates, udev rules) up to full-system checks (complete motion, reported currents,
                 spikes, end-effector behavior), at small, medium, and large scale. Also shipped a simple
                 <strong>arm calibration tool</strong> so operators could calibrate the arm themselves.
@@ -336,13 +322,40 @@
         </div>
 
         <div class="callout">
-            <strong>Outcome — operators could self-diagnose a robot in the field.</strong>
+            <strong>Outcome: operators could self-diagnose a robot in the field.</strong>
             Faster triage of broken robots, and far less dependence on an engineer to figure out what went wrong.
         </div>
 
+        <div class="fig-row one">
+            <figure>
+                <video controls muted playsinline>
+                    <source src="../assets/media/peanut/arm-calibration.mp4" type="video/mp4">
+                </video>
+                <figcaption>The arm calibration script running (sped up).</figcaption>
+            </figure>
+        </div>
+
+        <div class="media-grid media-grid-2">
+            <figure>
+                <img src="../assets/media/peanut/optitrack-before.jpg" alt="Arm before calibration">
+                <figcaption>Before calibration.</figcaption>
+            </figure>
+            <figure>
+                <img src="../assets/media/peanut/optitrack-after.jpg" alt="Arm after calibration">
+                <figcaption>After calibration.</figcaption>
+            </figure>
+        </div>
+
+        <figure class="portrait-single">
+            <video controls muted playsinline>
+                <source src="../assets/media/peanut/arm-vibration.mp4" type="video/mp4">
+            </video>
+            <figcaption>Tuning controllers to fix an arm vibration issue, the kind of bug you only find on real hardware.</figcaption>
+        </figure>
+
         <h3>Navigation</h3>
         <p>
-            Alongside the manipulation work, I spent time on the navigation stack — SLAM mapping with
+            Alongside the manipulation work, I spent time on the navigation stack: SLAM mapping with
             gmapping, testing <code>move_base</code> and then <strong>Nav2 with the MPPI controller</strong>
             in simulation and on the real robot, including obstacle-avoidance and wall-following runs. The
             robot has to get itself to and around the work area reliably before the arm can do anything.
@@ -365,8 +378,8 @@
 
         <h3>Hardware &amp; sensors</h3>
         <p>
-            A mobile manipulator is many subsystems — arm, base, elevator, scrubber, and a stack of
-            sensors — and a deployed robot only works if all of them do. I did bring-up and debugging
+            A mobile manipulator is many subsystems (arm, base, elevator, scrubber, and a stack of
+            sensors), and a deployed robot only works if all of them do. I did bring-up and debugging
             across <strong>Dynamixel servos, DC and stepper motors, a BLDC base motor, hall sensors
             (latching and distance), crush sensors, encoders, limit switches, and a magnetometer</strong>.
             Plus low-level system and performance work: a udev-rules wizard to automate device setup, and
@@ -377,13 +390,13 @@
         <div class="portrait-gallery">
             <figure>
                 <img src="../assets/media/peanut/dynamixel-joint.jpg" alt="Dynamixel motor joint close-up">
-                <figcaption>Dynamixel joint — end effector.</figcaption>
+                <figcaption>Dynamixel joint, end effector.</figcaption>
             </figure>
             <figure>
                 <video controls muted playsinline>
                     <source src="../assets/media/peanut/hall-sensor.mp4" type="video/mp4">
                 </video>
-                <figcaption>Hall sensor — end effector feedback.</figcaption>
+                <figcaption>Hall sensor, end effector feedback.</figcaption>
             </figure>
             <figure>
                 <video controls muted playsinline>
@@ -395,27 +408,27 @@
                 <video controls muted playsinline>
                     <source src="../assets/media/peanut/bldc-motor.mp4" type="video/mp4">
                 </video>
-                <figcaption>BLDC motor — base.</figcaption>
+                <figcaption>BLDC motor, base.</figcaption>
             </figure>
             <figure>
                 <video controls muted playsinline>
                     <source src="../assets/media/peanut/limit-switch.mp4" type="video/mp4">
                 </video>
-                <figcaption>Limit switch — arm position.</figcaption>
+                <figcaption>Limit switch, arm position.</figcaption>
             </figure>
         </div>
     </section>
 
     <!-- ── CLOSING ── -->
     <section>
-        <h2>[INSERT — title for your reflection]</h2>
-        <p>[INSERT — in your own words. What this place meant to you, what you learned, what surprised you about building robots for the real world. This is also where you can acknowledge that Peanut ran out of funding and wound down — it's an honest, human part of the story.]</p>
+        <h2>[INSERT: title for your reflection]</h2>
+        <p>[INSERT: in your own words. What this place meant to you, what you learned, what surprised you about building robots for the real world. This is also where you can acknowledge that Peanut ran out of funding and wound down, an honest, human part of the story.]</p>
     </section>
 
     <figure class="fig-row one">
         <img src="../assets/media/peanut/arm-party.jpg"
              alt="Team gathered around fixing broken robot arms together">
-        <figcaption>Arm party — when several arms needed fixing, everyone got together and did it.</figcaption>
+        <figcaption>Arm party: when several arms needed fixing, everyone got together and did it.</figcaption>
     </figure>
 
     <section>
