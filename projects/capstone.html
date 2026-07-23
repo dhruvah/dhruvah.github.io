@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capstone: Automated Eating Apparatus · Harsh Dhruva</title>
+    <meta name="description" content="Senior capstone at Rose-Hulman: a low-cost automated eating apparatus for a quadriplegic client, built over three prototypes and shown at the E²Festa in South Korea.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<article class="project-page">
+    <a href="./rose-hulman.html" class="project-back">Rose-Hulman projects</a>
+
+    <header class="project-page-header">
+        <div class="project-page-category-with-logo">
+            <img src="../assets/media/about/rose-hulman-seal.png" alt="Rose-Hulman Institute of Technology" class="project-company-logo">
+            <span class="project-page-category">Assistive Robotics · Rose-Hulman Capstone</span>
+        </div>
+        <h1>An automated eating apparatus for a quadriplegic patient.</h1>
+        <p class="project-page-summary">
+            A year-long senior capstone with a team of four. We built a fully working prototype for
+            about $150, compared to commercial robotic feeding arms that cost $5,000 to $10,000, and
+            represented Rose-Hulman and the USA at the E²Festa in South Korea.
+        </p>
+    </header>
+
+    <div class="project-meta">
+        <div class="project-meta-item">
+            <span class="label">Role</span>
+            <span class="value">Design + Build (team of 4)</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Timeline</span>
+            <span class="value">2019 to 2020</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Context</span>
+            <span class="value">Senior Capstone</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Stack</span>
+            <span class="value">Arduino MEGA · Steppers · Linear Actuator · CAD</span>
+        </div>
+    </div>
+
+    <!-- ── INTRO ── -->
+    <section>
+        <p>
+            Our team of four developed an automated eating apparatus for a quadriplegic patient. Our
+            client, Mr. Gary Wallace, met with an accident that left him quadriplegic, with very
+            limited movement in all four limbs. He required assistance with every daily task,
+            including eating meals three times a day. We created a fully operating prototype that cost
+            about $150 to develop, compared to other robotic arm devices on the market for the same
+            task that cost $5,000 to $10,000.
+        </p>
+        <p>
+            The work was divided across three quarters of the academic year: Fall, Winter, and
+            Spring. Over that year we built three prototypes, each one addressing the shortcomings of
+            the last.
+        </p>
+    </section>
+
+    <figure class="fig-row one">
+        <img src="../assets/media/capstone/gary.png" alt="Our client, Gary Wallace">
+        <figcaption>Our client, Mr. Gary Wallace.</figcaption>
+    </figure>
+
+    <!-- ── FALL ── -->
+    <section>
+        <h2>Fall quarter</h2>
+        <p>
+            To approach the problem, our team fabricated a first prototype. We wanted a device that
+            is easy to assemble, clean, and transport, so we built one with individual spoons attached
+            to a rotating base and raised by a linkage system, with an electromagnet to catch a spoon
+            and bring it to the user's mouth.
+        </p>
+        <p>
+            The spoons are detachable, so different foods can be placed on each one. The housing holds
+            the electronics: an Arduino MEGA, a stepper motor to rotate the spoons to the correct
+            positions, a second stepper motor with a lead screw driving the linkage system, the motor
+            drivers, and the wiring.
+        </p>
+    </section>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/capstone/fall1.png" alt="Fall prototype CAD, full assembly">
+            <figcaption>The first prototype: rotating spoon base and linkage.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/capstone/fall2.png" alt="Fall prototype CAD, mechanism detail">
+            <figcaption>Electromagnet catch and lifting linkage.</figcaption>
+        </figure>
+    </div>
+
+    <figure class="fig-row one">
+        <img src="../assets/media/capstone/fall3.png" alt="Fall prototype CAD, housing and electronics">
+        <figcaption>The housing holding the Arduino, stepper motors, and drivers.</figcaption>
+    </figure>
+
+    <section>
+        <p>
+            Our team was selected to represent Rose-Hulman and the USA at the Capstone Design
+            Competition at the E²Festa in South Korea, the largest engineering festival in the
+            country. We placed 10th while competing with hundreds of teams, and were recognized for
+            our unique design and the prototype's low production cost of around $80.
+        </p>
+    </section>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/capstone/korea1.jpg" alt="Team at the E²Festa capstone competition in South Korea">
+            <figcaption>Representing Rose-Hulman and the USA at the E²Festa in South Korea.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/capstone/korea2.jpg" alt="The prototype on display at the E²Festa">
+            <figcaption>The prototype on display at the competition.</figcaption>
+        </figure>
+    </div>
+
+    <!-- ── WINTER ── -->
+    <section>
+        <h2>Winter quarter</h2>
+        <p>
+            For the second prototype we upgraded the rotating mechanism and made the spoons easier to
+            remove by attaching them magnetically, rather than seating them in pre-defined slots. We
+            redesigned the spoon to hold roughly as much food as an average person eats off a plate,
+            updated the housing, and fabricated aluminum links for more stability in the mechanism.
+        </p>
+    </section>
+
+    <figure class="fig-row one">
+        <img src="../assets/media/capstone/winter1.png" alt="Winter prototype CAD, full assembly">
+        <figcaption>The winter prototype, with the upgraded rotating mechanism.</figcaption>
+    </figure>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/capstone/winter2.png" alt="Winter prototype, magnetic spoon attachment">
+            <figcaption>Magnetic spoon attachment, replacing the fixed slots.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/capstone/winter3.png" alt="Winter prototype, aluminum links">
+            <figcaption>Aluminum links for a more stable mechanism.</figcaption>
+        </figure>
+    </div>
+
+    <!-- ── SPRING ── -->
+    <section>
+        <h2>Spring quarter</h2>
+        <p>
+            For the final prototype, we switched from a stepper motor with a lead screw to a linear
+            actuator, giving the linkage system more power to actuate. We swapped the joystick for a
+            smaller analog joystick that mounts to the client's chair so it can be used with ease.
+        </p>
+        <p>
+            We added a limit switch with a roller for precise spoon positioning, and a cover to keep
+            food out of the housing that held the electronics. The final prototype used a new spoon
+            design with three spoon heads, reducing the total number of spoons, and adjustable legs to
+            handle the different table heights around the client's home.
+        </p>
+    </section>
+
+    <figure class="fig-row one">
+        <img src="../assets/media/capstone/spring1.png" alt="Spring prototype CAD, full assembly">
+        <figcaption>The final prototype, with a linear actuator and three-head spoon.</figcaption>
+    </figure>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/capstone/spring2.png" alt="Spring prototype, limit switch detail">
+            <figcaption>Limit switch with a roller for precise positioning.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/capstone/spring3.png" alt="Spring prototype, three-head spoon design">
+            <figcaption>The three-head spoon design and adjustable legs.</figcaption>
+        </figure>
+    </div>
+
+    <figure class="fig-row one">
+        <img src="../assets/media/capstone/final1.png" alt="The completed final prototype">
+        <figcaption>The completed final prototype.</figcaption>
+    </figure>
+
+    <!-- ── REFLECTION ── -->
+    <section>
+        <h2>Reflection</h2>
+        <p>
+            Overall, we succeeded in building a working prototype that explores an alternative way to
+            eat. Because of COVID-19 during the final quarter, we weren't able to add and optimize
+            several features that would have improved the design. Sadly, our client passed away right
+            before we completed the final prototype. With more research and development, I believe
+            this approach could help many people living with paralysis who need assistance with one of
+            the most important activities in life: eating.
+        </p>
+    </section>
+
+    <section>
+        <h2>Work pack</h2>
+        <p>
+            The link below is a work pack for the final prototype, containing a parts list, part
+            descriptions, engineering drawings, assembly instructions, and the project code.
+        </p>
+        <div class="project-page-tags">
+            <span class="tag">Arduino MEGA</span>
+            <span class="tag">Stepper Motors</span>
+            <span class="tag">Linear Actuator</span>
+            <span class="tag">Electromagnets</span>
+            <span class="tag">Mechanical Design</span>
+            <span class="tag">CAD</span>
+            <span class="tag">Assistive Robotics</span>
+        </div>
+        <div class="project-links">
+            <a href="https://docs.google.com/document/d/1s8KHg6yI-dU0KyfgtHoei1mhYxFEDVfeGZKbxttXNFY/edit?usp=sharing" target="_blank" class="btn">Project work pack ↗</a>
+        </div>
+    </section>
+
+    <nav class="project-nav">
+        <a href="./rose-hulman.html">
+            <div class="nav-label">← Back to</div>
+            <div class="nav-title">Rose-Hulman Projects</div>
+        </a>
+        <a href="../index.html" class="next">
+            <div class="nav-label">Next →</div>
+            <div class="nav-title">All work</div>
+        </a>
+    </nav>
+</article>
+
+<div id="site-footer"></div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
