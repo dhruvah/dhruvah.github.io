@@ -115,100 +115,28 @@
     <div class="coursework-group">
         <h2>Computer vision (16-720)</h2>
 
-        <div class="coursework-item">
-            <span class="coursework-course">16-720 · Computer Vision</span>
-            <h3>Spatial pyramid matching for scene classification</h3>
-            <p>
-                Scene classifier that identifies the location type of a photograph by combining a
-                bag-of-visual-words representation with spatial pyramid matching, capturing both
-                global and local spatial structure to improve accuracy over flat bag-of-words.
-            </p>
-            <div class="project-page-tags">
-                <span class="tag">Bag of Words</span>
-                <span class="tag">Spatial Pyramid</span>
-                <span class="tag">Classification</span>
+        <a href="./computer-vision.html" class="project-card featured">
+            <div class="project-thumb">
+                <img src="../assets/media/cv/cv2-4.png" alt="Computer vision projects" loading="lazy">
             </div>
-        </div>
-
-        <div class="coursework-item">
-            <span class="coursework-course">16-720 · Computer Vision</span>
-            <h3>Augmented reality with planar homographies</h3>
-            <p>
-                Detected corresponding feature points between image pairs with BRIEF descriptors,
-                computed the homography between them, and warped virtual content onto a real object —
-                first overlaying a book cover onto a textbook, then extending it frame-by-frame to
-                video.
-            </p>
-            <div class="project-page-tags">
-                <span class="tag">BRIEF</span>
-                <span class="tag">Homography</span>
-                <span class="tag">AR</span>
+            <div class="project-body">
+                <div class="project-category">16-720 · Computer Vision</div>
+                <div class="project-title">Computer vision projects</div>
+                <div class="project-desc">
+                    Six projects from CMU's graduate computer vision course: spatial pyramid scene
+                    classification, augmented reality with planar homographies, Lucas-Kanade tracking,
+                    two-view 3D reconstruction, neural networks for character recognition, and
+                    photometric stereo.
+                </div>
+                <div class="project-tags">
+                    <span class="tag">Homographies</span>
+                    <span class="tag">Optical Flow</span>
+                    <span class="tag">3D Reconstruction</span>
+                    <span class="tag">CNNs</span>
+                    <span class="tag">Photometric Stereo</span>
+                </div>
             </div>
-        </div>
-
-        <div class="coursework-item">
-            <span class="coursework-course">16-720 · Computer Vision</span>
-            <h3>Lucas-Kanade tracking</h3>
-            <p>
-                Optical-flow tracking across video: a 2D translation tracker that handles template
-                drift, dominant-motion estimation to find moving objects in aerial footage despite
-                camera motion, and an inverse-compositional variant for efficiency. Tested on ants
-                and vehicles in non-stationary footage.
-            </p>
-            <div class="project-page-tags">
-                <span class="tag">Optical Flow</span>
-                <span class="tag">Tracking</span>
-                <span class="tag">Motion Estimation</span>
-            </div>
-        </div>
-
-        <div class="coursework-item">
-            <span class="coursework-course">16-720 · Computer Vision</span>
-            <h3>Two-view 3D reconstruction</h3>
-            <p>
-                Recovered 3D structure from two viewpoints: matched features, estimated the
-                fundamental matrix with the eight-point algorithm, derived the essential matrix from
-                calibration, and triangulated correspondences into a point cloud — with automatic
-                matching driven by epipolar constraints.
-            </p>
-            <div class="project-page-tags">
-                <span class="tag">Eight-Point</span>
-                <span class="tag">Epipolar Geometry</span>
-                <span class="tag">Triangulation</span>
-            </div>
-        </div>
-
-        <div class="coursework-item">
-            <span class="coursework-course">16-720 · Computer Vision</span>
-            <h3>Neural networks for character recognition</h3>
-            <p>
-                Handwritten-character recognition on NIST36. A from-scratch fully-connected network
-                reached 76% test accuracy via morphological segmentation and bounding-box extraction;
-                a PyTorch CNN improved this to 90.2% validation accuracy. A trained autoencoder for
-                image compression reached an average PSNR of 15.68.
-            </p>
-            <div class="project-page-tags">
-                <span class="tag">PyTorch</span>
-                <span class="tag">CNN</span>
-                <span class="tag">Autoencoders</span>
-            </div>
-        </div>
-
-        <div class="coursework-item">
-            <span class="coursework-course">16-720 · Computer Vision</span>
-            <h3>Photometric stereo</h3>
-            <p>
-                Recovered shape from appearance under varying illumination. Calibrated photometric
-                stereo extracted albedo and surface normals, integrated via Frankot-Chellappa into a
-                depth map. The uncalibrated case estimated lighting with SVD and ran into the
-                bas-relief ambiguity, where a family of depth configurations produce identical images.
-            </p>
-            <div class="project-page-tags">
-                <span class="tag">Surface Normals</span>
-                <span class="tag">SVD</span>
-                <span class="tag">Bas-Relief Ambiguity</span>
-            </div>
-        </div>
+        </a>
     </div>
 
     <!-- ===================== SLAM ===================== -->

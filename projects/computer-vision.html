@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Computer Vision Projects · Harsh Dhruva</title>
+    <meta name="description" content="Graduate computer vision projects (CMU 16-720): scene classification, augmented reality, Lucas-Kanade tracking, 3D reconstruction, neural networks, and photometric stereo.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<article class="project-page">
+    <a href="./cmu.html" class="project-back">CMU projects</a>
+
+    <header class="project-page-header">
+        <div class="project-page-category-with-logo">
+            <img src="../assets/media/about/cmu-seal.png" alt="Carnegie Mellon University" class="project-company-logo">
+            <span class="project-page-category">Graduate Coursework · CMU 16-720</span>
+        </div>
+        <h1>Computer vision projects.</h1>
+        <p class="project-page-summary">
+            Six projects from the graduate Computer Vision course (16-720) at Carnegie Mellon:
+            scene classification, augmented reality, optical-flow tracking, two-view 3D
+            reconstruction, neural networks for character recognition, and photometric stereo.
+        </p>
+    </header>
+
+    <div class="project-meta">
+        <div class="project-meta-item">
+            <span class="label">Course</span>
+            <span class="value">16-720 Computer Vision</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Level</span>
+            <span class="value">Graduate</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">School</span>
+            <span class="value">Carnegie Mellon</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Focus</span>
+            <span class="value">Perception · Geometry · Learning</span>
+        </div>
+    </div>
+
+    <!-- ── 1. SPATIAL PYRAMID ── -->
+    <section>
+        <h2>1. Spatial pyramid matching for scene classification</h2>
+        <p>
+            Given an image, the program determines the scene where it was taken. The image
+            representation is built on a bag-of-visual-words approach, using spatial pyramid matching
+            to capture both global and local spatial structure when classifying the scene category. An
+            overview of the process used to build the classifier is shown below.
+        </p>
+    </section>
+
+    <figure class="fig-row one">
+        <img src="../assets/media/cv/cv1.png" alt="Bag of visual words scene classification overview">
+        <figcaption>Building the scene-classification system from a bag of visual words.</figcaption>
+    </figure>
+    <figure class="fig-row one">
+        <img src="../assets/media/cv/cv1-1.png" alt="Spatial pyramid matching representation">
+        <figcaption>Spatial pyramid matching over the visual-word representation.</figcaption>
+    </figure>
+
+    <!-- ── 2. AUGMENTED REALITY ── -->
+    <section>
+        <h2>2. Augmented reality with planar homographies</h2>
+        <p>
+            An augmented-reality application built on planar homographies. After finding point
+            correspondences between two images with a BRIEF descriptor, I estimated a homography
+            between them and used it to warp and overlay content. To test it, I computed a homography
+            between a textbook cover and the textbook sitting on a table, then warped a Harry Potter
+            cover and overlaid it onto the textbook.
+        </p>
+    </section>
+
+    <div class="media-grid media-grid-3">
+        <figure>
+            <img src="../assets/media/cv/cv_cover.jpg" alt="Textbook cover reference image">
+            <figcaption>Textbook cover.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/cv/cv_desk.png" alt="Textbook on a desk">
+            <figcaption>Textbook on the table.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/cv/hp_cover.jpg" alt="Harry Potter cover to overlay">
+            <figcaption>Cover to overlay.</figcaption>
+        </figure>
+    </div>
+
+    <p>
+        The BRIEF descriptor supplied the corresponding matching points used to compute the
+        homography. The cover was then warped and overlaid onto the textbook image to produce the
+        result below.
+    </p>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/cv/cv2-1.png" alt="BRIEF descriptor point matches">
+            <figcaption>BRIEF descriptor matches.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/cv/cv2-2.png" alt="BRIEF descriptor point matches after tuning">
+            <figcaption>Matches after parameter tuning.</figcaption>
+        </figure>
+    </div>
+
+    <figure class="fig-row one">
+        <img src="../assets/media/cv/cv2-4.png" alt="Warped cover overlaid on the textbook">
+        <figcaption>The warped cover overlaid onto the textbook.</figcaption>
+    </figure>
+
+    <p>
+        With the homographies working well, I extended it to a full AR application, overlaying a video
+        onto the book by computing a homography frame by frame.
+    </p>
+
+    <figure class="fig-row one">
+        <video controls muted playsinline>
+            <source src="../assets/media/cv/ar.mp4" type="video/mp4">
+        </video>
+        <figcaption>The AR result: a video overlaid onto the book, frame by frame.</figcaption>
+    </figure>
+
+    <!-- ── 3. LUCAS-KANADE ── -->
+    <section>
+        <h2>3. Lucas-Kanade tracking</h2>
+        <p>
+            I implemented the Lucas-Kanade method, a widely used approach for tracking by estimating
+            optical flow. The first tracker follows a moving template in the scene, implemented as 2D
+            tracking with a pure-translation warp and correction for the template-drift problem. The
+            second estimates the dominant affine motion across a sequence of images and then identifies
+            the pixels that correspond to moving objects, tested on aerial footage of moving ants and
+            of vehicles seen from a non-stationary camera. Finally, I added the inverse-compositional
+            extension of Lucas-Kanade to make the tracking more efficient.
+        </p>
+    </section>
+
+    <!-- ── 4. 3D RECONSTRUCTION ── -->
+    <section>
+        <h2>4. Two-view 3D reconstruction</h2>
+        <p>
+            The goal is a 3D reconstruction of an object from two different images. After finding
+            corresponding points, I estimated the fundamental matrix with the eight-point algorithm,
+            then combined it with the calibrated camera intrinsics to compute the essential matrix,
+            and triangulated the 2D correspondences into a 3D metric reconstruction. I then added
+            automatic point matching using the epipolar constraint and visualized the result as a
+            point cloud. In the figure below, points selected on the left image lie on the
+            corresponding epipolar lines on the right.
+        </p>
+    </section>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/cv/im1.png" alt="Input view 1">
+            <figcaption>Input view 1.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/cv/im2.png" alt="Input view 2">
+            <figcaption>Input view 2.</figcaption>
+        </figure>
+    </div>
+
+    <figure class="fig-row one">
+        <img src="../assets/media/cv/cv4-1.png" alt="Epipolar constraint point correspondences">
+        <figcaption>A selected point and its corresponding epipolar line in the second view.</figcaption>
+    </figure>
+    <figure class="fig-row one">
+        <img src="../assets/media/cv/cv4-2.png" alt="3D reconstructed point cloud">
+        <figcaption>The triangulated 3D point cloud of the object.</figcaption>
+    </figure>
+
+    <!-- ── 5. NEURAL NETWORKS ── -->
+    <section>
+        <h2>5. Neural networks for character recognition</h2>
+        <p>
+            A fully connected neural network that recognizes handwritten letters, trained on the
+            NIST36 dataset to about 76% test accuracy. Given an image of text, the first step extracts
+            each character by drawing a bounding box around it.
+        </p>
+    </section>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/cv/textboxes.png" alt="Detected character bounding boxes">
+            <figcaption>Characters detected with bounding boxes.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/cv/cv5-1.png" alt="Bounding boxes over a line of text">
+            <figcaption>Boxes grouped and sorted by text line.</figcaption>
+        </figure>
+    </div>
+
+    <p>
+        The pipeline blurs, thresholds, and applies opening morphology to separate character pixels
+        from the background, finds connected groups of character pixels and boxes each one, groups the
+        boxes by the line of text they belong to and sorts them, then resizes each box to the network
+        input and classifies it. The trained network output is shown below, which worked well aside
+        from a few misclassifications, along with the training and validation accuracy.
+    </p>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/cv/outputnn.png" alt="Neural network classification output">
+            <figcaption>Classified output from the network.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/cv/normalacc.png" alt="Training and validation accuracy plot">
+            <figcaption>Training and validation accuracy.</figcaption>
+        </figure>
+    </div>
+
+    <p>
+        <strong>Image compression with autoencoders.</strong> An autoencoder is a network trained to
+        approximately copy its input to its output, which is a useful way to learn compressed
+        representations. By changing the activation function and adding momentum for speed, I got the
+        output below, with an average PSNR (peak signal-to-noise ratio) of 15.68 across the images.
+    </p>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/cv/autoencoder1.png" alt="Autoencoder input">
+            <figcaption>Autoencoder input.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/cv/autoencoder2.png" alt="Autoencoder reconstruction">
+            <figcaption>Autoencoder reconstruction.</figcaption>
+        </figure>
+    </div>
+
+    <p>
+        To improve on the fully connected network, I also trained a convolutional neural network in
+        PyTorch on the same NIST36 dataset. The CNN did significantly better, reaching 90.2%
+        validation accuracy versus the 76% of the fully connected network.
+    </p>
+
+    <figure class="fig-row one">
+        <img src="../assets/media/cv/cnnaccuracy.png" alt="CNN accuracy plot">
+        <figcaption>Validation accuracy of the PyTorch CNN.</figcaption>
+    </figure>
+
+    <!-- ── 6. PHOTOMETRIC STEREO ── -->
+    <section>
+        <h2>6. Photometric stereo</h2>
+        <p>
+            Photometric stereo recovers the shape of an object from its appearance under a set of
+            lighting directions. This implementation assumes a Lambertian object imaged with an
+            orthographic camera.
+        </p>
+
+        <h3>Rendering the n-dot-l lighting</h3>
+        <p>
+            For a fully reflective Lambertian sphere centered at the origin, with an orthographic
+            camera placed away from it and three different incoming lighting directions, I simulate the
+            sphere's appearance under the n-dot-l model.
+        </p>
+    </section>
+
+    <figure class="fig-row one">
+        <img src="../assets/media/cv/n-dot-l-rendering.png" alt="n-dot-l lighting rendering setup">
+        <figcaption>The n-dot-l rendering setup: a Lambertian sphere and an orthographic camera.</figcaption>
+    </figure>
+
+    <div class="media-grid media-grid-3">
+        <figure>
+            <img src="../assets/media/cv/rendering1.png" alt="Sphere rendered under lighting direction 1">
+            <figcaption>Lighting direction 1.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/cv/rendering2.png" alt="Sphere rendered under lighting direction 2">
+            <figcaption>Lighting direction 2.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/cv/rendering3.png" alt="Sphere rendered under lighting direction 3">
+            <figcaption>Lighting direction 3.</figcaption>
+        </figure>
+    </div>
+
+    <section>
+        <h3>Calibrated photometric stereo</h3>
+        <p>
+            Given seven images of a face lit from different directions, with the ground-truth lighting
+            directions, I invert the image formation model. From the images I recover the surface
+            albedo, which indicates how much light hitting the surface is reflected rather than
+            absorbed, and the surface normals, which encode the depth. The albedo (left) and the
+            false-color surface normals (right) are shown below. Integrating the normals with a special
+            case of the Frankot-Chellappa algorithm to enforce integrability then gives the depth, and
+            the reconstructed shape of the face.
+        </p>
+    </section>
+
+    <figure class="fig-row one">
+        <img src="../assets/media/cv/albedonormal.png" alt="Recovered albedo and surface normals">
+        <figcaption>Recovered albedo (left) and false-color surface normals (right).</figcaption>
+    </figure>
+
+    <div class="media-grid media-grid-3">
+        <figure>
+            <img src="../assets/media/cv/depth1.png" alt="Depth reconstruction view 1">
+            <figcaption>Reconstructed shape, view 1.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/cv/depth2.png" alt="Depth reconstruction view 2">
+            <figcaption>View 2.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/cv/depth3.png" alt="Depth reconstruction view 3">
+            <figcaption>View 3.</figcaption>
+        </figure>
+    </div>
+
+    <section>
+        <h3>Uncalibrated photometric stereo</h3>
+        <p>
+            With no given lighting directions, I estimate the shape directly from the face images. The
+            lighting directions are estimated by decomposing the matrix with SVD, which introduces a
+            linear ambiguity known as the bas-relief ambiguity. Bas-relief is the old sculpting
+            technique of flattened figures protruding from a wall that, viewed from the right angle,
+            look full-depth. After enforcing integrability with Frankot-Chellappa, the reconstruction
+            looks very similar to the calibrated one, but is only resolved up to a family of
+            transformations: for any parameters greater than zero there is a set of integrable
+            pseudonormals producing the same appearance. Examples of varying those parameters are shown
+            below, some of which look identical to the original when viewed from a particular angle.
+        </p>
+    </section>
+
+    <figure class="fig-row one">
+        <img src="../assets/media/cv/uncaldepth.png" alt="Uncalibrated depth reconstruction">
+        <figcaption>Uncalibrated reconstruction, recovered without the lighting directions.</figcaption>
+    </figure>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/cv/basrelief1.png" alt="Bas-relief ambiguity variation 1">
+            <figcaption>Varying the bas-relief parameters, example 1.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/cv/basrelief2.png" alt="Bas-relief ambiguity variation 2">
+            <figcaption>Example 2.</figcaption>
+        </figure>
+    </div>
+
+    <section>
+        <div class="project-page-tags">
+            <span class="tag">Homographies</span>
+            <span class="tag">BRIEF</span>
+            <span class="tag">Optical Flow</span>
+            <span class="tag">Epipolar Geometry</span>
+            <span class="tag">Triangulation</span>
+            <span class="tag">PyTorch</span>
+            <span class="tag">CNNs</span>
+            <span class="tag">Autoencoders</span>
+            <span class="tag">Photometric Stereo</span>
+        </div>
+    </section>
+
+    <nav class="project-nav">
+        <a href="./cmu.html">
+            <div class="nav-label">← Back to</div>
+            <div class="nav-title">CMU Projects</div>
+        </a>
+        <a href="./research.html" class="next">
+            <div class="nav-label">Next →</div>
+            <div class="nav-title">Robotic Post-Processing</div>
+        </a>
+    </nav>
+</article>
+
+<div id="site-footer"></div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
