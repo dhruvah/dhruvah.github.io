@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robotic Post-Processing Research · Harsh Dhruva</title>
+    <meta name="description" content="NASA ULI graduate research at CMU CERLAB: a robotic metrology system for coverage-planned scanning and quality inspection of additively manufactured parts.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<article class="project-page">
+    <a href="./cmu.html" class="project-back">CMU projects</a>
+
+    <header class="project-page-header">
+        <div class="project-page-category-with-logo">
+            <img src="../assets/media/about/cmu-seal.png" alt="Carnegie Mellon University" class="project-company-logo">
+            <span class="project-page-category">Graduate Research · CMU CERLAB</span>
+        </div>
+        <h1>Robotic post-processing of additive-manufacturing parts.</h1>
+        <p class="project-page-summary">
+            NASA ULI-sponsored research at Carnegie Mellon's CERLAB on a robotic metrology system for
+            the quality inspection of complex, custom 3D-printed parts, planning coverage for a robot
+            arm and turntable so a line-scanner can fully scan an arbitrary object.
+        </p>
+    </header>
+
+    <div class="project-meta">
+        <div class="project-meta-item">
+            <span class="label">Role</span>
+            <span class="value">Graduate Researcher</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Timeline</span>
+            <span class="value">2020 to 2022</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Lab</span>
+            <span class="value">CERLAB · Dr. Kenji Shimada</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Sponsor</span>
+            <span class="value">NASA ULI</span>
+        </div>
+    </div>
+
+    <!-- ── INTRO ── -->
+    <section>
+        <p>
+            As a graduate research student at the Computational Engineering and Robotics Lab (CERLAB)
+            at Carnegie Mellon University, I worked on a robotic system for the post-processing of
+            additive-manufacturing parts. The project was sponsored by the NASA University Leadership
+            Initiative (ULI), and is aimed one day at processing the kind of complex, custom-made parts
+            needed for spacecraft and satellites, where each part is one-off and can't be checked with
+            a fixed jig.
+        </p>
+        <p>
+            My work centered on the <strong>quality inspection</strong> side of the system: developing
+            a way to produce an accurate scan of a custom, complex part. There are several pieces to
+            that, but the two main research challenges are <strong>scanning path planning</strong> and
+            <strong>robot motion planning</strong>.
+        </p>
+        <div class="project-links">
+            <a href="https://engineering.cmu.edu/news-events/news/2019/06/28-nasa-uli.html" target="_blank" class="btn">CMU news: NASA ULI ↗</a>
+        </div>
+    </section>
+
+    <!-- ── OVERVIEW ── -->
+    <section>
+        <h2>The system</h2>
+        <p>
+            The idea is to inspect the quality of a 3D-printed part with the combined motion of a
+            robotic arm and a turntable, using a 2D line-scanner for precise measurement. The arm gives
+            the dexterity to reach complicated shapes; the turntable adds a redundant degree of freedom
+            that speeds up inspection. Line-scanners give more precise measurement than depth cameras,
+            at the cost of a small field of view.
+        </p>
+    </section>
+
+    <figure class="fig-row one">
+        <img src="../assets/media/research/research1.png" alt="Overview: robotic arm, turntable, depth camera, and line-scanner for quality inspection of 3D-printed parts">
+        <figcaption>Quality inspection with a robot arm, a turntable, and a 2D line-scanner.</figcaption>
+    </figure>
+
+    <!-- ── CHALLENGES ── -->
+    <section>
+        <h2>Research challenges</h2>
+        <p>
+            Two hard problems sit at the core. In <strong>scanning path planning</strong>, a
+            line-scanner's limited field of view means you need a long, continuous scanning trajectory
+            to fully cover the target. In <strong>robot motion planning</strong>, the redundant degree
+            of freedom adds flexibility and dexterity, but it also enlarges the search space for
+            finding an optimal, collision-free motion.
+        </p>
+    </section>
+
+    <figure class="fig-row one">
+        <img src="../assets/media/research/research2.png" alt="Two research challenges: scanning path planning and robot motion planning">
+        <figcaption>The two challenges: covering the object with a long scan path, and planning the arm's motion in a large search space.</figcaption>
+    </figure>
+
+    <!-- ── PIPELINE ── -->
+    <section>
+        <h2>Scanning trajectory pipeline</h2>
+        <p>
+            The pipeline breaks a smooth scanning trajectory into sub-paths that move the scanner to
+            fully cover a 3D-printed part. It runs in three stages: <strong>target registration</strong>,
+            locating the part with a RealSense; <strong>viewpoint generation</strong>, decimating the
+            mesh so each surface becomes a viewpoint; and <strong>path planning</strong>, connecting the
+            viewpoints in the shortest time, with view-path primitives generated across each surface.
+        </p>
+    </section>
+
+    <figure class="fig-row one">
+        <img src="../assets/media/research/research3.png" alt="Scanning trajectory planning pipeline: target registration, viewpoint generation, path planning">
+        <figcaption>The scanning trajectory pipeline: target registration, viewpoint generation, and path planning.</figcaption>
+    </figure>
+
+    <!-- ── POSTER ── -->
+    <section>
+        <h2>Research poster</h2>
+        <p>
+            The work came together in a research poster, <strong>Coordinated Coverage Planning for
+            Robotic Metrology</strong>, with Dr. Kenji Shimada. The motion planning uses a sampling-based
+            Probabilistic Roadmap (PRM) coordinated with discrete turntable orientations, and the order
+            in which scan points are visited is optimized as a Traveling Salesman Problem over the
+            orientations reachable by the arm. The hardware setup is a 6-DOF DENSO arm, a single-axis
+            turntable, a RealSense depth camera, and a &micro;-epsilon laser line-scanner, simulated in
+            Gazebo and Rviz on ROS.
+        </p>
+    </section>
+
+    <figure class="fig-row one">
+        <img src="../assets/media/research/research4.png" alt="Research poster: Coordinated Coverage Planning for Robotic Metrology">
+        <figcaption>The full research poster (Coordinated Coverage Planning for Robotic Metrology).</figcaption>
+    </figure>
+
+    <section>
+        <div class="project-page-tags">
+            <span class="tag">Motion Planning</span>
+            <span class="tag">Path Planning</span>
+            <span class="tag">PRM</span>
+            <span class="tag">TSP</span>
+            <span class="tag">ROS</span>
+            <span class="tag">Gazebo</span>
+            <span class="tag">IKFAST</span>
+            <span class="tag">RealSense</span>
+            <span class="tag">Line Scanning</span>
+        </div>
+        <div class="project-links">
+            <a href="../assets/media/research/research4.png" target="_blank" class="btn">View full poster ↗</a>
+            <a href="https://engineering.cmu.edu/news-events/news/2019/06/28-nasa-uli.html" target="_blank" class="btn">CMU news: NASA ULI ↗</a>
+        </div>
+    </section>
+
+    <nav class="project-nav">
+        <a href="./cmu.html">
+            <div class="nav-label">← Back to</div>
+            <div class="nav-title">CMU Projects</div>
+        </a>
+        <a href="./moonranger.html" class="next">
+            <div class="nav-label">Next →</div>
+            <div class="nav-title">MoonRanger</div>
+        </a>
+    </nav>
+</article>
+
+<div id="site-footer"></div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
