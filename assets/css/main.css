@@ -578,6 +578,14 @@ nav.site-nav.scrolled {
     padding-top: 2.5rem;
     border-top: 1px solid var(--border);
 }
+.memorial-photo {
+    display: block;
+    width: 190px;
+    max-width: 55%;
+    margin: 0 auto 1.5rem;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+}
 .memorial .memorial-label {
     font-family: var(--mono);
     font-size: 0.72rem;
