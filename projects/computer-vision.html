@@ -123,12 +123,12 @@
         onto the book by computing a homography frame by frame.
     </p>
 
-    <figure class="fig-row one">
-        <video controls muted playsinline>
-            <source src="../assets/media/cv/ar.mp4" type="video/mp4">
-        </video>
-        <figcaption>The AR result: a video overlaid onto the book, frame by frame.</figcaption>
-    </figure>
+    <div class="video-embed">
+        <iframe src="https://www.youtube.com/embed/w86tmwwb-Ck"
+            title="AR overlay with planar homographies" loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
+    </div>
 
     <!-- ── 3. LUCAS-KANADE ── -->
     <section>
@@ -143,6 +143,45 @@
             extension of Lucas-Kanade to make the tracking more efficient.
         </p>
     </section>
+
+    <div class="video-grid">
+        <figure>
+            <div class="video-embed">
+                <iframe src="https://www.youtube.com/embed/ACmUhkJlGrs"
+                    title="Lucas-Kanade template tracking" loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+            </div>
+            <figcaption>Template tracking with a pure-translation warp.</figcaption>
+        </figure>
+        <figure>
+            <div class="video-embed">
+                <iframe src="https://www.youtube.com/embed/nmxPtPmHi_g"
+                    title="Ant tracking with dominant affine motion" loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+            </div>
+            <figcaption>Tracking ants via dominant affine motion.</figcaption>
+        </figure>
+        <figure>
+            <div class="video-embed">
+                <iframe src="https://www.youtube.com/embed/9nXfYtPFNho"
+                    title="Vehicle tracking with dominant affine motion" loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+            </div>
+            <figcaption>Tracking vehicles via dominant affine motion.</figcaption>
+        </figure>
+        <figure>
+            <div class="video-embed">
+                <iframe src="https://www.youtube.com/embed/iiOVbAqZz5g"
+                    title="Aerial tracking from a non-stationary camera" loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+            </div>
+            <figcaption>Moving objects in aerial footage from a non-stationary camera.</figcaption>
+        </figure>
+    </div>
 
     <!-- ── 4. 3D RECONSTRUCTION ── -->
     <section>
