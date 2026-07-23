@@ -302,6 +302,13 @@ nav.site-nav.scrolled {
 .project-card:hover .project-thumb video {
     transform: scale(1.03);
 }
+/* Card thumbnail: centered logo instead of a cropped photo */
+.project-thumb.thumb-logo { background: var(--bg-elevated); }
+.project-thumb.thumb-logo img {
+    width: auto; height: auto;
+    max-width: 46%; max-height: 48%;
+    object-fit: contain;
+}
 .project-thumb-placeholder {
     font-size: 3rem;
     opacity: 0.4;
