@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tripawd — Harsh Dhruva</title>
-    <meta name="description" content="A three-legged robotic dog comparing natural and trajectory-optimized gaits.">
+    <title>Tripawd · Harsh Dhruva</title>
+    <meta name="description" content="A three-legged robot dog built to test whether an amputee dog's natural gait is already optimal for cost of travel, versus a trajectory-optimized gait.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -15,15 +15,15 @@
 <div id="site-header"></div>
 
 <article class="project-page">
-    <a href="../index.html" class="project-back">All work</a>
+    <a href="./cmu.html" class="project-back">CMU projects</a>
 
     <header class="project-page-header">
-        <div class="project-page-category">Legged Locomotion · CMU</div>
-        <h1>Tripawd — the three-legged robot dog.</h1>
+        <div class="project-page-category">Bio-Inspired Locomotion · CMU</div>
+        <h1>Tripawd: the three-legged robot dog.</h1>
         <p class="project-page-summary">
-            Designed and built a functional three-legged robotic dog to explore a research
-            question: how does the natural gait of a tripod dog compare to a trajectory-optimized
-            gait in terms of cost of transport?
+            A three-legged robot dog built to test a bio-inspired question: is the natural walking
+            gait of an amputee three-legged dog already optimal for cost of travel, or can trajectory
+            optimization find a better one? Built in CMU's 24-775, Robot Design and Experimentation.
         </p>
     </header>
 
@@ -34,11 +34,11 @@
         </div>
         <div class="project-meta-item">
             <span class="label">Timeline</span>
-            <span class="value">Feb 2021 — May 2021</span>
+            <span class="value">Feb 2021 to May 2021</span>
         </div>
         <div class="project-meta-item">
             <span class="label">Context</span>
-            <span class="value">CMU Coursework</span>
+            <span class="value">CMU · 24-775</span>
         </div>
         <div class="project-meta-item">
             <span class="label">Stack</span>
@@ -46,47 +46,80 @@
         </div>
     </div>
 
+    <!-- DEMO VIDEO -->
+    <div class="video-embed">
+        <iframe src="https://www.youtube.com/embed/xsltkJcOU9c"
+            title="Tripawd: The Three-Legged Dog demonstration" loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
+    </div>
+
     <section>
         <h2>The research question</h2>
         <p>
-            When a four-legged dog loses a leg, it adapts — finding a natural gait pattern that
-            keeps it stable and mobile. The question is whether that adapted gait is actually
-            <strong>optimal</strong>, or just a local minimum biology settled on. Could
-            trajectory optimization find a faster, more energy-efficient gait the dog never
-            discovered?
+            Tripawd is a three-legged robot dog, developed at Carnegie Mellon in the course 24-775,
+            Robot Design and Experimentation. Our team wanted to explore a question about the gait of a
+            three-legged dog: how optimally does a three-legged dog's natural gait perform in terms of
+            cost of travel, compared to a gait found through trajectory optimization?
+        </p>
+        <p>
+            Stated formally, the question we set out to answer was whether applying the walking gait of
+            an amputee three-legged dog to a quadruped robot missing the corresponding leg would
+            optimize the robot's cost of travel.
         </p>
     </section>
 
     <section>
-        <h2>What I built</h2>
+        <h2>Biological inspiration and control</h2>
         <p>
-            A three-legged platform driven by Dynamixel servos, with each leg a simple
-            multi-link chain. The hard part of a tripod isn't the legs — it's that with only three
-            contact points, the robot is always one lifted leg away from being statically unstable.
-            Unlike a quadruped, it can't just keep three feet on the ground and swing the fourth;
-            every step has to actively manage where the center of mass sits relative to the
-            remaining support. That constraint drove most of the mechanical layout and gait design.
+            Our biological inspiration was the motion of an amputee three-legged dog. When a dog loses
+            a leg, it adapts into a natural gait that keeps it stable and mobile, and we wanted to know
+            whether that adapted gait is actually efficient, or just a local minimum that biology
+            settled on.
+        </p>
+        <p>
+            We drew on prior work in quadruped control. One useful design principle is the
+            gravitationally decoupled actuator (GDA), which addresses energy efficiency, design, and
+            adaptive gait control in quadruped walking vehicles. We also looked at model-reference
+            adaptive control (MRAC), which adapts a control law through parameter changes against a
+            predefined reference plant. The catch is that losing a leg changes the plant model
+            completely, so MRAC has no valid reference to adapt from and can't produce an efficient
+            three-legged gait on its own. That limitation is part of why we turned to trajectory
+            optimization to design the optimized gait.
+        </p>
+    </section>
+
+    <section>
+        <h2>What we built</h2>
+        <p>
+            A three-legged platform driven by Dynamixel servos, with each leg a simple multi-link
+            chain. The hard part of a tripod isn't the legs, it's that with only three contact points
+            the robot is always one lifted leg away from being statically unstable. Unlike a quadruped,
+            it can't just keep three feet on the ground and swing the fourth; every step has to actively
+            manage where the center of mass sits relative to the remaining support. That constraint
+            drove most of the mechanical layout and gait design.
         </p>
     </section>
 
     <section>
         <h2>The experiment</h2>
         <p>
-            We compared two gaits on the same hardware. The "natural" gait was hand-designed to
-            mimic how a real tripod dog moves — the pattern biology settles into. The "optimized"
-            gait came out of a trajectory optimization that minimized energy use subject to the
-            stability constraint. Cost of transport — energy spent per unit distance per unit weight —
-            was the common yardstick, so the two could be compared directly on the physical robot.
+            We compared two gaits on the same hardware. The natural gait was hand-designed to mimic how
+            a real three-legged dog moves, the pattern biology settles into. The optimized gait came out
+            of a trajectory optimization that minimized energy use subject to the stability constraint.
+            Cost of transport, the energy spent per unit distance per unit weight, was the common
+            yardstick, so the two could be compared directly on the physical robot.
         </p>
     </section>
 
     <section>
-        <h2>Results &amp; learnings</h2>
+        <h2>Results</h2>
         <p>
-            <span class="pa-label">[INSERT — drop in the actual numbers and the takeaway: did the
-            optimized gait beat the natural one on cost of transport, and by how much? Anything
-            that surprised you about the gap between sim and the real robot?]</span>
+            The demonstration video above walks through the project and our results in full: how the
+            robot was built, how each gait was generated, and how the two compared on cost of transport.
         </p>
+        <!-- TODO(Harsh): add the headline result here in a sentence — which gait won on cost of
+             transport and by how much — so the page states it without needing to watch the video. -->
     </section>
 
     <section>
@@ -96,6 +129,10 @@
             <span class="tag">Arduino</span>
             <span class="tag">Trajectory Optimization</span>
             <span class="tag">Legged Locomotion</span>
+            <span class="tag">Bio-Inspired</span>
+        </div>
+        <div class="project-links">
+            <a href="https://www.youtube.com/watch?v=xsltkJcOU9c" target="_blank" class="btn">Watch the demo ↗</a>
         </div>
     </section>
 
