@@ -571,6 +571,28 @@ nav.site-nav.scrolled {
 }
 .pa p { margin-bottom: 0; }
 
+/* In-memoriam closer */
+.memorial {
+    text-align: center;
+    margin: 4rem 0 1rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--border);
+}
+.memorial .memorial-label {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-muted);
+}
+.memorial p {
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin: 0.5rem 0 0;
+    color: var(--ink);
+}
+
 /* Diagrams & landscape video — keep natural aspect, never crop */
 .fig-row {
     display: grid;
