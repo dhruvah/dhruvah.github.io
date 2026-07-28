@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taj Mahal: CAD Model and OpenGL Visualization · Harsh Dhruva</title>
+    <meta name="description" content="A detailed CAD model of the Taj Mahal built for a freshman intro-CAD competition, then turned into a continuous line drawing in C++ with OpenGL using nearest-neighbour point sorting.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<article class="project-page">
+    <a href="./rose-hulman.html" class="project-back">Rose-Hulman projects</a>
+
+    <header class="project-page-header">
+        <div class="project-page-category-with-logo">
+            <img src="../assets/media/about/rose-hulman-seal.png" alt="Rose-Hulman Institute of Technology" class="project-company-logo">
+            <span class="project-page-category">Freshman year · Rose-Hulman</span>
+        </div>
+        <h1>Taj Mahal: CAD model and OpenGL visualization.</h1>
+        <p class="project-page-summary">
+            A detailed CAD model of the Taj Mahal built for a freshman intro-CAD competition, and then
+            a second life for it: extracting its points and redrawing them in C++ with OpenGL as a
+            continuous line drawing.
+        </p>
+    </header>
+
+    <div class="project-meta">
+        <div class="project-meta-item">
+            <span class="label">School</span>
+            <span class="value">Rose-Hulman</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Year</span>
+            <span class="value">Freshman</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Context</span>
+            <span class="value">Intro to CAD competition</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Stack</span>
+            <span class="value">CAD · C++ · OpenGL</span>
+        </div>
+    </div>
+
+    <section>
+        <h2>The model</h2>
+        <p>
+            During my freshman year in undergrad I made a CAD model of the Taj Mahal for our Intro to
+            CAD class project competition. It was a great project to have fun with and to learn the
+            basics of CAD.
+        </p>
+        <p>
+            The building is a good subject for learning solid modeling precisely because it is so
+            regular: a central dome over an octagonal chamber, four freestanding minarets, and a
+            plinth, all under strict fourfold symmetry. Getting it right is mostly about building
+            clean, parametric primitives and then mirroring and arraying them, which is exactly the
+            habit an intro CAD course is trying to teach.
+        </p>
+    </section>
+
+    <figure class="fig-row one">
+        <img src="../assets/media/cad/taj1.png" alt="Isometric render of the Taj Mahal CAD model with minarets and surrounding wall">
+        <figcaption>The finished model in isometric view, with the four minarets and the enclosing wall.</figcaption>
+    </figure>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/cad/taj3.png" alt="Front elevation render of the Taj Mahal CAD model">
+            <figcaption>Front elevation.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/cad/taj2.png" alt="Angled render of the Taj Mahal CAD model">
+            <figcaption>Three-quarter view.</figcaption>
+        </figure>
+    </div>
+
+    <section>
+        <h2>Redrawing it in OpenGL</h2>
+        <p>
+            I also made a fun visualization of the Taj Mahal in C++ using OpenGL. This was done by
+            extracting the necessary points from the CAD image, then sorting the points using nearest
+            neighbours to give the drawing effect.
+        </p>
+        <p>
+            The sorting step is what makes it work. A raw point set carries no notion of order, so
+            plotting it straight produces a cloud, or a mess of lines jumping across the figure.
+            Repeatedly stepping to the closest unvisited point turns that unordered set into a path a
+            pen could plausibly follow, which is what makes the render look hand-drawn rather than
+            plotted. It is a greedy heuristic, so it can strand itself and jump when it exhausts a
+            local cluster, but for a figure this dense the effect reads exactly as intended.
+        </p>
+    </section>
+
+    <div class="video-embed">
+        <iframe src="https://www.youtube.com/embed/sK-2GuYaORY"
+            title="Taj Mahal CAD visualization in OpenGL" loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
+    </div>
+    <p style="text-align: center; font-size: 0.9rem; color: var(--ink-soft);">
+        The drawing effect, sped up.
+    </p>
+
+    <section>
+        <div class="project-page-tags">
+            <span class="tag">CAD</span>
+            <span class="tag">Solid Modeling</span>
+            <span class="tag">C++</span>
+            <span class="tag">OpenGL</span>
+            <span class="tag">Nearest Neighbours</span>
+            <span class="tag">Visualization</span>
+        </div>
+    </section>
+
+    <nav class="project-nav">
+        <a href="./fuzzy-parking.html">
+            <div class="nav-label">← Previous</div>
+            <div class="nav-title">Fuzzy-Logic Parking Controllers</div>
+        </a>
+        <a href="./rose-hulman.html" class="next">
+            <div class="nav-label">Next →</div>
+            <div class="nav-title">Rose-Hulman Projects</div>
+        </a>
+    </nav>
+</article>
+
+<div id="site-footer"></div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

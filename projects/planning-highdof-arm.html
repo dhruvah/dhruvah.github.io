@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planning for a High-DOF Planar Arm · Harsh Dhruva</title>
+    <meta name="description" content="Implementing and benchmarking RRT, RRT-Connect, RRT* and PRM for a high-DOF planar arm, compared on planning time, success rate, path quality and consistency across 20 runs.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<article class="project-page">
+    <a href="./cmu.html" class="project-back">CMU projects</a>
+
+    <header class="project-page-header">
+        <div class="project-page-category-with-logo">
+            <img src="../assets/media/about/cmu-seal.png" alt="Carnegie Mellon University" class="project-company-logo">
+            <span class="project-page-category">Mini project 2 · CMU 16-782</span>
+        </div>
+        <h1>Planning for a high-DOF planar arm.</h1>
+        <p class="project-page-summary">
+            Four sampling-based planners built and benchmarked against each other: RRT, RRT-Connect,
+            RRT* and PRM. The comparison is the point, and it comes out as a clean set of trades
+            between speed, optimality and consistency.
+        </p>
+    </header>
+
+    <div class="project-meta">
+        <div class="project-meta-item">
+            <span class="label">Course</span>
+            <span class="value">16-782 Planning &amp; Decision Making</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Timeline</span>
+            <span class="value">October 2021</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Benchmark</span>
+            <span class="value">20 runs per planner</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Stack</span>
+            <span class="value">C++ · MATLAB MEX</span>
+        </div>
+    </div>
+
+    <section>
+        <h2>Why sampling</h2>
+        <p>
+            A high-DOF arm cannot be planned by discretizing its configuration space, because the
+            number of cells grows exponentially in the number of joints. Sampling-based planners
+            sidestep this by never building the space at all: they draw random configurations, test
+            only those for collision, and connect the valid ones into a tree or graph. What you give up
+            is completeness in the strict sense; what you get is a planner that works in ten dimensions
+            at all.
+        </p>
+        <p>
+            I implemented RRT, RRT-Connect and RRT* inside a shared <code>RRTs</code> class so the
+            common machinery could be reused, with separate build functions for each. Random samples
+            are drawn 85% of the time, with the other 15% drawn from a region near the goal to bias
+            growth in the right direction. PRM sits in its own <code>ProbabilisticRoadmap</code> class,
+            building a graph, connecting start and goal to it, then running A* over the roadmap to
+            answer the query.
+        </p>
+    </section>
+
+    <div class="media-grid media-grid-2">
+        <figure>
+            <img src="../assets/media/planning-arm/rrt-map1.jpg" alt="RRT tree of arm configurations on map 1">
+            <figcaption>RRT on map 1.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/planning-arm/rrt-connect-map1.jpg" alt="RRT-Connect tree on map 1">
+            <figcaption>RRT-Connect, growing from both ends.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/planning-arm/rrt-star-map1.jpg" alt="RRT star tree on map 1">
+            <figcaption>RRT*, with rewiring.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/planning-arm/prm-map1.jpg" alt="PRM roadmap on map 1">
+            <figcaption>PRM, a roadmap rather than a tree.</figcaption>
+        </figure>
+    </div>
+
+    <section>
+        <h2>The benchmark</h2>
+        <p>
+            I compiled six metrics across 20 runs per planner: average planning time, success rate
+            within 5 seconds, average vertices generated, average path quality (total distance
+            travelled, as the sum of RMS distances between adjacent configurations, where lower is
+            better), path length in number of configurations, and the standard deviation in path
+            quality, which captures how <em>consistent</em> a probabilistic planner is across repeated
+            runs on the same query.
+        </p>
+    </section>
+
+    <div class="code-block">Map 2            Avg time   Success    Avg        Avg path   Avg path   Std dev in
+                 (s)        (5s, %)    vertices   quality    length     path quality
+RRT              1.8120      89.47      2918      9.8888        61       3.4052
+RRT-Connect      0.7201      90.00      2275     11.2430        67       5.3471
+RRT*             2.2505      90.00      2855      9.4039        79       3.2623
+PRM              0.9214     100.00      9780      8.6526         9       2.1169</div>
+
+    <p>
+        The numbers line up with what the algorithms are designed to do. <strong>RRT-Connect</strong>
+        is the fastest of the trees and generates the fewest vertices, because growing from both start
+        and goal meets in the middle. <strong>RRT*</strong> is the slowest, since it builds everything
+        RRT does and then rewires on top, and in exchange it produces the best path quality of the
+        three trees. The speed of RRT-Connect is paid for in quality and, more tellingly, in
+        consistency: its standard deviation of 5.35 is the worst in the table, roughly double RRT*'s.
+    </p>
+    <p>
+        One number needs a caveat I kept from the write-up. PRM looks fast at 0.92 seconds, but that
+        figure includes regenerating the roadmap on every single run. The whole point of a PRM is that
+        the graph is built once and reused across many queries; measured that way it would be by far
+        the fastest planner here. Its path length of 9 also is not comparable to the others, since it
+        does not count the interpolated states between roadmap nodes.
+    </p>
+
+    <section>
+        <h2>What I would use, and when</h2>
+        <p>
+            <strong>RRT</strong> succeeds within 5 seconds 89% of the time, making it the slowest to
+            find a solution, and the solution is not optimal. It offers no guarantee of reaching the
+            goal state exactly, only a goal neighbourhood, and its growth is always biased toward the
+            largest unexplored region. On map 2, with its many obstacles, RRT is more suitable than
+            PRM. The goal-biased sampling I added helps drive the search; beyond that, the real gains
+            would come from better data structures for nearest-neighbour queries, and post-processing
+            the path.
+        </p>
+        <p>
+            <strong>RRT-Connect</strong> is probabilistically complete and, because trees extend from
+            both start and goal, it reaches the goal itself rather than a neighbourhood. On map 1, with
+            few obstacles, it is what I would choose. On map 2 its paths were noticeably suboptimal.
+            Goal biasing does not help much here, since both ends are already growing toward each
+            other.
+        </p>
+        <p>
+            <strong>RRT*</strong> is the one to use on map 2 if optimality matters and the extra
+            runtime is acceptable. It is substantially more expensive and takes longer to reach a first
+            solution, which is the real cost in a time-limited setting.
+        </p>
+        <p>
+            <strong>PRM</strong> is best for one-shot planning against a reusable roadmap. This was the
+            hardest of the four to implement and my version does not work especially well: I had to
+            relax parameters to get results on map 2 at all. Uniform sampling misses narrow passages
+            when obstacles are dense, which costs connectivity, and I connected neighbours by radius
+            rather than by k-nearest. Biasing samples toward obstacle boundaries and switching to a
+            proper k-nearest structure are the fixes.
+        </p>
+    </section>
+
+    <section>
+        <h2>The spread behind the averages</h2>
+        <p>
+            The per-run data is worth more than the means. RRT's individual planning times range from
+            0.00015 seconds to 13.7 seconds, and RRT-Connect's from 0.000054 to 6.85. A handful of
+            unlucky runs dominate the average entirely, which is the honest character of a randomized
+            planner: most of the time it is nearly instant, and occasionally it is not, and no average
+            communicates that. It is exactly why the standard deviation column earns its place in the
+            table.
+        </p>
+    </section>
+
+    <section>
+        <div class="project-page-tags">
+            <span class="tag">RRT</span>
+            <span class="tag">RRT-Connect</span>
+            <span class="tag">RRT*</span>
+            <span class="tag">PRM</span>
+            <span class="tag">Sampling-Based Planning</span>
+            <span class="tag">Motion Planning</span>
+            <span class="tag">C++</span>
+        </div>
+        <div class="project-links">
+            <a href="https://github.com/dhruvah/path_planning" target="_blank" class="btn">Code on GitHub ↗</a>
+        </div>
+    </section>
+
+    <nav class="project-nav">
+        <a href="./planning-catch-target.html">
+            <div class="nav-label">← Previous</div>
+            <div class="nav-title">Catch Me If You Can</div>
+        </a>
+        <a href="./cmu.html" class="next">
+            <div class="nav-label">Next →</div>
+            <div class="nav-title">CMU Projects</div>
+        </a>
+    </nav>
+</article>
+
+<div id="site-footer"></div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

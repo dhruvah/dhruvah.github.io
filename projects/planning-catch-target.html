@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catch Me If You Can: Planning to Intercept a Moving Target · Harsh Dhruva</title>
+    <meta name="description" content="Intercepting a moving target on a grid map by precomputing a reachable interception cell with forward Dijkstra, then planning to it with weighted A* under a backward-Dijkstra heuristic.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<article class="project-page">
+    <a href="./cmu.html" class="project-back">CMU projects</a>
+
+    <header class="project-page-header">
+        <div class="project-page-category-with-logo">
+            <img src="../assets/media/about/cmu-seal.png" alt="Carnegie Mellon University" class="project-company-logo">
+            <span class="project-page-category">Mini project 1 · CMU 16-782</span>
+        </div>
+        <h1>Catch me if you can.</h1>
+        <p class="project-page-summary">
+            Planning a robot to intercept a moving target on a grid map. The interesting move is that
+            the hard part is not the search, it is choosing <em>where</em> to search to: pick the
+            interception point well and an ordinary A* finishes the job.
+        </p>
+    </header>
+
+    <div class="project-meta">
+        <div class="project-meta-item">
+            <span class="label">Course</span>
+            <span class="value">16-782 Planning &amp; Decision Making</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Timeline</span>
+            <span class="value">October 2021</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Result</span>
+            <span class="value">Target caught on 5 of 6 maps</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Stack</span>
+            <span class="value">C++ · MATLAB MEX</span>
+        </div>
+    </div>
+
+    <section>
+        <h2>The problem</h2>
+        <p>
+            A robot has to catch a target moving along a known trajectory through a cost map. Chasing
+            the target directly is the obvious approach and the wrong one: following where it
+            <em>is</em> means always arriving where it <em>was</em>. The robot needs to pick a point on
+            the target's future trajectory that it can reach before the target does, go there, and
+            wait.
+        </p>
+        <p>
+            That reframes the problem usefully. Instead of a moving goal, we need to choose a single
+            static goal cell subject to a timing constraint, and then run a standard search to it.
+        </p>
+    </section>
+
+    <section>
+        <h2>Precomputing the goal</h2>
+        <p>
+            My approach precomputes a goal position: a cell in the target's trajectory that the robot
+            can intercept in time, accounting for both the cost of getting to the cell and the cost of
+            waiting there once it arrives.
+        </p>
+        <p>
+            To select it, a forward Dijkstra search runs from the robot's initial position. That gives
+            the cost of reaching every point on the target's trajectory, and the number of time steps
+            it takes to get there. Keeping only the cells the robot can reach in time, I sort the
+            candidates in a priority queue by the cost of getting to the cell plus the cost of waiting
+            in it, and take the minimum. That cell becomes the goal handed to A*.
+        </p>
+    </section>
+
+    <div class="code-block">time_buffer ← 1                      /* accounts for pre-computation time */
+for i in target_steps:
+    h_val ← HEURISTIC_DF[target_index]
+    time  ← ROBOT_STEPS[target_index]
+    if time + time_buffer ≤ i:
+        g_val ← h_val + (i - time)   /* cost of getting there + waiting */
+        TARGET_G_VAL.push(cell)
+return TARGET_G_VAL.top()</div>
+
+    <section>
+        <h2>The heuristic</h2>
+        <p>
+            With the goal chosen, a 2D <em>backward</em> Dijkstra runs from the goal outward, storing
+            each cell's cost-to-goal in a hash map. Those values become the heuristic for the A*
+            search. The direction matters: running Dijkstra backward from the goal means its g-values
+            are precisely the true cost-to-go for every cell, which makes the heuristic both
+            admissible and consistent, so A* keeps its optimality guarantee.
+        </p>
+        <p>
+            It is worth noting what this costs. Computing a perfect heuristic by exhaustive search is
+            more expensive than the A* it accelerates, which would be self-defeating in general.
+            Here it pays off because the same Dijkstra expansion is doing double duty: the forward
+            pass chooses the goal, the backward pass guides the search to it.
+        </p>
+    </section>
+
+    <section>
+        <h2>Weighted A*</h2>
+        <p>
+            The path itself comes from 2D weighted A*, with the weight epsilon set to 100 across all
+            results. A high weight inflates the heuristic and makes the search greedier, trading a
+            bounded amount of optimality for a large speedup, which matters when the whole plan has to
+            be produced before the target gets away. Backtracking happens inside the search, populating
+            the path, and each call to the planner pops the next position off it.
+        </p>
+        <p>
+            I also wrote a 3D A* over (x, y, time), which is the more principled formulation since it
+            reasons about where the robot can be <em>when</em>, but I could not get it working and the
+            planner does not use it.
+        </p>
+    </section>
+
+    <section>
+        <h2>Results</h2>
+        <p>
+            The planner caught the target on maps 1 through 4, and on map 6. Map 5 is the interesting
+            failure.
+        </p>
+    </section>
+
+    <div class="code-block">Map   Method     Heuristic     Caught   Time   Moves   Path cost   Precompute (s)
+1     2D A*      2D Dijkstra    yes    2641    2639      2641       0.997
+2     2D A*      2D Dijkstra    yes    4673    1235   4457697       2.702
+3     2D A*      2D Dijkstra    yes     242     241       242       0.214
+4     2D A*      2D Dijkstra    yes     380     266       380       0.254
+5     2D A*      2D Dijkstra     no     182     182       182       0.021
+5     Greedy     --             yes     150     150      5050        --
+6     2D A*      Euclidean      yes     141       0      2820       0.025
+6     2D A*      Dijkstra       yes     141       0      2820       0.039</div>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/planning-target/map1-astar.jpg" alt="Map 1 with the robot path in green and the target trajectory in magenta">
+            <figcaption>Map 1: robot path in green, target trajectory in magenta.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/planning-target/map2-astar.jpg" alt="Map 2 robot path and target trajectory">
+            <figcaption>Map 2, the most expensive path at a cost of 4.46 million.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/planning-target/map3-astar.jpg" alt="Map 3 robot path and target trajectory">
+            <figcaption>Map 3, caught in 242 steps.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/planning-target/map4-astar.jpg" alt="Map 4 robot path and target trajectory">
+            <figcaption>Map 4, caught in 380.</figcaption>
+        </figure>
+    </div>
+
+    <p>
+        On map 5, weighted A* with the Dijkstra heuristic failed to catch the target, while a plain
+        greedy search succeeded. The trade is visible in the numbers: greedy caught it in 150 moves at
+        a path cost of 5050, against A*'s 182 moves at a cost of 182. A* found the far cheaper path and
+        still lost, because on this map cheapness and speed point in different directions.
+    </p>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/planning-target/map5-astar.jpg" alt="Map 5 using weighted A star, which fails to catch the target">
+            <figcaption>Map 5 with 2D A*: cheap path, target missed.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/planning-target/map5-greedy.jpg" alt="Map 5 using greedy search, which catches the target">
+            <figcaption>Map 5 with greedy search: 33x the cost, target caught.</figcaption>
+        </figure>
+    </div>
+
+    <p>
+        Map 6 makes the opposite point. A Euclidean heuristic and the Dijkstra heuristic produce
+        identical results, 141 steps at a cost of 2820, but Euclidean gets there with less than
+        two-thirds of the precompute time. When the map is open enough that straight-line distance is
+        a good estimate, paying for an exact heuristic buys nothing.
+    </p>
+
+    <figure class="fig-row one">
+        <img src="../assets/media/planning-target/map6-euclidean.jpg" alt="Map 6 solved with a Euclidean heuristic">
+        <figcaption>Map 6, where a Euclidean heuristic matches Dijkstra's result for less precompute.</figcaption>
+    </figure>
+
+    <section>
+        <h2>The timing caveat</h2>
+        <p>
+            One honest detail from the write-up. The goal computation includes a time buffer to account
+            for its own precompute time, which I set to 5 seconds in the submitted code because of
+            uncertainty about the machine it would be graded on. That buffer is a real trade: increase
+            it and the chosen goal becomes less optimal and the path more expensive, but the robot is
+            guaranteed to arrive before the target. On map 1, with no buffer, a precompute exceeding
+            1.1 seconds would make the robot too late.
+        </p>
+        <p>
+            The results in the table were generated with the buffer at zero, for the most optimal cost.
+        </p>
+    </section>
+
+    <section>
+        <div class="project-page-tags">
+            <span class="tag">A*</span>
+            <span class="tag">Weighted A*</span>
+            <span class="tag">Dijkstra</span>
+            <span class="tag">Heuristic Search</span>
+            <span class="tag">Grid Planning</span>
+            <span class="tag">C++</span>
+        </div>
+        <div class="project-links">
+            <a href="https://github.com/dhruvah/path_planning" target="_blank" class="btn">Code on GitHub ↗</a>
+        </div>
+    </section>
+
+    <nav class="project-nav">
+        <a href="./cmu.html">
+            <div class="nav-label">← Back to</div>
+            <div class="nav-title">CMU Projects</div>
+        </a>
+        <a href="./planning-highdof-arm.html" class="next">
+            <div class="nav-label">Next →</div>
+            <div class="nav-title">Planning for a High-DOF Arm</div>
+        </a>
+    </nav>
+</article>
+
+<div id="site-footer"></div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
