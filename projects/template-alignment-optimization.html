@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Alignment Optimization · Harsh Dhruva</title>
+    <meta name="description" content="Benchmarking gradient descent, Newton, Gauss-Newton, BFGS and Levenberg-Marquardt on the Lucas-Kanade image alignment problem, and finding out why Gauss-Newton is the one that ships.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<article class="project-page">
+    <a href="./cmu.html" class="project-back">CMU projects</a>
+
+    <header class="project-page-header">
+        <div class="project-page-category-with-logo">
+            <img src="../assets/media/about/cmu-seal.png" alt="Carnegie Mellon University" class="project-company-logo">
+            <span class="project-page-category">Course Project · CMU 24-785</span>
+        </div>
+        <h1>Template alignment optimization.</h1>
+        <p class="project-page-summary">
+            Lucas-Kanade tracking is, underneath, a nonlinear least-squares problem solved once per
+            frame. So which optimizer should solve it? We implemented five and raced them, and the
+            answer explains why the original 1981 paper made the choice it did.
+        </p>
+    </header>
+
+    <div class="project-meta">
+        <div class="project-meta-item">
+            <span class="label">Course</span>
+            <span class="value">24-785 Engineering Optimization</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Timeline</span>
+            <span class="value">December 2021</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Team</span>
+            <span class="value">5 people</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Best result</span>
+            <span class="value">Gauss-Newton, IoU 0.507</span>
+        </div>
+    </div>
+
+    <section>
+        <h2>The problem</h2>
+        <p>
+            Image alignment consists of moving and deforming a template to minimize the difference
+            between the template and an image. It underpins optical flow, tracking and mosaicing, and
+            the Lucas-Kanade algorithm is the standard approach. Stated as optimization, the objective
+            is to minimize the sum of squared error between the template and the image warped back
+            onto it:
+        </p>
+    </section>
+
+    <div class="code-block">min over x:   Σ_p [ I(W(p; x)) - T(p) ]²
+
+Translational warp:  x = [x1 x2]ᵀ                  (2 variables)
+Affine warp:         x = [x1 x2 x3 x4 x5 x6]ᵀ      (6 variables)</div>
+
+    <p>
+        This project is a comparative study of the optimizers that can solve it: gradient descent,
+        Newton's method, Gauss-Newton, BFGS and Levenberg-Marquardt, evaluated on frame-by-frame
+        tracking across a video sequence. It was a five-person project with Ashwin Nehete, Bradley
+        Feng, Siqiao Fu and Xiaoyang Zhan.
+    </p>
+
+    <section>
+        <h2>What makes it awkward</h2>
+        <p>
+            The problem is a nonlinear program, and the source of the nonlinearity is worth being
+            precise about. The warp functions themselves are linear. What is nonlinear is the image:
+            pixel <em>values</em> have no smooth relationship to pixel <em>coordinates</em>, so moving
+            the template a little can change the objective a lot.
+        </p>
+        <p>
+            That has a sharp practical consequence. The image function I and template T cannot be
+            written down analytically at all; they are just arrays of pixel values, potentially close
+            to a random distribution. So gradients and Hessians cannot be derived. We compute
+            gradients by forward difference and approximate the Hessian. And because warped
+            coordinates land between pixels, we interpolate with a bivariate spline
+            (<code>RectBivariateSpline</code>) to get values off the discrete grid.
+        </p>
+        <p>
+            The modelling rests on the standard optical-flow assumptions: brightness constancy between
+            frames, local smoothness of the flow, and small object displacement between successive
+            frames. Evaluation is by Intersection over Union between the predicted and ground-truth
+            bounding boxes.
+        </p>
+    </section>
+
+    <section>
+        <h2>Is it even convex?</h2>
+        <p>
+            No, and the objective landscape shows exactly why that turns out not to matter. Plotting
+            the objective across the whole image reveals many local minima: regions whose pixel
+            distribution happens to resemble the tracked patch, even though they do not look similar
+            to a human. In the "eyes" of the objective function, several patches look like the target.
+        </p>
+    </section>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/optimization/objective-landscape.png" alt="Contour plot of the objective function over the image, with the meaningful minimum circled">
+            <figcaption>The objective across the image. Many minima; the meaningful one is circled.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/optimization/objective-annotated.png" alt="The same objective landscape annotated with ground truth, initial guess and result">
+            <figcaption>Ground truth, initial guess and result all coincide in the same basin.</figcaption>
+        </figure>
+    </div>
+
+    <p>
+        The resolution is that we never need the global minimum. Because we assume small displacement
+        between frames, the only solution that means anything is the local one near the previous
+        bounding box, and the problem <em>is</em> locally convex around that starting point. The other
+        minima correspond to positions where the pixel distribution merely looks similar, and reaching
+        them would be a tracking failure, not a success.
+    </p>
+
+    <section>
+        <h2>The five optimizers</h2>
+        <p>
+            <strong>Gradient descent</strong>, implemented from scratch, takes a small step opposite
+            the gradient, with a solution-norm threshold of 0.01 and a 1000-iteration cap. It reached
+            an IoU of 0.5023.
+        </p>
+        <p>
+            <strong>Newton's method</strong> iteratively minimizes a second-order approximation, which
+            requires the Hessian of the image, and that is precisely the quantity that is expensive and
+            awkward to obtain here. It scored 0.4411, and its final-frame values blew up to x0 = 6685
+            with an objective of 1,587,600, a clear divergence the other methods avoided.
+        </p>
+        <p>
+            <strong>Gauss-Newton</strong> is the one the original Lucas-Kanade uses, and its advantage
+            is structural: as a method for nonlinear least squares it approximates the Hessian from
+            first derivatives alone, so it never needs the second-order image derivative. That is a
+            real saving when the optimization runs on every pair of frames in a video.
+        </p>
+        <p>
+            <strong>Levenberg-Marquardt</strong> interpolates between the two regimes. For small
+            damping it behaves like Gauss-Newton, which is better near the minimum where the quadratic
+            model is good; for large damping it behaves like a diagonal approximation with a reduced
+            step, which is better far away. It is also the only method here that checks whether the
+            error actually improved: if the error decreased it reduces the damping tenfold, and if it
+            increased it reverses the update and increases the damping tenfold.
+        </p>
+    </section>
+
+    <div class="media-grid media-grid-2">
+        <figure>
+            <img src="../assets/media/optimization/gd-frame40.png" alt="Gradient descent still tracking the object at frame 40">
+            <figcaption>Gradient descent, frame 40: still tracking.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/optimization/gaussnewton-frame40.png" alt="Gauss-Newton still tracking the object at frame 40">
+            <figcaption>Gauss-Newton, frame 40: locked on.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/optimization/lm-frame40.png" alt="Levenberg-Marquardt still tracking the object at frame 40">
+            <figcaption>Levenberg-Marquardt, frame 40: still tracking.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/optimization/newton-frame40.png" alt="Newton's method tracking the object at frame 40">
+            <figcaption>Newton's method, frame 40.</figcaption>
+        </figure>
+    </div>
+
+    <section>
+        <h2>Where BFGS falls over</h2>
+        <p>
+            <strong>BFGS</strong>, the quasi-Newton method, builds up its Hessian approximation
+            gradually from successive gradients. We used <code>scipy.optimize.minimize</code> with
+            <code>method='BFGS'</code>. It scored an IoU of 0.1301, by far the worst of the five, and
+            the failure has a specific character: it loses the object precisely when motion between two
+            consecutive frames is fast.
+        </p>
+        <p>
+            Our reading is that BFGS cannot build a good enough Hessian approximation in the few
+            iterations available before the frame changes, so it fails to reach the minimum, and once
+            the box is off the target the next frame's template is wrong and the failure compounds.
+            Its objective values tell the same story: at frame 100 it reports 48,967 where
+            Gauss-Newton reports 603,369, which looks better until you realize it has converged
+            comfortably onto the wrong patch.
+        </p>
+    </section>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/optimization/bfgs-frame35.png" alt="BFGS tracking box at frame 35, still roughly on target">
+            <figcaption>BFGS at frame 35, before the fast motion.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/optimization/bfgs-frame40.png" alt="BFGS tracking box at frame 40, drifted off the target onto a leaf">
+            <figcaption>Frame 40: the box has slipped off the can. Compare Gauss-Newton above.</figcaption>
+        </figure>
+    </div>
+
+    <section>
+        <h2>Results</h2>
+    </section>
+
+    <div class="code-block">Method                 IoU       Frame 289 objective
+Gauss-Newton           0.5067     77455
+Levenberg-Marquardt    0.5038     75941
+Gradient Descent       0.5023     77073
+Newton's Method        0.4411   1587600      (diverged)
+BFGS                   0.1301     55032      (converged on the wrong patch)</div>
+
+    <p>
+        We could not compile fair speed comparisons, since the code was run across several machines
+        with different specifications. Observationally, Gauss-Newton was the fastest and BFGS the
+        slowest. Gradient descent and Levenberg-Marquardt perform respectably on IoU, but Gauss-Newton
+        is best on both accuracy and speed, which is the answer to the question the project asked:
+        Lucas-Kanade uses Gauss-Newton because, for this problem, it is genuinely the right tool.
+    </p>
+
+    <div class="project-links" style="margin-bottom: 2rem;">
+        <a href="https://www.youtube.com/watch?v=aW5DaNZIXrY&list=PLEbJSf3as63rz-yntDzGD6Bkz_BOryTcp" target="_blank" class="btn">Demo videos ↗</a>
+    </div>
+
+    <section>
+        <h2>What did not work</h2>
+        <p>
+            An honest close from the report: performance on the translational warp was good, but the
+            affine case was not up to par. Going from 2 parameters to 6 makes the optimization
+            substantially harder, and fixing it would need work on template updates and possibly
+            bounding-box constraints. Frame rate and resolution matter too, and in a predictable
+            direction: sampling one frame in five widens the gap between frames, enlarges the
+            parameters to be solved, and makes the problem harder, while lower resolution supplies
+            fewer pixels and therefore less information to optimize against.
+        </p>
+    </section>
+
+    <section>
+        <div class="project-page-tags">
+            <span class="tag">Numerical Optimization</span>
+            <span class="tag">Gauss-Newton</span>
+            <span class="tag">BFGS</span>
+            <span class="tag">Levenberg-Marquardt</span>
+            <span class="tag">Lucas-Kanade</span>
+            <span class="tag">Nonlinear Least Squares</span>
+            <span class="tag">Python</span>
+        </div>
+        <div class="project-links">
+            <a href="https://github.com/dhruvah/24785-Project" target="_blank" class="btn">Code on GitHub ↗</a>
+            <a href="./cv-lucas-kanade.html" class="btn">Related: Lucas-Kanade tracking</a>
+        </div>
+    </section>
+
+    <nav class="project-nav">
+        <a href="./cv-lucas-kanade.html">
+            <div class="nav-label">← Related</div>
+            <div class="nav-title">Lucas-Kanade Tracking</div>
+        </a>
+        <a href="./cmu.html" class="next">
+            <div class="nav-label">Next →</div>
+            <div class="nav-title">CMU Projects</div>
+        </a>
+    </nav>
+</article>
+
+<div id="site-footer"></div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

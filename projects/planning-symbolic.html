@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symbolic Planning · Harsh Dhruva</title>
+    <meta name="description" content="A symbolic planner over grounded actions and logical conditions, solving Blocks-world and a fire-extinguisher domain with A* and a goal-condition-count heuristic.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<article class="project-page">
+    <a href="./cmu.html" class="project-back">CMU projects</a>
+
+    <header class="project-page-header">
+        <div class="project-page-category-with-logo">
+            <img src="../assets/media/about/cmu-seal.png" alt="Carnegie Mellon University" class="project-company-logo">
+            <span class="project-page-category">Mini project 3 · CMU 16-782</span>
+        </div>
+        <h1>Symbolic planning.</h1>
+        <p class="project-page-summary">
+            Planning over logical conditions rather than coordinates. The state is a set of facts, the
+            actions are rules with preconditions and effects, and the search runs over the space of
+            worlds those rules can reach.
+        </p>
+    </header>
+
+    <div class="project-meta">
+        <div class="project-meta-item">
+            <span class="label">Course</span>
+            <span class="value">16-782 Planning &amp; Decision Making</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Timeline</span>
+            <span class="value">November 2021</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Domains</span>
+            <span class="value">Blocks · Triangles · Fire Extinguisher</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Stack</span>
+            <span class="value">C++</span>
+        </div>
+    </div>
+
+    <section>
+        <h2>A different kind of planning</h2>
+        <p>
+            The other two planning projects search over geometry: grid cells, or arm configurations.
+            This one searches over <em>logic</em>. A state is a set of true conditions, an action is a
+            rule with preconditions that must hold and effects that add or delete conditions, and
+            planning means finding the sequence of actions that turns the initial set of facts into one
+            containing the goal.
+        </p>
+        <p>
+            The Blocks domain is the classic example: blocks on a table, an action to move a block
+            onto another, an action to move it back to the table, and preconditions enforcing that you
+            can only move something with nothing on top of it.
+        </p>
+    </section>
+
+    <div class="code-block">Symbols: A, B, C, Table
+Initial: On(A,B), On(B,Table), On(C,Table), Block(A), Block(B), Block(C), Clear(A), Clear(C)
+Goal:    On(B,C), On(C,A), On(A,Table)
+
+MoveToTable(b, x)
+    Preconditions: On(b,x), Clear(b), Block(b), Block(x)
+    Effects:       On(b,Table), Clear(x), !On(b,x)
+
+Move(b, x, y)
+    Preconditions: On(b,x), Clear(b), Clear(y), Block(b), Block(y)
+    Effects:       On(b,y), Clear(x), !On(b,x), !Clear(y)</div>
+
+    <figure class="fig-row one" style="max-width: 600px; margin: 2rem auto;">
+        <img src="../assets/media/planning-symbolic/blocks-world.svg" alt="Diagram of the Blocks world initial state with A on B and C on the table, and the goal state with B on C on A">
+        <figcaption>The Blocks domain: getting from the initial configuration to the goal stack.</figcaption>
+    </figure>
+
+    <section>
+        <h2>Grounding the actions</h2>
+        <p>
+            The actions above are templates with free variables. Before search can happen they have to
+            be <em>grounded</em>, meaning every valid assignment of real symbols to those variables has
+            to be enumerated.
+        </p>
+        <p>
+            I precomputed the permutations of symbols based on the maximum number of arguments any
+            action requires, storing them in a <code>vector&lt;list&lt;list&lt;string&gt;&gt;&gt;</code>
+            where each entry holds the permutations for n variables. From those I generate every
+            possible grounded action, each with its grounded preconditions and effects, and store them
+            in a list. Search then simply walks that list, applying whichever actions have satisfied
+            preconditions in the current state.
+        </p>
+        <p>
+            One bug is worth recording because of how it presented. Initially I was not checking
+            whether a newly generated state already existed in the expanded list. On the small Blocks
+            domain that merely wasted work; on the Fire Extinguisher environment it ran
+            <em>indefinitely</em>, because the planner kept regenerating states it had already seen and
+            never exhausted its frontier. Adding the duplicate check fixed it.
+        </p>
+    </section>
+
+    <section>
+        <h2>Results</h2>
+        <p>
+            Once the goal state is reached, the plan is recovered by backtracking through each state's
+            parent and the grounded action that produced it. The three domains produce plans of
+            increasing length: 3 actions for Blocks, 6 once triangles are added, and 21 for the fire
+            extinguisher.
+        </p>
+    </section>
+
+    <div class="code-block">Blocks                     Blocks and Triangles       Fire Extinguisher
+MoveToTable(A,B)           MoveToTable(T0,B0)         MoveToLoc(A,B)      TakeOffFromRob(F)
+Move(C,Table,A)            MoveToTable(T1,B3)         LandOnRob(B)        PourTwice(F)
+Move(B,Table,C)            MoveToTable(B0,B1)         MoveTogether(B,W)   LandOnRob(F)
+                           Move(B1,B4,B3)             FillWater(Q)        MoveTogether(F,W)
+                           Move(B0,Table,B1)          MoveTogether(W,F)   FillWater(Q)
+                           Move(T1,Table,B0)          TakeOffFromRob(F)   MoveTogether(W,F)
+                                                      PourOnce(F)         Charge(Q)
+                                                      LandOnRob(F)        TakeOffFromRob(F)
+                                                      MoveTogether(F,W)   PourThrice(F)
+                                                      FillWater(Q)
+                                                      MoveTogether(W,F)
+                                                      Charge(Q)</div>
+
+    <section>
+        <h2>Does the heuristic help?</h2>
+        <p>
+            The heuristic is simple: count the conditions in the goal state that are not present in the
+            current state, with all edge costs set to 1, then run ordinary A*. I benchmarked each
+            domain with and without it, compiled both normally and with <code>-Ofast</code>.
+        </p>
+    </section>
+
+    <div class="code-block">Domain                 Heuristic     Time (s)   Time -Ofast (s)   States expanded
+Blocks                 yes            0.002966       0.001102             6
+Blocks                 no             0.007802       0.001905            13
+Blocks and Triangles   yes            0.528218       0.101104            68
+Blocks and Triangles   no            50.844100       9.738720           740
+Fire Extinguisher      yes            4.394570       0.701031           339
+Fire Extinguisher      no             5.062940       0.789837           365</div>
+
+    <p>
+        The heuristic helps everywhere, but the size of the win varies enormously, and the reason is
+        the interesting part. On Blocks and Triangles it is the difference between 68 states and 740,
+        which is 50.8 seconds against 0.53, a roughly <strong>96x speedup</strong>.
+    </p>
+    <p>
+        On Fire Extinguisher it barely matters: 339 states against 365. That is not because the domain
+        is easy but because <strong>the heuristic carries almost no information there</strong>. That
+        environment has exactly one condition in its goal, so the heuristic value is always 1 until the
+        goal is met, which makes the search nearly indistinguishable from running with no heuristic at
+        all. A heuristic that cannot discriminate between states cannot guide anything.
+    </p>
+
+    <section>
+        <h2>What would work better</h2>
+        <p>
+            Since this heuristic can either overestimate or underestimate how far the current state is
+            from the goal, a heuristic computed by a forward Dijkstra search would be far better
+            guided and would expand far fewer states. The catch is that it requires a Dijkstra search
+            <em>per expanded state</em>, so whether it pays depends on the size of the environment. For
+            very large environments the cost of expanding a huge number of states dominates, and the
+            more informed heuristic wins. For smaller ones a simple heuristic makes more sense, since
+            the state expansions are cheap relative to running repeated Dijkstra searches.
+        </p>
+    </section>
+
+    <section>
+        <div class="project-page-tags">
+            <span class="tag">Symbolic Planning</span>
+            <span class="tag">A*</span>
+            <span class="tag">Grounded Actions</span>
+            <span class="tag">Blocks World</span>
+            <span class="tag">Heuristic Search</span>
+            <span class="tag">C++</span>
+        </div>
+        <div class="project-links">
+            <a href="https://github.com/dhruvah/path_planning" target="_blank" class="btn">Code on GitHub ↗</a>
+        </div>
+    </section>
+
+    <nav class="project-nav">
+        <a href="./planning-highdof-arm.html">
+            <div class="nav-label">← Previous</div>
+            <div class="nav-title">Planning for a High-DOF Arm</div>
+        </a>
+        <a href="./cmu.html" class="next">
+            <div class="nav-label">Next →</div>
+            <div class="nav-title">CMU Projects</div>
+        </a>
+    </nav>
+</article>
+
+<div id="site-footer"></div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

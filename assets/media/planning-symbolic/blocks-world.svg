@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="800" height="400" role="img" aria-label="Blocks world: the initial state with A on B, and the goal state with B on C on A">
+  <rect width="800" height="400" fill="#f4f3f0"/>
+
+  <g font-family="Geist, ui-sans-serif, system-ui, sans-serif" text-anchor="middle">
+
+    <!-- INITIAL STATE -->
+    <text x="200" y="60" font-size="20" font-weight="600" fill="#8a8781" letter-spacing="1.5">INITIAL</text>
+
+    <!-- A on B -->
+    <rect x="140" y="188" width="120" height="60" rx="6" fill="#c9d6e4" stroke="#7d93aa" stroke-width="2"/>
+    <text x="200" y="227" font-size="28" font-weight="700" fill="#33414f">A</text>
+    <rect x="140" y="250" width="120" height="60" rx="6" fill="#ded4c4" stroke="#a9998a" stroke-width="2"/>
+    <text x="200" y="289" font-size="28" font-weight="700" fill="#4f4438">B</text>
+
+    <!-- C on table -->
+    <rect x="290" y="250" width="120" height="60" rx="6" fill="#cfdcd0" stroke="#8fa591" stroke-width="2"/>
+    <text x="350" y="289" font-size="28" font-weight="700" fill="#3d4c3f">C</text>
+
+    <!-- table -->
+    <rect x="110" y="312" width="330" height="8" rx="4" fill="#b4afa6"/>
+    <text x="275" y="345" font-size="16" fill="#8a8781" letter-spacing="1">Table</text>
+
+    <!-- ARROW -->
+    <g stroke="#8a8781" stroke-width="3" fill="none">
+      <path d="M 470 250 L 530 250"/>
+      <path d="M 518 240 L 530 250 L 518 260"/>
+    </g>
+
+    <!-- GOAL STATE -->
+    <text x="640" y="60" font-size="20" font-weight="600" fill="#8a8781" letter-spacing="1.5">GOAL</text>
+
+    <!-- B on C on A -->
+    <rect x="580" y="126" width="120" height="60" rx="6" fill="#ded4c4" stroke="#a9998a" stroke-width="2"/>
+    <text x="640" y="165" font-size="28" font-weight="700" fill="#4f4438">B</text>
+    <rect x="580" y="188" width="120" height="60" rx="6" fill="#cfdcd0" stroke="#8fa591" stroke-width="2"/>
+    <text x="640" y="227" font-size="28" font-weight="700" fill="#3d4c3f">C</text>
+    <rect x="580" y="250" width="120" height="60" rx="6" fill="#c9d6e4" stroke="#7d93aa" stroke-width="2"/>
+    <text x="640" y="289" font-size="28" font-weight="700" fill="#33414f">A</text>
+
+    <!-- table -->
+    <rect x="550" y="312" width="180" height="8" rx="4" fill="#b4afa6"/>
+    <text x="640" y="345" font-size="16" fill="#8a8781" letter-spacing="1">Table</text>
+  </g>
+</svg>
