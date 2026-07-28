@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planning Mini Projects · Harsh Dhruva</title>
+    <meta name="description" content="Three mini projects from CMU 16-782 Planning and Decision Making in Robotics: intercepting a moving target with A*, sampling-based planning for a high-DOF arm, and symbolic planning.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<article class="project-page">
+    <a href="./cmu.html" class="project-back">CMU projects</a>
+
+    <header class="project-page-header">
+        <div class="project-page-category-with-logo">
+            <img src="../assets/media/about/cmu-seal.png" alt="Carnegie Mellon University" class="project-company-logo">
+            <span class="project-page-category">Graduate Coursework · CMU 16-782</span>
+        </div>
+        <h1>Planning mini projects.</h1>
+        <p class="project-page-summary">
+            Three mini projects from Planning and Decision Making in Robotics, each searching a
+            different kind of space: a grid, a continuous high-dimensional configuration space, and a
+            space of logical facts.
+        </p>
+    </header>
+
+    <div class="project-meta">
+        <div class="project-meta-item">
+            <span class="label">Course</span>
+            <span class="value">16-782 Planning &amp; Decision Making</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Timeline</span>
+            <span class="value">Fall 2021</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Projects</span>
+            <span class="value">3 mini projects</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Stack</span>
+            <span class="value">C++ · MATLAB MEX</span>
+        </div>
+    </div>
+
+    <section>
+        <h2>The through-line</h2>
+        <p>
+            What changes across the three is the space being searched, and therefore what "a state"
+            even means. On a grid it is a cell, and the whole map can be enumerated, so the interesting
+            question becomes which goal to search toward. For a high-DOF arm the space is continuous
+            and exponential in the joint count, so it cannot be enumerated at all and you sample it
+            instead. In symbolic planning a state is a set of true facts, and the actions are rules,
+            so the search is over logic rather than geometry.
+        </p>
+    </section>
+
+    <div class="coursework-group">
+        <div class="projects-grid">
+
+            <a href="./planning-catch-target.html" class="project-card">
+                <div class="project-thumb">
+                    <img src="../assets/media/planning-target/map1-astar.jpg" alt="Grid map with a planned robot path and a target trajectory" loading="lazy">
+                </div>
+                <div class="project-body">
+                    <div class="project-category">Mini project 1</div>
+                    <div class="project-title">Catch me if you can</div>
+                    <div class="project-desc">
+                        Intercepting a moving target on a grid map. Chasing it means always arriving
+                        where it was, so a forward Dijkstra precomputes a reachable interception cell
+                        and weighted A* plans to it.
+                    </div>
+                    <div class="project-tags">
+                        <span class="tag">A*</span>
+                        <span class="tag">Dijkstra</span>
+                        <span class="tag">C++</span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="./planning-highdof-arm.html" class="project-card">
+                <div class="project-thumb">
+                    <img src="../assets/media/planning-arm/rrt-star-map1.jpg" alt="RRT* tree of arm configurations in a planar workspace" loading="lazy">
+                </div>
+                <div class="project-body">
+                    <div class="project-category">Mini project 2</div>
+                    <div class="project-title">Planning for a high-DOF planar arm</div>
+                    <div class="project-desc">
+                        RRT, RRT-Connect, RRT* and PRM benchmarked over 20 runs each. RRT-Connect buys
+                        speed with inconsistency, RRT* buys optimality with time.
+                    </div>
+                    <div class="project-tags">
+                        <span class="tag">RRT</span>
+                        <span class="tag">RRT*</span>
+                        <span class="tag">PRM</span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="./planning-symbolic.html" class="project-card">
+                <div class="project-thumb">
+                    <img src="../assets/media/planning-symbolic/blocks-world.svg" alt="Blocks world initial and goal configurations" loading="lazy">
+                </div>
+                <div class="project-body">
+                    <div class="project-category">Mini project 3</div>
+                    <div class="project-title">Symbolic planning</div>
+                    <div class="project-desc">
+                        Planning over logic instead of geometry. A* with a goal-condition-count
+                        heuristic gave a 96x speedup on one domain and almost nothing on another, for
+                        an instructive reason.
+                    </div>
+                    <div class="project-tags">
+                        <span class="tag">Symbolic Planning</span>
+                        <span class="tag">Blocks World</span>
+                        <span class="tag">A*</span>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+    </div>
+
+    <section>
+        <div class="project-links">
+            <a href="https://github.com/dhruvah/path_planning" target="_blank" class="btn">Code on GitHub ↗</a>
+        </div>
+    </section>
+
+    <nav class="project-nav">
+        <a href="./cmu.html">
+            <div class="nav-label">← Back to</div>
+            <div class="nav-title">CMU Projects</div>
+        </a>
+        <a href="./slam-mini-projects.html" class="next">
+            <div class="nav-label">Next →</div>
+            <div class="nav-title">SLAM Mini Projects</div>
+        </a>
+    </nav>
+</article>
+
+<div id="site-footer"></div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
