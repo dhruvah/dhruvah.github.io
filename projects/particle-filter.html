@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robot Localization with Particle Filters · Harsh Dhruva</title>
+    <meta name="description" content="Monte Carlo localization for a lost indoor robot in Wean Hall using only odometry and a laser rangefinder: odometry motion model, beam sensor model, Bresenham ray casting and low-variance resampling.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<article class="project-page">
+    <a href="./cmu.html" class="project-back">CMU projects</a>
+
+    <header class="project-page-header">
+        <div class="project-page-category-with-logo">
+            <img src="../assets/media/about/cmu-seal.png" alt="Carnegie Mellon University" class="project-company-logo">
+            <span class="project-page-category">Graduate Coursework · CMU 16-833</span>
+        </div>
+        <h1>Robot localization with particle filters.</h1>
+        <p class="project-page-summary">
+            Monte Carlo localization for a lost indoor robot in Wean Hall, given nothing but odometry,
+            a laser rangefinder, and a map. The robot has no idea where it starts; the filter has to
+            find it.
+        </p>
+    </header>
+
+    <div class="project-meta">
+        <div class="project-meta-item">
+            <span class="label">Course</span>
+            <span class="value">16-833 Robot Localization &amp; Mapping</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Timeline</span>
+            <span class="value">Spring 2021</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Team</span>
+            <span class="value">With Ashwin Nehete</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Stack</span>
+            <span class="value">Python · NumPy · Multiprocessing</span>
+        </div>
+    </div>
+
+    <section>
+        <h2>The problem</h2>
+        <p>
+            This project explores robot localization with particle filters, also known as Monte Carlo
+            localization. A particle filter tracks the state of a dynamic system as a non-parametric
+            implementation of the recursive Bayes filter: instead of carrying a single estimate with a
+            covariance, it carries a cloud of thousands of hypotheses and lets the bad ones die off.
+        </p>
+        <p>
+            The task is <em>global</em> localization, which is the hard version. The robot is not told
+            roughly where it is and asked to refine that guess. It is dropped somewhere in Wean Hall
+            with no prior, and has to work out its own position from scratch using only wheel odometry
+            and a 180-degree laser scan matched against a known occupancy map.
+        </p>
+    </section>
+
+    <section>
+        <h2>Particle initialization</h2>
+        <p>
+            We started by initializing particles across the entire map, but that wastes most of them:
+            you need a very large number before enough land in the narrow corridors where the robot
+            actually is. So we implemented <code>init_particles_freespace</code>, which seeds particles
+            only in the free hallway space, putting the population where the answer can plausibly be.
+        </p>
+    </section>
+
+    <figure class="fig-row one" style="max-width: 420px;">
+        <img src="../assets/media/slam/particle-init.png" alt="Particles initialized across the free corridor space of the Wean Hall map">
+        <figcaption>Particle initialization in the freespace of the Wean Hall map.</figcaption>
+    </figure>
+
+    <section>
+        <h2>Motion model</h2>
+        <p>
+            We use the odometry motion model from Thrun et al.'s <em>Probabilistic Robotics</em>. It
+            uses relative motion over the interval (t-1, t] to update the robot state from
+            X<sub>1</sub> = (x<sub>1</sub>, y<sub>1</sub>, θ<sub>1</sub>) to X<sub>2</sub> =
+            (x<sub>2</sub>, y<sub>2</sub>, θ<sub>2</sub>). Those are odometry readings in the robot's
+            internal frame, and their relation to global coordinates is unknown, so we decompose the
+            relative motion into three steps: a rotation δ<sub>rot1</sub>, a translation
+            δ<sub>trans</sub>, and a second rotation δ<sub>rot2</sub>.
+        </p>
+    </section>
+
+    <figure class="fig-row one" style="max-width: 380px;">
+        <img src="../assets/media/slam/odometry-model.png" alt="Odometry motion model decomposed into rotation, translation and rotation">
+        <figcaption>The odometry model: rotate, translate, rotate.</figcaption>
+    </figure>
+
+    <div class="code-block">δrot1  = atan2(y2 - y1, x2 - x1) - θ1
+δtrans = sqrt((x2 - x1)² + (y2 - y1)²)
+δrot2  = θ2 - θ1 - δrot1</div>
+
+    <p>
+        Each step gets Gaussian noise controlled by four robot-specific parameters. Tuning these
+        mattered more than expected. We settled on low rotational noise and relatively higher
+        translational noise, because keeping both at the same value (0.01) increased the motional
+        error in the system, and too much noise overall hurt convergence.
+    </p>
+
+    <div class="code-block">α1 = 0.0001      α3 = 0.01
+α2 = 0.0001      α4 = 0.01</div>
+
+    <p>
+        We could only really test the motion model after the sensor model was already converging to a
+        ballpark location. With no noise at all, the motion simply mimicked the odometry data and
+        drifted. With too much noise on both sets, the position would converge but the particles
+        would not travel down the corridor properly. Every successful log we generated used the
+        parameters above.
+    </p>
+
+    <section>
+        <h2>Sensor model</h2>
+        <p>
+            The sensor model returns the product of individual measurement likelihoods, which become
+            the particle weights. We implemented the beam model of a range finder, which mixes four
+            densities to account for four distinct ways a laser reading goes wrong: small measurement
+            noise around the true value, unexpected objects, outright failure to detect, and
+            unexplained random noise.
+        </p>
+    </section>
+
+    <figure class="fig-row one" style="max-width: 460px;">
+        <img src="../assets/media/slam/beam-model.png" alt="The four component densities of the beam range finder model">
+        <figcaption>The four mixture components: Gaussian around the true range, exponential for short readings, a spike at max range, and a uniform floor.</figcaption>
+    </figure>
+
+    <p>
+        Each component earns its place. Unexpected objects, such as a person walking in front of the
+        robot, produce readings shorter than the true value, and that likelihood decreases with range.
+        Sensor failures return the maximum value instead of a real reading. And the uniform component
+        matters most subtly: it prevents any measurement from being assigned zero probability, which
+        would otherwise kill off correct particles on a single bad beam.
+    </p>
+
+    <section>
+        <h3>Ray casting</h3>
+        <p>
+            To weight a particle, the model compares the robot's actual laser reading against the true
+            range that <em>would</em> be measured from that particle's hypothetical pose in the map.
+            Computing that true range means tracing a ray through the occupancy grid. There are
+            several line-tracing algorithms available, such as DDA; we implemented Bresenham's line
+            algorithm.
+        </p>
+        <p>
+            For each particle we shift from the particle's position to where the laser is actually
+            mounted on the robot, convert to pixel coordinates, and compute end points for each beam
+            angle from (θ - π/2) to (θ + π/2) out to the maximum laser range. Bresenham gives us the
+            intermediate pixels along that line, and we walk them checking occupancy, treating a
+            probability at or above 0.35 as occupied.
+        </p>
+    </section>
+
+    <figure class="fig-row one">
+        <img src="../assets/media/slam/ray-tracing.png" alt="Visualization of ray tracing from particles across the map">
+        <figcaption>Ray tracing visualized: laser beams cast from particle poses into the occupancy map.</figcaption>
+    </figure>
+
+    <p>Processing all 180 beams, the ray casting routine is:</p>
+
+    <div class="code-block">Set laser_rayAngle = θ - π/2 + i*π/180
+Set start_point    = laser position on the robot
+Calculate end_point = start_point + (max_laserRange * orientation)
+Calculate line tracing pixel using Bresenham's Line Algorithm
+For each pixel that lies on the ray:
+    If occupancy probability > 0.35:
+        Higher chance the pixel is occupied
+        Return the distance upto the pixel
+    Else:
+        Higher chance the pixel is unoccupied
+        Return the max_laserRange
+Store the true_laserRange (zt^k*)
+Visualise laser_ray onto the map</div>
+
+    <section>
+        <h3>Parameter tuning</h3>
+        <p>
+            The sensor model parameters were tuned over many iterations. To build intuition we
+            visualized the net probability distribution by generating a range of fabricated sensor
+            values against an assigned true range, which showed us the likelihood of any individual
+            beam. Below is that distribution for a true range of 4000.
+        </p>
+    </section>
+
+    <figure class="fig-row one" style="max-width: 440px;">
+        <img src="../assets/media/slam/likelihood.png" alt="Net probability distribution over sensor readings for a true range of 4000">
+        <figcaption>The combined likelihood for z* = 4000: the Gaussian peak at the true range, the exponential rise near zero, and the max-range plateau.</figcaption>
+    </figure>
+
+    <p>
+        What made this tuning interesting is that nearly every parameter fails in <em>both</em>
+        directions:
+    </p>
+    <ul>
+        <li><strong>z<sub>hit</sub></strong> — raising it says the sensor is more accurate, rewarding
+            readings that match the true range. Too high, and particles converge very fast, usually to
+            the wrong place.</li>
+        <li><strong>z<sub>short</sub></strong> — raising it rewards readings short of the true range.
+            Tricky, because the dataset visibly has a person walking in front of the robot, so short
+            readings are genuinely expected. But too high and particles facing an obstacle in the
+            wrong location survive anyway.</li>
+        <li><strong>z<sub>max</sub></strong> — set between the uniform random floor and the peak of
+            the Gaussian.</li>
+        <li><strong>z<sub>rand</sub></strong> — tuned to bring likelihoods close to 1 and avoid
+            numerical issues. Set the uniform floor too low against the Gaussian and particles die
+            off fast from tiny weights.</li>
+        <li><strong>σ<sub>hit</sub></strong> — widens the Gaussian, giving the model slack around the
+            true range. Slows convergence but makes the filter more robust.</li>
+        <li><strong>λ<sub>short</sub></strong> — scales the short distribution, adjusted alongside
+            z<sub>short</sub>.</li>
+        <li><strong>max_range</strong> — 8191 cm, the largest value observed across all logs. Our ray
+            casting never produced a true range above about 5000 cm, so we treat any reading well
+            above that as an error measurement.</li>
+        <li><strong>subsampling</strong> — how many of the 180 beams to actually use. We used every
+            5th; sampling more costs computation time.</li>
+    </ul>
+
+    <div class="code-block">zhit             12          σhit              200
+zshort           1           λshort            0.002
+zmax             0.01        max_range         8191 cm
+zrand            8000        min_probability   0.35
+subsampling      5           No. of particles  500</div>
+
+    <section>
+        <h2>Resampling</h2>
+        <p>
+            We implemented both multinomial and low-variance resampling. Multinomial sampling simply
+            draws particles from the multinomial distribution formed by their importance weights. We
+            used low-variance resampling instead: draw a single random number, then select particles
+            at equally spaced intervals from it, rather than drawing M independent random numbers.
+        </p>
+        <p>
+            This is more systematic and strictly better behaved. If all particles carry the same
+            weight, low-variance sampling reproduces the set exactly, where multinomial sampling can
+            fail and lose diversity by chance. It is survival of the fittest, but without the
+            arbitrary casualties. We also only resample when the robot is actually moving.
+        </p>
+    </section>
+
+    <section>
+        <h2>Making it fast</h2>
+        <p>
+            Ray casting is by far the most expensive operation, so we precomputed a lookup table: all
+            the intermediate line-tracing pixels for a start point of (0, 0) at every angle, then
+            shifted those precomputed points to each particle's laser position. That bypasses the
+            per-particle, per-orientation ray casting entirely.
+        </p>
+        <p>
+            We also added multiprocessing in Python, wrapping the filter in a <code>monte_carlo</code>
+            function run across processes. On a 10-particle test, runtime dropped from 301 seconds to
+            208, and the gap widens considerably with more particles. That speedup is what made it
+            practical to test with large particle counts, which in turn made the parameter tuning
+            iterations fast enough to actually converge on good values.
+        </p>
+    </section>
+
+    <section>
+        <h2>Results</h2>
+        <p>
+            The filter localizes successfully across three different robot log files, all generated
+            with the parameters listed above.
+        </p>
+    </section>
+
+    <div class="video-grid">
+        <figure>
+            <div class="video-embed">
+                <iframe src="https://www.youtube.com/embed/kSVxaVqeip0"
+                    title="Particle filter localization on log 1" loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+            </div>
+            <figcaption>Log 1.</figcaption>
+        </figure>
+        <figure>
+            <div class="video-embed">
+                <iframe src="https://www.youtube.com/embed/u97DY_wzUR8"
+                    title="Particle filter localization on log 2" loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+            </div>
+            <figcaption>Log 2.</figcaption>
+        </figure>
+        <figure>
+            <div class="video-embed">
+                <iframe src="https://www.youtube.com/embed/jUQijpoG68s"
+                    title="Particle filter localization on log 4" loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+            </div>
+            <figcaption>Log 4.</figcaption>
+        </figure>
+        <figure>
+            <div class="video-embed">
+                <iframe src="https://www.youtube.com/embed/U037GU0ST7c"
+                    title="The kidnapped robot problem" loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+            </div>
+            <figcaption>The kidnapped robot problem.</figcaption>
+        </figure>
+    </div>
+
+    <p>
+        One honest caveat: we used a random seed for particle generation, and rerunning gave similar
+        performance for a given seed. Logs 2 and 4 were considerably more repeatable than log 1, which
+        needed additional tuning whenever the seed changed. The filter works, but its robustness to
+        initialization is not uniform across the datasets.
+    </p>
+
+    <section>
+        <h2>Extra credit: the kidnapped robot</h2>
+        <p>
+            The kidnapped robot problem asks what happens when a well-localized robot is picked up and
+            moved somewhere else without being told. We built a version of a log with entries removed
+            to simulate exactly that. Around the kidnap point, the localized particles spread out in
+            all directions, which is the desirable behavior: the filter abandons its now-wrong
+            certainty and widens the search, improving the chance of finding the nearest landmark and
+            relocalizing from consecutive sensor readings.
+        </p>
+        <p>
+            We also considered adapting the number of particles over time, which would help
+            computationally but is tricky to get right, since it needs a principled criterion for when
+            to shrink the population. Our thinking was to keep the count fixed through resampling,
+            then reduce it proportionally once some threshold number of particles had collapsed onto
+            the same state, retaining the localization information while dropping redundancy.
+        </p>
+    </section>
+
+    <section>
+        <h2>Future work</h2>
+        <ul>
+            <li>Vectorize the Python implementation for speed.</li>
+            <li>Move the heavy computation to the GPU with CUDA or Numba.</li>
+            <li>Automatically tune the sensor model parameters by analyzing the log file, rather than
+                by hand.</li>
+            <li>Improve overall robustness through better parameter tuning, particularly on the motion
+                model, where we ran into several issues with particle movement.</li>
+        </ul>
+
+        <div class="project-page-tags">
+            <span class="tag">Particle Filter</span>
+            <span class="tag">Monte Carlo Localization</span>
+            <span class="tag">Bayes Filter</span>
+            <span class="tag">Beam Sensor Model</span>
+            <span class="tag">Bresenham Ray Casting</span>
+            <span class="tag">LiDAR</span>
+            <span class="tag">Python</span>
+        </div>
+        <div class="project-links">
+            <a href="../assets/media/slam/particle-filter-writeup.pdf" target="_blank" class="btn">Read the full write-up (PDF) ↗</a>
+        </div>
+    </section>
+
+    <nav class="project-nav">
+        <a href="./computer-vision.html">
+            <div class="nav-label">← Previous</div>
+            <div class="nav-title">Computer Vision Projects</div>
+        </a>
+        <a href="./cmu.html" class="next">
+            <div class="nav-label">Next →</div>
+            <div class="nav-title">CMU Projects</div>
+        </a>
+    </nav>
+</article>
+
+<div id="site-footer"></div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
