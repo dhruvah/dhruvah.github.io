@@ -80,55 +80,28 @@
     <div class="coursework-group">
         <h2>AI / ML / controls</h2>
 
-        <div class="coursework-item">
-            <span class="coursework-course">Controls · MATLAB</span>
-            <h3>Inverse kinematics via a distal-teacher network</h3>
-            <p>
-                Learned the inverse kinematics of a 3-DOF planar manipulator. First trained a network
-                on the forward kinematics from 100 random joint configurations, then added an inverse
-                network and trained both together with the distal-teacher method and
-                Levenberg-Marquardt optimization. Given a desired end-effector position, the
-                controller network returns a valid set of joint angles — built from scratch in MATLAB
-                without any neural-network libraries.
-            </p>
-            <div class="project-page-tags">
-                <span class="tag">Neural Networks</span>
-                <span class="tag">Distal Teacher</span>
-                <span class="tag">MATLAB</span>
+        <a href="./ai-ml-controls.html" class="project-card featured">
+            <div class="project-thumb">
+                <img src="../assets/media/aiml/fuzzy-parallel-3.png" alt="Simulated parallel-parking trajectory produced by the fuzzy controller" loading="lazy">
             </div>
-        </div>
-
-        <div class="coursework-item">
-            <span class="coursework-course">Controls · Simulink</span>
-            <h3>Fuzzy-logic controllers for autonomous parking</h3>
-            <p>
-                Mamdani fuzzy controllers for autonomous back-up and parallel parking. The back-parking
-                controller used three input membership functions and 27 rules and stayed robust across
-                hard cases like double-diamond starts; the parallel-parking controller used four inputs
-                and 43 rules, adding front-axle displacement. Built with the MATLAB Fuzzy Toolbox and
-                Simulink.
-            </p>
-            <div class="project-page-tags">
-                <span class="tag">Fuzzy Logic</span>
-                <span class="tag">Mamdani</span>
-                <span class="tag">Simulink</span>
+            <div class="project-body">
+                <div class="project-category">Controls · MATLAB &amp; Simulink</div>
+                <div class="project-title">AI, machine learning and controls</div>
+                <div class="project-desc">
+                    Two projects where the controller is learned or reasoned rather than derived:
+                    solving a 3-DOF arm's inverse kinematics with a neural network trained through a
+                    distal teacher, and hand-designing Mamdani fuzzy-logic controllers that back a car
+                    into a space and parallel park it.
+                </div>
+                <div class="project-tags">
+                    <span class="tag">Neural Networks</span>
+                    <span class="tag">Distal Teacher</span>
+                    <span class="tag">Fuzzy Logic</span>
+                    <span class="tag">MATLAB</span>
+                    <span class="tag">Simulink</span>
+                </div>
             </div>
-        </div>
-
-        <div class="coursework-item">
-            <span class="coursework-course">Machine Learning</span>
-            <h3>Diabetic retinopathy detection with a CNN</h3>
-            <p>
-                Multi-class image classification to detect the stages of diabetic retinopathy, a
-                diabetes-related retinal complication that can cause vision loss, using convolutional
-                neural networks.
-            </p>
-            <div class="project-page-tags">
-                <span class="tag">CNN</span>
-                <span class="tag">Medical Imaging</span>
-                <span class="tag">Classification</span>
-            </div>
-        </div>
+        </a>
     </div>
 
     <!-- ===================== CAD ===================== -->

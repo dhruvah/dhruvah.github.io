@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diabetic Retinopathy Detection via CNN · Harsh Dhruva</title>
+    <meta name="description" content="Applying AlexNet, ResNet50 and VGG16 to grade diabetic retinopathy from retinal fundus images, and decomposing the categorical problem into binary classifiers.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<article class="project-page">
+    <a href="./cmu.html" class="project-back">CMU projects</a>
+
+    <header class="project-page-header">
+        <div class="project-page-category-with-logo">
+            <img src="../assets/media/about/cmu-seal.png" alt="Carnegie Mellon University" class="project-company-logo">
+            <span class="project-page-category">Graduate Coursework · CMU</span>
+        </div>
+        <h1>Diabetic retinopathy detection via CNN.</h1>
+        <p class="project-page-summary">
+            Diabetic retinopathy is a complication of diabetes in which lesions form on the retina,
+            affecting vision and eventually causing blindness. We applied several existing image
+            classification CNN architectures to grading it from retinal photographs, then tried
+            breaking the five-way grading problem into a cascade of binary classifiers to see whether
+            it would perform better.
+        </p>
+    </header>
+
+    <div class="project-meta">
+        <div class="project-meta-item">
+            <span class="label">Timeline</span>
+            <span class="value">Fall 2020</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Team</span>
+            <span class="value">4 people</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Stack</span>
+            <span class="value">Python · Keras · CNNs</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Best result</span>
+            <span class="value">98% binary · 80% 5-class</span>
+        </div>
+    </div>
+
+    <section>
+        <h2>The problem</h2>
+        <p>
+            Diabetic retinopathy (DR) is a complication resulting from diabetes in which long-term
+            high blood sugar damages the blood vessels on the retina, affecting vision. In its early
+            stages it has only a mild effect, but if allowed to proliferate it can eventually lead to
+            blindness. Anyone with type 1 or type 2 diabetes is at risk.
+        </p>
+        <p>
+            The long-term damage can be effectively managed, and often prevented, if the disease is
+            caught early. So diabetic patients have regular eye exams where a physician photographs
+            the rear of the eye, called the fundus. Those fundus images are then examined for features
+            like microaneurysms, hemorrhages, hard exudates and soft exudates, each of which shows up
+            as a discolored region.
+        </p>
+    </section>
+
+    <figure class="fig-row one" style="max-width: 520px;">
+        <img src="../assets/media/dr/lesions.png" alt="Six fundus images annotated with the retinal features associated with diabetic retinopathy">
+        <figcaption>The features clinicians look for: blood vessels and the optic disc, microaneurysms, soft and hard exudates, and hemorrhages. Figure from Alyoubi et al., <em>Diabetic retinopathy detection through deep learning techniques: a review</em> (2020).</figcaption>
+    </figure>
+
+    <p>
+        Reading these images takes a trained clinician, and human error is a real concern in
+        image-based diagnosis. A reliable automated grader would cut that error, reduce the need for
+        scarce specialist labor, and potentially catch the disease earlier. That is the case for
+        pointing a CNN at the problem.
+    </p>
+
+    <section>
+        <h2>My contribution</h2>
+        <p>
+            This was a four-person project with Michael Dermksian, Michael Turski and Eric Rasmussen.
+            I worked mainly on the investigation and testing of established architectures: I expanded
+            the set of well-known CNNs we tried by building working models for each, researched
+            alternative datasets and approaches for overcoming the overfitting we kept running into,
+            and generated a large share of the trained models we evaluated. I also contributed to the
+            presentation and the final write-up.
+        </p>
+    </section>
+
+    <section>
+        <h2>Data</h2>
+        <p>
+            We relied on two public sources. <strong>Messidor-2</strong> is 1,748 right and left
+            fundus images from 874 examinations, shot at very high resolution with consistent
+            equipment and field of view, labeled by retina specialists. <strong>Kaggle</strong> gave
+            us 88,704 images combining the 2015 Diabetic Retinopathy Detection competition (EyePACS)
+            with the APTOS 2019 Blindness Detection set. The Kaggle images are far less consistent in
+            quality and framing, ranging from 2612 x 1964 pixels down to 221 x 205, but the sheer size
+            of the dataset is attractive, since CNNs generally need a lot of data to train well. We
+            also used a Gaussian-filtered 3,632-image subset of it.
+        </p>
+        <p>
+            One honest caveat we recorded in the paper: results can only ever be as good as the
+            dataset. The labels are generated by clinicians, so any bias in the human labeling gets
+            inherited by the model.
+        </p>
+
+        <h3>Preprocessing</h3>
+        <p>
+            The irregularity of the Kaggle data forced us to resize everything to a common
+            224 x 224 pixels, which also let us initialize from ImageNet weights, and at which the
+            features associated with the different DR levels are still visible to the human eye. We
+            then applied Gaussian filtering and contrast limited adaptive histogram equalization
+            (CLAHE), treating each filtered version as a separate dataset to train on and compare
+            against the unfiltered images. On top of that we augmented aggressively during training,
+            with width and height shifts, rotations, brightness changes, standardization, zoom, and
+            horizontal and vertical flips, to keep the network from overfitting on incidental features
+            like edge position or overall color.
+        </p>
+    </section>
+
+    <div class="media-grid media-grid-2">
+        <figure>
+            <img src="../assets/media/dr/preprocess-original.png" alt="Original unfiltered fundus image">
+            <figcaption>Original image.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/dr/preprocess-clahe.png" alt="Fundus image with CLAHE contrast enhancement applied">
+            <figcaption>CLAHE contrast enhancement applied.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/dr/preprocess-gaussian.png" alt="Fundus image with a Gaussian filter applied">
+            <figcaption>Gaussian filter applied.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/dr/preprocess-clahe-gaussian.png" alt="Fundus image with CLAHE and Gaussian filtering with color">
+            <figcaption>CLAHE plus Gaussian filter, with color.</figcaption>
+        </figure>
+    </div>
+
+    <section>
+        <h2>Architectures</h2>
+        <h3>AlexNet</h3>
+        <p>
+            As one of the first highly successful CNNs, AlexNet inspired many of the more recent
+            architectures: five convolutional layers and three fully connected layers, ReLU
+            activations, and dropout rather than L2 regularization to control overfitting. Training a
+            generic AlexNet on both Kaggle and Messidor-2, we hit extreme overfitting. Instead of
+            learning the relevant filters and features, it effectively memorized the images, and
+            training accuracy drove to 100% while validation accuracy fell to about 35%.
+        </p>
+    </section>
+
+    <figure class="fig-row one" style="max-width: 460px;">
+        <img src="../assets/media/dr/alexnet-training.png" alt="AlexNet accuracy and loss curves showing severe overfitting">
+        <figcaption>AlexNet on Messidor-2. After initially tracking together, training accuracy drives to 100% while validation falls to around 35%.</figcaption>
+    </figure>
+
+    <p>
+        We tried to mitigate this with augmentation, different batch sizes, loss functions,
+        regularization techniques and adjustable learning rates. What we got instead was the other
+        failure mode: because the datasets are mostly healthy images (label 0), the network learned it
+        could maximize accuracy by simply calling nearly everything healthy. The confusion matrix
+        below is what that looks like, at a deceptively respectable 73.5% accuracy.
+    </p>
+
+    <figure class="fig-row one" style="max-width: 420px;">
+        <img src="../assets/media/dr/alexnet-confusion.png" alt="AlexNet confusion matrix showing every class predicted as label 0">
+        <figcaption>AlexNet biasing to the 0 label: essentially every image, at every true severity, predicted healthy.</figcaption>
+    </figure>
+
+    <section>
+        <h3>ResNet50</h3>
+        <p>
+            ResNet introduces residual learning through shortcut connections, which perform identity
+            mapping so that extra depth does not add parameters, cutting computation while improving
+            accuracy. We implemented the 50-layer variant. The results were mixed: like AlexNet it
+            often overfit, though with somewhat better validation numbers, reaching about 80%
+            validation accuracy against over 95% training accuracy.
+        </p>
+
+        <h3>VGG16</h3>
+        <p>
+            VGG, another successor to AlexNet, is where we had the most success. We tried VGG19
+            without beating it. Using VGG16 initialized with ImageNet weights on the Gaussian-filtered
+            dataset, we reached 95%+ training and 80% validation accuracy on the full 0 to 4 grading.
+        </p>
+    </section>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/dr/vgg16-training.png" alt="VGG16 training and validation accuracy and loss curves">
+            <figcaption>VGG16 accuracy and loss, training versus validation.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/dr/vgg16-confusion.png" alt="VGG16 confusion matrix across all five DR labels">
+            <figcaption>VGG16 across all five labels: healthy is nailed, the severities blur together.</figcaption>
+        </figure>
+    </div>
+
+    <p>
+        That confusion matrix is the key result of the whole project. The network clearly separates
+        label 0 (healthy) from everything else, with 96.2% precision, 98.6% recall and a 97.45% F1
+        score on that distinction. What it cannot do is tell classes 1 through 4 apart from each
+        other. Detecting the disease turned out to be a much easier problem than grading it.
+    </p>
+
+    <section>
+        <h2>Splitting it into binary problems</h2>
+        <p>
+            That observation suggested an approach: rather than asking one network for a five-way
+            answer, decompose the problem into a cascade of binary decisions, each of which the
+            network might handle well.
+        </p>
+
+        <h3>Step one: healthy versus afflicted</h3>
+        <p>
+            We relabeled classes 1 through 4 as simply "afflicted" and trained VGG16 against class 0,
+            with updated class weights to handle the imbalance, augmentation and L2 regularization, on
+            the Gaussian-filtered Kaggle set. This worked very well: 99.4% training and 98% validation
+            accuracy, with 98.1% precision, 99% recall and a 98.6% F1 score.
+        </p>
+    </section>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/dr/binary-training.png" alt="Accuracy and loss curves for healthy versus afflicted binary classification">
+            <figcaption>Binary classification: training and validation track each other closely.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/dr/binary-confusion.png" alt="Confusion matrix for healthy versus afflicted classification">
+            <figcaption>98% of unafflicted and 99% of afflicted images classified correctly.</figcaption>
+        </figure>
+    </div>
+
+    <p>
+        As a screening tool, that is the result that matters. Catching the disease early is what
+        prevents the damage, and a model this reliable at answering "is there any DR here at all"
+        could plausibly do useful triage work.
+    </p>
+
+    <section>
+        <h3>Step two: grading the afflicted images</h3>
+        <p>
+            With healthy images identified, we excluded them and tried to classify the remaining
+            labels 1 to 4, adding CLAHE alongside the Gaussian filter to bring out features. Accuracy
+            was poor, around 75% training and 65% validation. But the confusion matrix was more
+            informative than the accuracy number.
+        </p>
+    </section>
+
+    <figure class="fig-row one" style="max-width: 460px;">
+        <img src="../assets/media/dr/afflicted-confusion.png" alt="Confusion matrix for categorical classification of afflicted images across labels 1 to 4">
+        <figcaption>The errors are structured: confusion sits between 1 and 2, and between 3 and 4, not across the two groups.</figcaption>
+    </figure>
+
+    <p>
+        The network could reliably tell whether an image was in the {1, 2} group or the {3, 4} group,
+        and only struggled within each pair. That implies the feature differences between neighboring
+        severities are small and indistinct, while the gap between early and late stage is real. So we
+        split it again along exactly that seam.
+    </p>
+
+    <section>
+        <h3>Step three: early versus late, then within each</h3>
+        <p>
+            Grouping 1 and 2 as early-stage and 3 and 4 as late-stage, the same VGG setup gave 98.1%
+            training and 80.0% validation accuracy, though precision fell to 61.1% and recall to 66%.
+            We then ran the two final splits: class 1 versus class 2 reached 96% training and 82%
+            validation accuracy, and class 3 versus class 4 reached 97% training but only 57%
+            validation, which is essentially a coin flip.
+        </p>
+    </section>
+
+    <figure class="fig-row one" style="max-width: 420px;">
+        <img src="../assets/media/dr/early-late-confusion.png" alt="Confusion matrix for early stage versus late stage DR classification">
+        <figcaption>Early versus late stage: most images land correctly, with about 20% misclassified.</figcaption>
+    </figure>
+
+    <section>
+        <h2>Conclusion</h2>
+        <p>
+            CNNs can detect the presence of diabetic retinopathy with high accuracy. They struggle to
+            grade its severity. Our best five-way result, VGG16 with augmentation and L2
+            regularization on the Gaussian-filtered Kaggle data, reached 98.1% training and 80.0%
+            validation accuracy, and the confusion matrix showed 96% of healthy images predicted
+            correctly with nearly all the error concentrated between the DR levels.
+        </p>
+        <p>
+            The binary decomposition did not pay off the way we hoped. It made healthy-versus-afflicted
+            excellent, but subdividing further did not meaningfully beat one-shot categorical
+            classification. We were time-constrained and did little tuning on those sub-models, and
+            properly measuring the gain would need cross-validation studies across the combinations,
+            so this is a preliminary result rather than a verdict.
+        </p>
+        <p>
+            The more interesting takeaway is about the problem itself: the presence of DR is not
+            nearly as subtle a signal as the variation between its levels. Architectures like VGG16
+            are built to separate thousands of vastly different image classes. Grading retinopathy
+            asks the opposite question, distinguishing near-identical images by a small difference in
+            the count or character of a few small lesions, and we came to believe a network designed
+            for that kind of fine-grained discrimination would do better than a general-purpose
+            classifier.
+        </p>
+        <div class="project-page-tags">
+            <span class="tag">CNN</span>
+            <span class="tag">VGG16</span>
+            <span class="tag">ResNet50</span>
+            <span class="tag">AlexNet</span>
+            <span class="tag">Transfer Learning</span>
+            <span class="tag">Medical Imaging</span>
+            <span class="tag">Classification</span>
+            <span class="tag">CLAHE</span>
+        </div>
+        <div class="project-links">
+            <a href="../assets/media/dr/dr-report.pdf" target="_blank" class="btn">Read the full report (PDF) ↗</a>
+        </div>
+    </section>
+
+    <nav class="project-nav">
+        <a href="./computer-vision.html">
+            <div class="nav-label">← Previous</div>
+            <div class="nav-title">Computer Vision Projects</div>
+        </a>
+        <a href="./cmu.html" class="next">
+            <div class="nav-label">Next →</div>
+            <div class="nav-title">CMU Projects</div>
+        </a>
+    </nav>
+</article>
+
+<div id="site-footer"></div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

@@ -79,21 +79,27 @@
     <div class="coursework-group">
         <h2>Featured projects</h2>
 
-        <div class="coursework-item">
-            <span class="coursework-course">Space Robotics</span>
-            <h3><a href="./moonranger.html">MoonRanger — lunar micro-rover perception →</a></h3>
-            <p>
-                Software perception for one of the first truly autonomous micro-rovers targeted for
-                the lunar surface. Worked on the stereo reconstruction pipeline, building tooling to
-                dump disparity data to disk for offline inspection of failures that aren't visible in
-                real time.
-            </p>
-            <div class="project-page-tags">
-                <span class="tag">Stereo Vision</span>
-                <span class="tag">C++</span>
-                <span class="tag">Autonomy</span>
+        <a href="./moonranger.html" class="project-card featured">
+            <div class="project-thumb thumb-logo">
+                <img src="../assets/media/moonranger/rover.png" alt="The MoonRanger lunar rover" loading="lazy"
+                     style="width:auto; height:auto; max-height:210px; max-width:70%; object-fit:contain;">
             </div>
-        </div>
+            <div class="project-body">
+                <div class="project-category">Space Robotics · CMU</div>
+                <div class="project-title">MoonRanger: lunar micro-rover perception</div>
+                <div class="project-desc">
+                    Software perception for one of the first truly autonomous micro-rovers targeted for
+                    the lunar surface. Worked on the stereo reconstruction pipeline, getting disparity
+                    data saved and inspectable so failures could be debugged offline.
+                </div>
+                <div class="project-tags">
+                    <span class="tag">Stereo Vision</span>
+                    <span class="tag">C++</span>
+                    <span class="tag">ROS</span>
+                    <span class="tag">Autonomy</span>
+                </div>
+            </div>
+        </a>
 
         <a href="./tripawd.html" class="project-card featured">
             <div class="project-thumb">
@@ -139,6 +145,33 @@
                     <span class="tag">3D Reconstruction</span>
                     <span class="tag">CNNs</span>
                     <span class="tag">Photometric Stereo</span>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- ===================== MACHINE LEARNING ===================== -->
+    <div class="coursework-group">
+        <h2>Machine learning</h2>
+
+        <a href="./diabetic-retinopathy.html" class="project-card featured">
+            <div class="project-thumb">
+                <img src="../assets/media/dr/preprocess-clahe-gaussian.png" alt="A retinal fundus image with contrast enhancement applied" loading="lazy">
+            </div>
+            <div class="project-body">
+                <div class="project-category">Graduate Coursework · 4-person team</div>
+                <div class="project-title">Diabetic retinopathy detection via CNN</div>
+                <div class="project-desc">
+                    Grading diabetic retinopathy from retinal photographs with AlexNet, ResNet50 and
+                    VGG16. Detecting the disease turned out to be easy (98%) and grading its severity
+                    hard (80%), so we broke the five-way problem into a cascade of binary classifiers
+                    to find out why.
+                </div>
+                <div class="project-tags">
+                    <span class="tag">CNN</span>
+                    <span class="tag">VGG16</span>
+                    <span class="tag">Transfer Learning</span>
+                    <span class="tag">Medical Imaging</span>
                 </div>
             </div>
         </a>
