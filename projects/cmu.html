@@ -181,87 +181,25 @@
     <div class="coursework-group">
         <h2>SLAM mini projects (16-833)</h2>
 
-        <a href="./particle-filter.html" class="project-card featured">
+        <a href="./slam-mini-projects.html" class="project-card featured">
             <div class="project-thumb">
                 <img src="../assets/media/slam/particle-init.png" alt="Particles spread across the free space of the Wean Hall map" loading="lazy">
             </div>
             <div class="project-body">
-                <div class="project-category">16-833 · Mini project 1</div>
-                <div class="project-title">Robot localization with particle filters</div>
+                <div class="project-category">16-833 · 4 mini projects</div>
+                <div class="project-title">SLAM mini projects</div>
                 <div class="project-desc">
-                    Global localization for a lost indoor robot in Wean Hall using only odometry and a
-                    laser rangefinder against a known map. Monte Carlo localization with an odometry
-                    motion model, a beam sensor model, Bresenham ray casting and low-variance
-                    resampling, validated across three robot datasets.
+                    Four takes on the same problem: particle filter localization, EKF-SLAM, SLAM as a
+                    sparse least-squares problem, and dense SLAM with point-based fusion. From
+                    thousands of samples, to a single Gaussian, to batch linear algebra, to raw
+                    geometry.
                 </div>
                 <div class="project-tags">
                     <span class="tag">Particle Filter</span>
-                    <span class="tag">Monte Carlo Localization</span>
-                    <span class="tag">Ray Casting</span>
-                    <span class="tag">LiDAR</span>
-                </div>
-            </div>
-        </a>
-
-        <a href="./ekf-slam.html" class="project-card featured">
-            <div class="project-thumb">
-                <img src="../assets/media/ekf-slam/default.png" alt="EKF-SLAM trajectory with landmark covariance ellipses" loading="lazy">
-            </div>
-            <div class="project-body">
-                <div class="project-category">16-833 · Mini project 2</div>
-                <div class="project-title">SLAM using an extended Kalman filter</div>
-                <div class="project-desc">
-                    Estimating the robot trajectory and six landmark positions simultaneously from
-                    range-and-bearing measurements, with an explicit covariance on every one, plus a
-                    systematic study of how each noise parameter reshapes the uncertainty ellipses.
-                </div>
-                <div class="project-tags">
                     <span class="tag">EKF-SLAM</span>
-                    <span class="tag">Kalman Filter</span>
-                    <span class="tag">Covariance</span>
-                    <span class="tag">Python</span>
-                </div>
-            </div>
-        </a>
-
-        <a href="./slam-solvers.html" class="project-card featured">
-            <div class="project-thumb">
-                <img src="../assets/media/slam-solvers/R_qr_colamd_loop.png" alt="Sparsity pattern of a square root information matrix" loading="lazy">
-            </div>
-            <div class="project-body">
-                <div class="project-category">16-833 · Mini project 3</div>
-                <div class="project-title">Linear and nonlinear SLAM solvers</div>
-                <div class="project-desc">
-                    SLAM as one large sparse least-squares problem instead of a filter. Benchmarking LU
-                    against QR with and without COLAMD reordering, reading the answer off the sparsity
-                    of the information matrix, then extending to the nonlinear case.
-                </div>
-                <div class="project-tags">
                     <span class="tag">Sparse Least Squares</span>
-                    <span class="tag">LU / QR</span>
-                    <span class="tag">COLAMD</span>
-                    <span class="tag">Gauss-Newton</span>
-                </div>
-            </div>
-        </a>
-
-        <a href="./dense-slam.html" class="project-card featured">
-            <div class="project-thumb">
-                <img src="../assets/media/dense-slam/fusion-groundtruth.png" alt="Dense living room reconstruction from point-based fusion" loading="lazy">
-            </div>
-            <div class="project-body">
-                <div class="project-category">16-833 · Mini project 4</div>
-                <div class="project-title">Dense SLAM with point-based fusion</div>
-                <div class="project-desc">
-                    A full dense RGB-D SLAM system: point-to-plane ICP with projective data association
-                    for tracking, point-based fusion into a surfel map at under 9% of the raw point
-                    count, then tracking against that map instead of ground truth.
-                </div>
-                <div class="project-tags">
-                    <span class="tag">Dense SLAM</span>
                     <span class="tag">ICP</span>
-                    <span class="tag">Point-Based Fusion</span>
-                    <span class="tag">RGB-D</span>
+                    <span class="tag">Dense SLAM</span>
                 </div>
             </div>
         </a>

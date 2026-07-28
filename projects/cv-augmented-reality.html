@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Augmented Reality with Planar Homographies · Harsh Dhruva</title>
+    <meta name="description" content="An augmented reality application built on planar homographies: BRIEF descriptor matching, homography estimation, and warping a video onto a book frame by frame.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<article class="project-page">
+    <a href="./computer-vision.html" class="project-back">Computer vision projects</a>
+
+    <header class="project-page-header">
+        <div class="project-page-category-with-logo">
+            <img src="../assets/media/about/cmu-seal.png" alt="Carnegie Mellon University" class="project-company-logo">
+            <span class="project-page-category">Project 2 · CMU 16-720</span>
+        </div>
+        <h1>Augmented reality with planar homographies.</h1>
+        <p class="project-page-summary">
+            A homography is the mapping between two views of the same plane. Estimate one reliably and
+            you can paste anything you like onto that plane, which is the whole basis of
+            marker-based AR.
+        </p>
+    </header>
+
+    <div class="project-meta">
+        <div class="project-meta-item">
+            <span class="label">Course</span>
+            <span class="value">16-720 Computer Vision</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Level</span>
+            <span class="value">Graduate</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Descriptor</span>
+            <span class="value">BRIEF</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Focus</span>
+            <span class="value">Projective geometry</span>
+        </div>
+    </div>
+
+    <section>
+        <h2>Setting it up</h2>
+        <p>
+            After finding point correspondences between two images with a BRIEF descriptor, I estimated
+            a homography between them and used it to warp and overlay content. To test it, I computed
+            a homography between a textbook cover and the same textbook sitting on a table, then warped
+            a Harry Potter cover and overlaid it onto the textbook.
+        </p>
+    </section>
+
+    <div class="media-grid media-grid-3">
+        <figure>
+            <img src="../assets/media/cv/cv_cover.jpg" alt="Textbook cover reference image">
+            <figcaption>Textbook cover.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/cv/cv_desk.png" alt="Textbook on a desk">
+            <figcaption>Textbook on the table.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/cv/hp_cover.jpg" alt="Harry Potter cover to overlay">
+            <figcaption>Cover to overlay.</figcaption>
+        </figure>
+    </div>
+
+    <p>
+        The BRIEF descriptor supplied the corresponding matching points used to compute the
+        homography. Tuning the matching parameters matters here: the homography is only as good as
+        the correspondences feeding it, and a handful of bad matches will drag the estimate off.
+    </p>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/cv/cv2-1.png" alt="BRIEF descriptor point matches">
+            <figcaption>BRIEF descriptor matches.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/cv/cv2-2.png" alt="BRIEF descriptor point matches after tuning">
+            <figcaption>Matches after parameter tuning.</figcaption>
+        </figure>
+    </div>
+
+    <p>
+        The cover was then warped and overlaid onto the textbook image to produce the result below.
+    </p>
+
+    <figure class="fig-row one">
+        <img src="../assets/media/cv/cv2-4.png" alt="Warped cover overlaid on the textbook">
+        <figcaption>The warped cover overlaid onto the textbook.</figcaption>
+    </figure>
+
+    <section>
+        <h2>From a single frame to video</h2>
+        <p>
+            With the homographies working well, I extended it to a full AR application, overlaying a
+            video onto the book by computing a homography frame by frame.
+        </p>
+    </section>
+
+    <div class="video-embed">
+        <iframe src="https://www.youtube.com/embed/w86tmwwb-Ck"
+            title="AR overlay with planar homographies" loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
+    </div>
+
+    <section>
+        <div class="project-page-tags">
+            <span class="tag">Planar Homographies</span>
+            <span class="tag">BRIEF</span>
+            <span class="tag">Feature Matching</span>
+            <span class="tag">Image Warping</span>
+            <span class="tag">Augmented Reality</span>
+        </div>
+    </section>
+
+    <nav class="project-nav">
+        <a href="./cv-scene-classification.html">
+            <div class="nav-label">← Previous</div>
+            <div class="nav-title">Spatial Pyramid Matching</div>
+        </a>
+        <a href="./cv-lucas-kanade.html" class="next">
+            <div class="nav-label">Next →</div>
+            <div class="nav-title">Lucas-Kanade Tracking</div>
+        </a>
+    </nav>
+</article>
+
+<div id="site-footer"></div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

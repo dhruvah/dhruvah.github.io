@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Two-view 3D Reconstruction · Harsh Dhruva</title>
+    <meta name="description" content="Recovering 3D structure from two images: the eight-point algorithm for the fundamental matrix, the essential matrix from calibrated intrinsics, and triangulation into a metric point cloud.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<article class="project-page">
+    <a href="./computer-vision.html" class="project-back">Computer vision projects</a>
+
+    <header class="project-page-header">
+        <div class="project-page-category-with-logo">
+            <img src="../assets/media/about/cmu-seal.png" alt="Carnegie Mellon University" class="project-company-logo">
+            <span class="project-page-category">Project 4 · CMU 16-720</span>
+        </div>
+        <h1>Two-view 3D reconstruction.</h1>
+        <p class="project-page-summary">
+            Recovering the 3D shape of an object from two different images of it, going from raw
+            correspondences through epipolar geometry to a metric point cloud.
+        </p>
+    </header>
+
+    <div class="project-meta">
+        <div class="project-meta-item">
+            <span class="label">Course</span>
+            <span class="value">16-720 Computer Vision</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Level</span>
+            <span class="value">Graduate</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Method</span>
+            <span class="value">Eight-point algorithm</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Focus</span>
+            <span class="value">Epipolar geometry</span>
+        </div>
+    </div>
+
+    <section>
+        <h2>The pipeline</h2>
+        <p>
+            The goal is a 3D reconstruction of an object from two different images. After finding
+            corresponding points, I estimated the fundamental matrix with the eight-point algorithm,
+            then combined it with the calibrated camera intrinsics to compute the essential matrix,
+            and triangulated the 2D correspondences into a 3D metric reconstruction.
+        </p>
+        <p>
+            The distinction between those two matrices is the crux. The fundamental matrix relates
+            pixel coordinates between views and knows nothing about the cameras; folding in the
+            intrinsics turns it into the essential matrix, which encodes actual relative rotation and
+            translation, and only then can triangulation produce real geometry rather than something
+            correct up to an unknown projective transformation.
+        </p>
+    </section>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/cv/im1.png" alt="Input view 1">
+            <figcaption>Input view 1.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/cv/im2.png" alt="Input view 2">
+            <figcaption>Input view 2.</figcaption>
+        </figure>
+    </div>
+
+    <p>
+        I then added automatic point matching using the epipolar constraint, which reduces the search
+        for a match from the whole second image to a single line. In the figure below, points selected
+        on the left image lie on the corresponding epipolar lines on the right.
+    </p>
+
+    <figure class="fig-row one">
+        <img src="../assets/media/cv/cv4-1.png" alt="Epipolar constraint point correspondences">
+        <figcaption>A selected point and its corresponding epipolar line in the second view.</figcaption>
+    </figure>
+
+    <figure class="fig-row one">
+        <img src="../assets/media/cv/cv4-2.png" alt="3D reconstructed point cloud">
+        <figcaption>The triangulated 3D point cloud of the object.</figcaption>
+    </figure>
+
+    <section>
+        <div class="project-page-tags">
+            <span class="tag">Epipolar Geometry</span>
+            <span class="tag">Fundamental Matrix</span>
+            <span class="tag">Essential Matrix</span>
+            <span class="tag">Eight-Point Algorithm</span>
+            <span class="tag">Triangulation</span>
+        </div>
+    </section>
+
+    <nav class="project-nav">
+        <a href="./cv-lucas-kanade.html">
+            <div class="nav-label">← Previous</div>
+            <div class="nav-title">Lucas-Kanade Tracking</div>
+        </a>
+        <a href="./cv-neural-networks.html" class="next">
+            <div class="nav-label">Next →</div>
+            <div class="nav-title">Neural Networks for Character Recognition</div>
+        </a>
+    </nav>
+</article>
+
+<div id="site-footer"></div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

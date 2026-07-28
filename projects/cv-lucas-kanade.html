@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucas-Kanade Tracking · Harsh Dhruva</title>
+    <meta name="description" content="Optical flow tracking with the Lucas-Kanade method: template tracking with drift correction, dominant affine motion for moving-object detection, and the inverse compositional extension.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<article class="project-page">
+    <a href="./computer-vision.html" class="project-back">Computer vision projects</a>
+
+    <header class="project-page-header">
+        <div class="project-page-category-with-logo">
+            <img src="../assets/media/about/cmu-seal.png" alt="Carnegie Mellon University" class="project-company-logo">
+            <span class="project-page-category">Project 3 · CMU 16-720</span>
+        </div>
+        <h1>Lucas-Kanade tracking.</h1>
+        <p class="project-page-summary">
+            Tracking by estimating optical flow, in three escalating forms: following a template
+            through a scene, separating moving objects from a moving camera, and making the whole
+            thing efficient enough to be practical.
+        </p>
+    </header>
+
+    <div class="project-meta">
+        <div class="project-meta-item">
+            <span class="label">Course</span>
+            <span class="value">16-720 Computer Vision</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Level</span>
+            <span class="value">Graduate</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Method</span>
+            <span class="value">Optical flow</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Focus</span>
+            <span class="value">Motion estimation</span>
+        </div>
+    </div>
+
+    <section>
+        <h2>Three trackers</h2>
+        <p>
+            I implemented the Lucas-Kanade method, a widely used approach for tracking by estimating
+            optical flow. The <strong>first tracker</strong> follows a moving template in the scene,
+            implemented as 2D tracking with a pure-translation warp, including a correction for the
+            template-drift problem: because each frame's template is updated from the last, small
+            alignment errors compound until the tracker slides off its target entirely.
+        </p>
+        <p>
+            The <strong>second</strong> estimates the dominant affine motion across a sequence of
+            images and then identifies the pixels that do not fit it. That inversion is the clever
+            part: rather than detecting moving objects directly, you model the motion of the
+            <em>background</em> and treat whatever disagrees as the moving object. It was tested on
+            aerial footage of moving ants and of vehicles seen from a non-stationary camera.
+        </p>
+        <p>
+            Finally, I added the <strong>inverse-compositional</strong> extension of Lucas-Kanade,
+            which restructures the optimization so that the expensive Hessian computation can be done
+            once up front rather than at every iteration, making the tracking substantially more
+            efficient.
+        </p>
+    </section>
+
+    <div class="video-grid">
+        <figure>
+            <div class="video-embed">
+                <iframe src="https://www.youtube.com/embed/ACmUhkJlGrs"
+                    title="Lucas-Kanade template tracking" loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+            </div>
+            <figcaption>Template tracking with a pure-translation warp.</figcaption>
+        </figure>
+        <figure>
+            <div class="video-embed">
+                <iframe src="https://www.youtube.com/embed/nmxPtPmHi_g"
+                    title="Ant tracking with dominant affine motion" loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+            </div>
+            <figcaption>Tracking ants via dominant affine motion.</figcaption>
+        </figure>
+        <figure>
+            <div class="video-embed">
+                <iframe src="https://www.youtube.com/embed/9nXfYtPFNho"
+                    title="Vehicle tracking with dominant affine motion" loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+            </div>
+            <figcaption>Tracking vehicles via dominant affine motion.</figcaption>
+        </figure>
+        <figure>
+            <div class="video-embed">
+                <iframe src="https://www.youtube.com/embed/iiOVbAqZz5g"
+                    title="Aerial tracking from a non-stationary camera" loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+            </div>
+            <figcaption>Moving objects in aerial footage from a non-stationary camera.</figcaption>
+        </figure>
+    </div>
+
+    <section>
+        <div class="project-page-tags">
+            <span class="tag">Lucas-Kanade</span>
+            <span class="tag">Optical Flow</span>
+            <span class="tag">Template Tracking</span>
+            <span class="tag">Affine Motion</span>
+            <span class="tag">Inverse Compositional</span>
+        </div>
+    </section>
+
+    <nav class="project-nav">
+        <a href="./cv-augmented-reality.html">
+            <div class="nav-label">← Previous</div>
+            <div class="nav-title">Augmented Reality with Homographies</div>
+        </a>
+        <a href="./cv-3d-reconstruction.html" class="next">
+            <div class="nav-label">Next →</div>
+            <div class="nav-title">Two-view 3D Reconstruction</div>
+        </a>
+    </nav>
+</article>
+
+<div id="site-footer"></div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

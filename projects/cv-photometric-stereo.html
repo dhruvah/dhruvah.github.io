@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photometric Stereo · Harsh Dhruva</title>
+    <meta name="description" content="Recovering surface shape from shading: n-dot-l rendering, calibrated photometric stereo for albedo and normals, and the uncalibrated case with the bas-relief ambiguity.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<article class="project-page">
+    <a href="./computer-vision.html" class="project-back">Computer vision projects</a>
+
+    <header class="project-page-header">
+        <div class="project-page-category-with-logo">
+            <img src="../assets/media/about/cmu-seal.png" alt="Carnegie Mellon University" class="project-company-logo">
+            <span class="project-page-category">Project 6 · CMU 16-720</span>
+        </div>
+        <h1>Photometric stereo.</h1>
+        <p class="project-page-summary">
+            Recovering the shape of an object from how it appears under different lighting directions,
+            first with the lights known, then without them, where the problem becomes genuinely
+            ambiguous in an interesting way.
+        </p>
+    </header>
+
+    <div class="project-meta">
+        <div class="project-meta-item">
+            <span class="label">Course</span>
+            <span class="value">16-720 Computer Vision</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Level</span>
+            <span class="value">Graduate</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Model</span>
+            <span class="value">Lambertian · orthographic</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Focus</span>
+            <span class="value">Shape from shading</span>
+        </div>
+    </div>
+
+    <section>
+        <h2>Rendering the n-dot-l lighting</h2>
+        <p>
+            Photometric stereo recovers the shape of an object from its appearance under a set of
+            lighting directions. This implementation assumes a Lambertian object imaged with an
+            orthographic camera. To build up the forward model first: for a fully reflective Lambertian
+            sphere centered at the origin, with an orthographic camera placed away from it and three
+            different incoming lighting directions, I simulate the sphere's appearance under the
+            n-dot-l model.
+        </p>
+    </section>
+
+    <figure class="fig-row one" style="max-width: 360px; margin: 2rem auto;">
+        <img src="../assets/media/cv/n-dot-l-rendering.png" alt="n-dot-l lighting rendering setup">
+        <figcaption>The n-dot-l rendering setup: a Lambertian sphere and an orthographic camera.</figcaption>
+    </figure>
+
+    <div class="media-grid media-grid-3">
+        <figure>
+            <img src="../assets/media/cv/rendering1.png" alt="Sphere rendered under lighting direction 1">
+            <figcaption>Lighting direction 1.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/cv/rendering2.png" alt="Sphere rendered under lighting direction 2">
+            <figcaption>Lighting direction 2.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/cv/rendering3.png" alt="Sphere rendered under lighting direction 3">
+            <figcaption>Lighting direction 3.</figcaption>
+        </figure>
+    </div>
+
+    <section>
+        <h2>Calibrated photometric stereo</h2>
+        <p>
+            Given seven images of a face lit from different directions, with the ground-truth lighting
+            directions, I invert the image formation model. From the images I recover the surface
+            albedo, which indicates how much light hitting the surface is reflected rather than
+            absorbed, and the surface normals, which encode the depth. Integrating the normals with a
+            special case of the Frankot-Chellappa algorithm to enforce integrability then gives the
+            depth, and the reconstructed shape of the face.
+        </p>
+    </section>
+
+    <figure class="fig-row one" style="max-width: 612px; margin: 2rem auto;">
+        <img src="../assets/media/cv/albedonormal.png" alt="Recovered albedo and surface normals">
+        <figcaption>Recovered albedo (left) and false-color surface normals (right).</figcaption>
+    </figure>
+
+    <div class="media-grid media-grid-3">
+        <figure>
+            <img src="../assets/media/cv/depth1.png" alt="Depth reconstruction view 1">
+            <figcaption>Reconstructed shape, view 1.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/cv/depth2.png" alt="Depth reconstruction view 2">
+            <figcaption>View 2.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/cv/depth3.png" alt="Depth reconstruction view 3">
+            <figcaption>View 3.</figcaption>
+        </figure>
+    </div>
+
+    <section>
+        <h2>Uncalibrated, and the bas-relief ambiguity</h2>
+        <p>
+            With no given lighting directions, I estimate the shape directly from the face images. The
+            lighting directions are estimated by decomposing the matrix with SVD, which introduces a
+            linear ambiguity known as the bas-relief ambiguity. Bas-relief is the old sculpting
+            technique of flattened figures protruding from a wall that, viewed from the right angle,
+            look full-depth.
+        </p>
+        <p>
+            After enforcing integrability with Frankot-Chellappa, the reconstruction looks very similar
+            to the calibrated one, but is only resolved up to a family of transformations: for any
+            parameters greater than zero there is a set of integrable pseudonormals producing the same
+            appearance. This is not a flaw in the implementation but a real property of the problem.
+            Without knowing the lights, the images genuinely cannot distinguish between a family of
+            shapes.
+        </p>
+    </section>
+
+    <figure class="fig-row one" style="max-width: 564px; margin: 2rem auto;">
+        <img src="../assets/media/cv/uncaldepth.png" alt="Uncalibrated depth reconstruction">
+        <figcaption>Uncalibrated reconstruction, recovered without the lighting directions.</figcaption>
+    </figure>
+
+    <p>
+        Examples of varying those parameters are shown below, some of which look identical to the
+        original when viewed from a particular angle.
+    </p>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/cv/basrelief1.png" alt="Bas-relief ambiguity variation 1">
+            <figcaption>Varying the bas-relief parameters, example 1.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/cv/basrelief2.png" alt="Bas-relief ambiguity variation 2">
+            <figcaption>Example 2.</figcaption>
+        </figure>
+    </div>
+
+    <section>
+        <div class="project-page-tags">
+            <span class="tag">Photometric Stereo</span>
+            <span class="tag">Shape from Shading</span>
+            <span class="tag">Surface Normals</span>
+            <span class="tag">Frankot-Chellappa</span>
+            <span class="tag">Bas-Relief Ambiguity</span>
+            <span class="tag">SVD</span>
+        </div>
+    </section>
+
+    <nav class="project-nav">
+        <a href="./cv-neural-networks.html">
+            <div class="nav-label">← Previous</div>
+            <div class="nav-title">Neural Networks for Character Recognition</div>
+        </a>
+        <a href="./computer-vision.html" class="next">
+            <div class="nav-label">Next →</div>
+            <div class="nav-title">Computer Vision Projects</div>
+        </a>
+    </nav>
+</article>
+
+<div id="site-footer"></div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

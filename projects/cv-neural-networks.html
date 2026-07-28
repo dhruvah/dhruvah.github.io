@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Networks for Character Recognition · Harsh Dhruva</title>
+    <meta name="description" content="A fully connected network for handwritten character recognition on NIST36, extended with autoencoders for image compression and a PyTorch CNN reaching 90.2% validation accuracy.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<article class="project-page">
+    <a href="./computer-vision.html" class="project-back">Computer vision projects</a>
+
+    <header class="project-page-header">
+        <div class="project-page-category-with-logo">
+            <img src="../assets/media/about/cmu-seal.png" alt="Carnegie Mellon University" class="project-company-logo">
+            <span class="project-page-category">Project 5 · CMU 16-720</span>
+        </div>
+        <h1>Neural networks for character recognition.</h1>
+        <p class="project-page-summary">
+            Reading handwritten text out of an image, which turns out to be as much a classical image
+            processing problem as a learning one: the network only works once the characters have been
+            found, isolated and ordered.
+        </p>
+    </header>
+
+    <div class="project-meta">
+        <div class="project-meta-item">
+            <span class="label">Course</span>
+            <span class="value">16-720 Computer Vision</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Dataset</span>
+            <span class="value">NIST36</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Best result</span>
+            <span class="value">90.2% CNN vs 76% fully connected</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Stack</span>
+            <span class="value">Python · PyTorch</span>
+        </div>
+    </div>
+
+    <section>
+        <h2>Finding the characters first</h2>
+        <p>
+            A fully connected neural network recognizes handwritten letters, trained on the NIST36
+            dataset to about 76% test accuracy. But given an image of text rather than a pre-cropped
+            character, the first step is extraction: drawing a bounding box around each character.
+        </p>
+    </section>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/cv/textboxes.png" alt="Detected character bounding boxes">
+            <figcaption>Characters detected with bounding boxes.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/cv/cv5-1.png" alt="Bounding boxes over a line of text">
+            <figcaption>Boxes grouped and sorted by text line.</figcaption>
+        </figure>
+    </div>
+
+    <p>
+        The pipeline blurs, thresholds, and applies opening morphology to separate character pixels
+        from the background, finds connected groups of character pixels and boxes each one, groups the
+        boxes by the line of text they belong to and sorts them, then resizes each box to the network
+        input and classifies it. Every one of those steps has to work before the network sees anything
+        useful.
+    </p>
+
+    <figure class="fig-row one" style="max-width: 232px; margin: 2rem auto;">
+        <img src="../assets/media/cv/outputnn.png" alt="Neural network classification output">
+        <figcaption>Classified output from the network.</figcaption>
+    </figure>
+
+    <figure class="fig-row one" style="max-width: 500px; margin: 2rem auto;">
+        <img src="../assets/media/cv/normalacc.png" alt="Training and validation accuracy plot">
+        <figcaption>Training and validation accuracy.</figcaption>
+    </figure>
+
+    <p>
+        The trained network output worked well aside from a few misclassifications.
+    </p>
+
+    <section>
+        <h2>Image compression with autoencoders</h2>
+        <p>
+            An autoencoder is a network trained to approximately copy its input to its output, which
+            is a useful way to learn compressed representations: forcing the signal through a
+            narrow bottleneck means the network has to keep only what matters. By changing the
+            activation function and adding momentum for speed, I got the output below, with an average
+            PSNR (peak signal-to-noise ratio) of 15.68 across the images.
+        </p>
+    </section>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/cv/autoencoder1.png" alt="Autoencoder input">
+            <figcaption>Autoencoder input.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/cv/autoencoder2.png" alt="Autoencoder reconstruction">
+            <figcaption>Autoencoder reconstruction.</figcaption>
+        </figure>
+    </div>
+
+    <section>
+        <h2>Going convolutional</h2>
+        <p>
+            To improve on the fully connected network, I also trained a convolutional neural network
+            in PyTorch on the same NIST36 dataset. The CNN did significantly better, reaching 90.2%
+            validation accuracy versus the 76% of the fully connected network, which is the expected
+            payoff for a architecture that exploits spatial locality instead of flattening the image
+            into an unstructured vector.
+        </p>
+    </section>
+
+    <figure class="fig-row one" style="max-width: 514px; margin: 2rem auto;">
+        <img src="../assets/media/cv/cnnaccuracy.png" alt="CNN accuracy plot">
+        <figcaption>Validation accuracy of the PyTorch CNN.</figcaption>
+    </figure>
+
+    <section>
+        <div class="project-page-tags">
+            <span class="tag">Neural Networks</span>
+            <span class="tag">CNNs</span>
+            <span class="tag">PyTorch</span>
+            <span class="tag">Autoencoders</span>
+            <span class="tag">Morphology</span>
+            <span class="tag">Character Recognition</span>
+        </div>
+    </section>
+
+    <nav class="project-nav">
+        <a href="./cv-3d-reconstruction.html">
+            <div class="nav-label">← Previous</div>
+            <div class="nav-title">Two-view 3D Reconstruction</div>
+        </a>
+        <a href="./cv-photometric-stereo.html" class="next">
+            <div class="nav-label">Next →</div>
+            <div class="nav-title">Photometric Stereo</div>
+        </a>
+    </nav>
+</article>
+
+<div id="site-footer"></div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
