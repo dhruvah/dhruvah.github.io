@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fuzzy-Logic Controllers for Autonomous Parking · Harsh Dhruva</title>
+    <meta name="description" content="Rule-based Mamdani fuzzy-logic controllers that back a car into a space and parallel park it, built with the MATLAB Fuzzy Toolbox and Simulink.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<article class="project-page">
+    <a href="./rose-hulman.html" class="project-back">Rose-Hulman projects</a>
+
+    <header class="project-page-header">
+        <div class="project-page-category-with-logo">
+            <img src="../assets/media/about/rose-hulman-seal.png" alt="Rose-Hulman Institute of Technology" class="project-company-logo">
+            <span class="project-page-category">Undergraduate Coursework · Rose-Hulman</span>
+        </div>
+        <h1>Fuzzy-logic controllers for autonomous parking.</h1>
+        <p class="project-page-summary">
+            Rule-based Mamdani fuzzy-logic controllers that mimic a Lexus autonomously backing into a
+            parking space and parallel parking, written as the rules a human driver follows rather
+            than derived from a model.
+        </p>
+    </header>
+
+    <div class="project-meta">
+        <div class="project-meta-item">
+            <span class="label">School</span>
+            <span class="value">Rose-Hulman</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Level</span>
+            <span class="value">Undergraduate</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Method</span>
+            <span class="value">Mamdani fuzzy inference</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Stack</span>
+            <span class="value">MATLAB Fuzzy Toolbox · Simulink</span>
+        </div>
+    </div>
+
+    <section>
+        <h2>The idea</h2>
+        <p>
+            Fuzzy control is the opposite of learning a controller from data. Instead you write down
+            the rules a human driver follows in words, and the controller interpolates smoothly
+            between them. Rather than a hard threshold, the car is partly "too far left" and partly
+            "centered" at the same time, and the rules blend accordingly.
+        </p>
+        <p>
+            The vehicle model has 3 degrees of freedom, the center of the rear axle (x<sub>B</sub>,
+            y<sub>B</sub>) and the heading angle psi, and the controller output is the steering angle
+            beta.
+        </p>
+    </section>
+
+    <section>
+        <h2>Backing into a space</h2>
+        <p>
+            For the back-parking case there are three input membership functions, for x<sub>B</sub>,
+            y<sub>B</sub> and psi, and one output membership function for beta. The controller is
+            formulated with 27 Mamdani rules.
+        </p>
+    </section>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/aiml/fuzzy-back-setup.png" alt="Geometry of the back parking problem">
+            <figcaption>The back-parking geometry: the car's rear axle, heading, and the target space.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/aiml/fuzzy-back-rules.png" alt="Fuzzy inference system with three inputs and 27 rules">
+            <figcaption>The inference system: 3 inputs, 1 output, 27 rules.</figcaption>
+        </figure>
+    </div>
+
+    <p>
+        The controller is robust enough to park from a range of starting positions and headings,
+        including the double-diamond case where the car has to swing out before it can come back in.
+    </p>
+
+    <div class="media-grid media-grid-2">
+        <figure>
+            <img src="../assets/media/aiml/fuzzy-back-1.png" alt="Back parking from a start position below the space">
+            <figcaption>Starting below the space and backing straight in.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/aiml/fuzzy-back-2.png" alt="Back parking from an offset start on the left">
+            <figcaption>Offset to the left, correcting into the space.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/aiml/fuzzy-back-4.png" alt="Back parking from an offset start on the right">
+            <figcaption>The double-diamond case from the right, swinging out and back in.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/aiml/fuzzy-back-3.png" alt="Back parking from a start position far to the left and close to the obstacle">
+            <figcaption>A hard start: far left and tight against the obstacle.</figcaption>
+        </figure>
+    </div>
+
+    <section>
+        <h2>Parallel parking</h2>
+        <p>
+            For the parallel-parking case there are four input membership functions, for
+            x<sub>B</sub>, y<sub>B</sub>, x<sub>a</sub> and psi, and one output membership function
+            for beta, where x<sub>a</sub> is the front-axle displacement in the x-direction. The extra
+            input matters because parallel parking is a tighter maneuver: the controller has to track
+            the front of the car as well as the back to avoid clipping the vehicle ahead. This
+            controller is formulated with 43 Mamdani rules.
+        </p>
+    </section>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/aiml/fuzzy-parallel-setup.png" alt="Geometry of the parallel parking problem">
+            <figcaption>The parallel-parking geometry, with the target space and the starting pose.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/aiml/fuzzy-parallel-rules.png" alt="Fuzzy inference system with four inputs and 43 rules">
+            <figcaption>The inference system: 4 inputs, 1 output, 43 rules.</figcaption>
+        </figure>
+    </div>
+
+    <div class="media-grid media-grid-2">
+        <figure>
+            <img src="../assets/media/aiml/fuzzy-parallel-1.png" alt="Parallel parking trajectory from a start below and to the left">
+            <figcaption>Sweeping up into the space from below and to the left.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/aiml/fuzzy-parallel-2.png" alt="Parallel parking trajectory from a farther start">
+            <figcaption>The same maneuver from farther out.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/aiml/fuzzy-parallel-3.png" alt="Parallel parking trajectory with a deep approach">
+            <figcaption>A deeper approach, curling around into the slot.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/aiml/fuzzy-parallel-4.png" alt="Parallel parking trajectory from a start alongside the left obstacle">
+            <figcaption>Starting alongside the left-hand car and pulling in.</figcaption>
+        </figure>
+    </div>
+
+    <section>
+        <div class="project-page-tags">
+            <span class="tag">Fuzzy Logic</span>
+            <span class="tag">Mamdani</span>
+            <span class="tag">Membership Functions</span>
+            <span class="tag">Autonomous Parking</span>
+            <span class="tag">MATLAB</span>
+            <span class="tag">Simulink</span>
+        </div>
+    </section>
+
+    <nav class="project-nav">
+        <a href="./distal-teacher-ik.html">
+            <div class="nav-label">← Previous</div>
+            <div class="nav-title">Inverse Kinematics with a Distal Teacher</div>
+        </a>
+        <a href="./rose-hulman.html" class="next">
+            <div class="nav-label">Next →</div>
+            <div class="nav-title">Rose-Hulman Projects</div>
+        </a>
+    </nav>
+</article>
+
+<div id="site-footer"></div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

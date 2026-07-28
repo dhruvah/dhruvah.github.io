@@ -80,24 +80,45 @@
     <div class="coursework-group">
         <h2>AI / ML / controls</h2>
 
-        <a href="./ai-ml-controls.html" class="project-card featured">
+        <a href="./distal-teacher-ik.html" class="project-card featured">
+            <div class="project-thumb">
+                <img src="../assets/media/aiml/inverse-net-positions.png" alt="Desired versus achieved end-effector positions across a grid of test points" loading="lazy">
+            </div>
+            <div class="project-body">
+                <div class="project-category">Controls · MATLAB</div>
+                <div class="project-title">Inverse kinematics with a distal teacher</div>
+                <div class="project-desc">
+                    A 3-DOF arm reaching a 2D point has infinitely many valid joint solutions, so you
+                    cannot train a network on joint angles directly. The distal teacher supervises only
+                    the end-effector position and backpropagates through a learned forward model.
+                    Built from scratch in MATLAB with no neural-network libraries.
+                </div>
+                <div class="project-tags">
+                    <span class="tag">Neural Networks</span>
+                    <span class="tag">Distal Teacher</span>
+                    <span class="tag">Inverse Kinematics</span>
+                    <span class="tag">MATLAB</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="./fuzzy-parking.html" class="project-card featured">
             <div class="project-thumb">
                 <img src="../assets/media/aiml/fuzzy-parallel-3.png" alt="Simulated parallel-parking trajectory produced by the fuzzy controller" loading="lazy">
             </div>
             <div class="project-body">
                 <div class="project-category">Controls · MATLAB &amp; Simulink</div>
-                <div class="project-title">AI, machine learning and controls</div>
+                <div class="project-title">Fuzzy-logic controllers for autonomous parking</div>
                 <div class="project-desc">
-                    Two projects where the controller is learned or reasoned rather than derived:
-                    solving a 3-DOF arm's inverse kinematics with a neural network trained through a
-                    distal teacher, and hand-designing Mamdani fuzzy-logic controllers that back a car
-                    into a space and parallel park it.
+                    Mamdani fuzzy controllers that back a car into a space and parallel park it, written
+                    as the rules a driver follows rather than derived from a model. 27 rules for
+                    backing in, 43 for parallel parking, where tracking the front axle keeps it from
+                    clipping the car ahead.
                 </div>
                 <div class="project-tags">
-                    <span class="tag">Neural Networks</span>
-                    <span class="tag">Distal Teacher</span>
                     <span class="tag">Fuzzy Logic</span>
-                    <span class="tag">MATLAB</span>
+                    <span class="tag">Mamdani</span>
+                    <span class="tag">Autonomous Parking</span>
                     <span class="tag">Simulink</span>
                 </div>
             </div>
