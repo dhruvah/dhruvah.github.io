@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dense SLAM with Point-based Fusion · Harsh Dhruva</title>
+    <meta name="description" content="A dense RGB-D SLAM system built from point-to-plane ICP with projective data association and point-based fusion, tracking against an incrementally maintained surfel map.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<article class="project-page">
+    <a href="./cmu.html" class="project-back">CMU projects</a>
+
+    <header class="project-page-header">
+        <div class="project-page-category-with-logo">
+            <img src="../assets/media/about/cmu-seal.png" alt="Carnegie Mellon University" class="project-company-logo">
+            <span class="project-page-category">Mini project 4 · CMU 16-833</span>
+        </div>
+        <h1>Dense SLAM with point-based fusion.</h1>
+        <p class="project-page-summary">
+            Building a dense RGB-D SLAM system end to end: point-to-plane ICP with projective data
+            association for tracking, point-based fusion to merge each frame into a maintained map,
+            and then closing the loop by tracking against that map instead of ground truth.
+        </p>
+    </header>
+
+    <div class="project-meta">
+        <div class="project-meta-item">
+            <span class="label">Course</span>
+            <span class="value">16-833 Robot Localization &amp; Mapping</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Timeline</span>
+            <span class="value">April 2021</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Map size</span>
+            <span class="value">1,322,141 points</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Stack</span>
+            <span class="value">Python · Open3D · NumPy</span>
+        </div>
+    </div>
+
+    <section>
+        <h2>Two halves of a system</h2>
+        <p>
+            A dense SLAM system needs to answer two questions every frame: where is the camera now,
+            and how does what it sees get folded into the map. This project builds both halves.
+            Tracking comes from iterative closest point (ICP), which finds the rigid transform
+            aligning the incoming frame to what we already have. Mapping comes from point-based
+            fusion, which merges observations into a surfel map rather than accumulating every point
+            forever.
+        </p>
+    </section>
+
+    <section>
+        <h2>Iterative closest point</h2>
+        <h3>Projective data association</h3>
+        <p>
+            ICP's inner loop needs correspondences between points, and the cheap way to get them is
+            projective association: project a point into the other frame's image plane and take
+            whatever lands at that pixel. That requires the projected coordinates and depth to be
+            valid, so the first filter enforces
+        </p>
+    </section>
+
+    <div class="code-block">0 ≤ u &lt; W        0 ≤ v &lt; H        0 ≤ d</div>
+
+    <p>
+        A second filter enforces |p - q| &lt; d<sub>thr</sub>, and the reason is worth being precise
+        about. Since p and q are projective nearest neighbors, they are near each other in the 2D
+        image, but that says nothing about their separation along the camera's viewing direction. Two
+        points can project to the same pixel while sitting metres apart in depth. The distance
+        threshold is what makes them genuine nearest neighbors in 3D rather than just in projection.
+    </p>
+
+    <section>
+        <h3>Linearization and optimization</h3>
+        <p>
+            The objective is the point-to-plane error, minimizing the residual of each correspondence
+            measured along the target's surface normal rather than straight-line distance, which
+            converges much better on flat surfaces:
+        </p>
+    </section>
+
+    <div class="code-block">Σ ri²(δR, δt) = Σ [ nqiᵀ ((δR) p'i + δt - qi) ]²</div>
+
+    <p>
+        Linearizing the small rotation gives a residual linear in six parameters, three for rotation
+        and three for translation, which stacks into a standard system solved by normal equations:
+    </p>
+
+    <div class="code-block">ri(α, β, γ, tx, ty, tz) = Ai · [α β γ tx ty tz]ᵀ + bi
+
+Ai = [ nqiz p'iy - nqiy p'iz,  nqix p'iz - nqiz p'ix,
+       nqiy p'ix - nqix p'iy,  nqix, nqiy, nqiz ]
+
+Solve AᵀA x = Aᵀb   →   x = (AᵀA)⁻¹ Aᵀb</div>
+
+    <section>
+        <h3>Where it works, and where it doesn't</h3>
+        <p>
+            Aligning frames 10 and 50 works cleanly. The two point clouds start visibly offset and
+            converge onto each other.
+        </p>
+    </section>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/dense-slam/icp-10-50-before.png" alt="Point clouds of frames 10 and 50 before ICP alignment">
+            <figcaption>Frames 10 and 50, before alignment.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/dense-slam/icp-10-50-after.png" alt="Point clouds of frames 10 and 50 after ICP alignment">
+            <figcaption>After alignment: the two clouds coincide.</figcaption>
+        </figure>
+    </div>
+
+    <p>
+        Frames 10 and 100 are the interesting failure. The larger gap between frames means much larger
+        initial misalignment, and it took 80 iterations to converge at all. Even then the result is
+        not completely satisfactory, because ICP can converge to a local minimum: in this scene the
+        pillows on the couch align with <em>different</em> pillows. The geometry is locally
+        self-similar, the error is genuinely low at that wrong alignment, and nothing in the objective
+        can tell the difference.
+    </p>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/dense-slam/icp-10-100-before.png" alt="Point clouds of frames 10 and 100 before ICP alignment">
+            <figcaption>Frames 10 and 100, before alignment: a much wider gap.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/dense-slam/icp-10-100-after.png" alt="Point clouds of frames 10 and 100 after ICP alignment">
+            <figcaption>After 80 iterations: closer, but pillows matched to the wrong pillows.</figcaption>
+        </figure>
+    </div>
+
+    <section>
+        <h2>Point-based fusion</h2>
+        <p>
+            Rather than appending every point of every frame, fusion merges new observations into
+            existing map points using a running weighted average of position and normal, with the
+            normals renormalized afterward:
+        </p>
+    </section>
+
+    <div class="code-block">p  ← ( w·p  + (Rcw q  + twc) ) / (w + 1)
+np ← ( w·np + (Rcw nq + twc) ) / (w + 1)</div>
+
+    <p>
+        Points that find no match get added as new map points, and points that fail the filters are
+        discarded. Running this with ground-truth poses produces the reconstruction below, along with
+        its normal map.
+    </p>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/dense-slam/fusion-groundtruth.png" alt="Dense reconstruction of a living room produced by point-based fusion with ground truth poses">
+            <figcaption>Fusion with ground-truth poses.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/dense-slam/fusion-normal-map.png" alt="Normal map of the fused reconstruction">
+            <figcaption>The corresponding normal map.</figcaption>
+        </figure>
+    </div>
+
+    <p>
+        The final map holds <strong>1,322,141 points</strong> at a compression ratio of
+        <strong>0.0867</strong>. That ratio is the point of the exercise: fusion keeps under 9% of the
+        points a naive accumulation would produce, which is what makes dense mapping tractable at all.
+    </p>
+
+    <section>
+        <h2>Closing the loop</h2>
+        <p>
+            With both halves working, the full system replaces ground-truth poses with ICP-estimated
+            ones. That raises a design question worth stating: which cloud is the source and which is
+            the target? Here the source is the maintained map and the target is the input RGB-D frame.
+            The map points are projected into the incoming frame's vertex map, filtered, and the
+            resulting linear system solved for the transform.
+        </p>
+        <p>
+            It has to be this direction. The map grows continuously as points are added, so projecting
+            the frame into the map risks wrong transformations from points caught in local minima.
+            Theoretically flipping source and target would work for the initial iterations, while the
+            map is still small, but not once it has grown.
+        </p>
+    </section>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/dense-slam/fusion-estimated.png" alt="Dense reconstruction produced using ICP-estimated poses">
+            <figcaption>The full system: fusion driven by ICP-estimated poses.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/dense-slam/trajectory-vs-gt.png" alt="Estimated camera trajectory plotted against ground truth in 3D">
+            <figcaption>Estimated trajectory against ground truth.</figcaption>
+        </figure>
+    </div>
+
+    <p>
+        The estimated trajectory tracks the shape of the ground truth while accumulating an offset,
+        which is the expected signature of frame-to-model tracking without any loop closure to correct
+        the drift.
+    </p>
+
+    <section>
+        <div class="project-page-tags">
+            <span class="tag">Dense SLAM</span>
+            <span class="tag">ICP</span>
+            <span class="tag">Point-to-Plane</span>
+            <span class="tag">Point-Based Fusion</span>
+            <span class="tag">RGB-D</span>
+            <span class="tag">Open3D</span>
+            <span class="tag">Python</span>
+        </div>
+        <div class="project-links">
+            <a href="https://github.com/dhruvah/16833-SLAM" target="_blank" class="btn">Code on GitHub ↗</a>
+        </div>
+    </section>
+
+    <nav class="project-nav">
+        <a href="./slam-solvers.html">
+            <div class="nav-label">← Previous</div>
+            <div class="nav-title">Linear &amp; Nonlinear SLAM Solvers</div>
+        </a>
+        <a href="./slam-comparison.html" class="next">
+            <div class="nav-label">Next →</div>
+            <div class="nav-title">Visual &amp; Lidar SLAM Comparison</div>
+        </a>
+    </nav>
+</article>
+
+<div id="site-footer"></div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

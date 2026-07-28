@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SLAM using an Extended Kalman Filter · Harsh Dhruva</title>
+    <meta name="description" content="EKF-SLAM on a 2D range-and-bearing dataset: landmark initialization, prediction and update, covariance ellipses, and a study of how noise parameters shape uncertainty.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<article class="project-page">
+    <a href="./cmu.html" class="project-back">CMU projects</a>
+
+    <header class="project-page-header">
+        <div class="project-page-category-with-logo">
+            <img src="../assets/media/about/cmu-seal.png" alt="Carnegie Mellon University" class="project-company-logo">
+            <span class="project-page-category">Mini project 2 · CMU 16-833</span>
+        </div>
+        <h1>SLAM using an extended Kalman filter.</h1>
+        <p class="project-page-summary">
+            EKF-SLAM on a 2D dataset of range-and-bearing measurements, estimating the robot's
+            trajectory and the positions of six landmarks simultaneously, and carrying an explicit
+            uncertainty for every one of them.
+        </p>
+    </header>
+
+    <div class="project-meta">
+        <div class="project-meta-item">
+            <span class="label">Course</span>
+            <span class="value">16-833 Robot Localization &amp; Mapping</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Timeline</span>
+            <span class="value">Spring 2021</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Estimator</span>
+            <span class="value">Extended Kalman Filter</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Stack</span>
+            <span class="value">Python · NumPy</span>
+        </div>
+    </div>
+
+    <section>
+        <h2>The setup</h2>
+        <p>
+            Where the <a href="./particle-filter.html">particle filter mini project</a> represented
+            belief with thousands of samples, the EKF takes the opposite approach: one Gaussian, a
+            mean and a covariance, propagated analytically. The state vector holds the robot pose and
+            every landmark position at once, which is what makes it SLAM rather than localization, and
+            the covariance matrix over that joint state is where the interesting behavior lives.
+        </p>
+        <p>
+            The data gives two measurements per landmark, bearing and range, with six landmarks
+            observed across the entire sequence. The filter alternates between a prediction step that
+            propagates the pose through the motion model and inflates uncertainty, and an update step
+            that folds in each landmark observation and shrinks it back down.
+        </p>
+    </section>
+
+    <figure class="fig-row one">
+        <img src="../assets/media/ekf-slam/default.png" alt="EKF-SLAM result with default parameters showing the robot trajectory and landmark covariance ellipses">
+        <figcaption>The full run with default parameters. The robot traces a pentagon; landmark covariances are so small the ellipses are hard to see at this scale.</figcaption>
+    </figure>
+
+    <figure class="fig-row one" style="max-width: 380px;">
+        <img src="../assets/media/ekf-slam/default-zoom.png" alt="Zoomed view of landmark covariance ellipses">
+        <figcaption>Zoomed in on a single landmark: successive ellipses tightening as the estimate improves.</figcaption>
+    </figure>
+
+    <section>
+        <h2>What the covariances tell you</h2>
+        <p>
+            The predicted covariance of both the robot poses and the landmarks is consistently higher
+            than the covariance after the update step. That reduction comes from the Kalman gain,
+            which weights the measurement against the previous state estimate, making the EKF result a
+            kind of weighted average of the two.
+        </p>
+        <p>
+            It is worth stating the two limiting cases plainly, because they are the whole intuition
+            behind the filter. If sensor uncertainty is very low, the Kalman gain takes a higher
+            value, the measurement dominates, and the sensor effectively tells you where you are. If
+            instead the previous state uncertainty is very low, a lower gain weights toward the prior
+            estimate and most of the measurement is ignored. The filter is continuously deciding which
+            source to trust.
+        </p>
+        <p>
+            You can see this in the map: landmarks further from the robot are initialized with higher
+            covariance, and as the robot traverses past them it predicts and corrects more accurately,
+            shrinking those ellipses.
+        </p>
+    </section>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/ekf-slam/groundtruth.png" alt="EKF-SLAM result plotted against ground truth landmark positions">
+            <figcaption>Ground-truth landmarks plotted as crosses over the estimate.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/ekf-slam/groundtruth-zoom.png" alt="Zoomed view showing ground truth landmark inside the smallest covariance ellipse">
+            <figcaption>Zoomed: the true position sits inside the smallest ellipse.</figcaption>
+        </figure>
+    </div>
+
+    <p>
+        Every ground-truth landmark falls inside its smallest corresponding ellipse, meaning the
+        estimated positions land very close to the truth. Quantifying that with two distances:
+    </p>
+
+    <div class="code-block">Landmark   Euclidean distance   Mahalanobis distance
+1          0.00526844           0.00028343
+2          0.00626463           0.00034913
+3          0.00076271           0.00003893
+4          0.00536144           0.00028728
+5          0.00884154           0.00052986
+6          0.00764498           0.00052868</div>
+
+    <p>
+        The two measure different things. Euclidean distance is plain geometric distance, and in 2D it
+        says we are very close to ground truth. Mahalanobis distance measures the distance between a
+        point and a <em>distribution</em>, scaled by that distribution's own uncertainty. These values
+        being very low means the mean of the resulting distribution sits very close to the landmark's
+        true location, not merely that the numbers are small.
+    </p>
+
+    <section>
+        <h2>Why the zeros fill in</h2>
+        <p>
+            One of the more instructive parts of this project: the zero terms in the initial landmark
+            covariance matrix become non-zero in the final state covariance. That happens because the
+            landmarks become correlated with each other as the robot state updates, and correlated
+            with the robot state itself, since the landmark covariance was initialized accounting for
+            both the robot's initial pose and the initial measurement covariance. As the robot moves,
+            estimates improve for landmarks near its field of view, where variance in bearing and
+            range is lower.
+        </p>
+        <p>
+            Which exposes an assumption worth naming: when setting the initial cross-covariance we
+            assume zero cross-correlation between landmarks and the robot state, because we set those
+            entries to zero. That assumption is not necessarily correct. It is convenient, and the
+            filter recovers from it, but it is an approximation baked into the initialization.
+        </p>
+    </section>
+
+    <section>
+        <h2>How noise parameters shape the result</h2>
+        <p>
+            The bulk of the work was a systematic study of what each noise parameter actually does to
+            the covariance ellipses. Scaling the measurement noise up by ten inflates uncertainty in
+            both the robot pose and the landmarks, with the pose covariance growing in the angular
+            direction. Halving it shrinks every ellipse dramatically.
+        </p>
+    </section>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/ekf-slam/meas-noise-10x.png" alt="EKF result with measurement noise scaled up ten times">
+            <figcaption>Measurement noise at 10x: uncertainty balloons everywhere.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/ekf-slam/meas-noise-half.png" alt="EKF result with measurement noise halved">
+            <figcaption>Measurement noise at 0.5x: ellipses collapse to near-invisible.</figcaption>
+        </figure>
+    </div>
+
+    <p>
+        Scaling the motion noise instead separates the two effects cleanly. Raising σ<sub>x</sub> and
+        σ<sub>y</sub> by five inflates the robot's pose covariance while the landmark variance stays
+        relatively small; dropping them to a tenth shrinks the pose covariance drastically while
+        landmark variance stays roughly unchanged, since those sigmas were untouched.
+    </p>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/ekf-slam/motion-noise-5x.png" alt="EKF result with x and y motion noise scaled up five times">
+            <figcaption>σx, σy at 5x: pose uncertainty grows, landmarks hold.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/ekf-slam/motion-noise-tenth.png" alt="EKF result with x and y motion noise reduced to one tenth">
+            <figcaption>σx, σy at 0.1x: pose uncertainty collapses, landmarks unchanged.</figcaption>
+        </figure>
+    </div>
+
+    <p>
+        Isolating single parameters is where the geometry becomes legible. Raising only
+        σ<sub>x</sub> grows the covariance specifically in the x direction as the robot updates its
+        pose. Raising only σ<sub>r</sub> grows it along the range direction the robot faces at
+        initialization, elongating the landmark ellipses along that axis, with the further landmarks
+        showing more elongation in the angular direction too.
+    </p>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/ekf-slam/sigma-x-10x.png" alt="EKF result with only sigma x scaled up ten times">
+            <figcaption>σx alone at 10x: uncertainty stretches along x.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/ekf-slam/sigma-r-10x.png" alt="EKF result with only range noise scaled up ten times">
+            <figcaption>σr alone at 10x: ellipses elongate along range.</figcaption>
+        </figure>
+    </div>
+
+    <figure class="fig-row one" style="max-width: 460px;">
+        <img src="../assets/media/ekf-slam/sigma-beta-r.png" alt="EKF result with bearing noise scaled five times and range noise doubled">
+        <figcaption>σβ at 5x with σr at 2x: ellipses elongate in the angular direction, more so for distant landmarks.</figcaption>
+    </figure>
+
+    <p>
+        The pattern across all of these is that the ellipses are not abstract error bars. They point
+        in the direction the corresponding uncertainty actually lives, and distance from the robot
+        amplifies the angular component, because a fixed bearing error subtends more space the further
+        out you go.
+    </p>
+
+    <section>
+        <h2>Scaling problem: too many landmarks</h2>
+        <p>
+            EKF-SLAM's known weakness is that the covariance matrix grows quadratically with the
+            landmark count, so the final question was what to do when landmarks keep accumulating. I
+            proposed three approaches:
+        </p>
+        <ul>
+            <li><strong>Update landmarks by proximity.</strong> Optimize control inputs so the robot
+                properly explores an area, get reasonable estimates for the landmarks there, then move
+                on, replacing well-estimated landmarks in the matrix once a threshold is met. This
+                bounds the number of landmarks in the robot's working set, but requires reinitializing
+                landmarks against the current pose estimate, and leans on loop closure to recover the
+                forgotten ones. The cost is speed, since it needs redundant exploration.</li>
+            <li><strong>Preallocate and stay sparse.</strong> Initialize a very large number of
+                landmarks and fill the sparse matrix as they are observed, using sparse matrix
+                techniques for computation speed. This fails once the landmark count is genuinely
+                unbounded.</li>
+            <li><strong>Cluster.</strong> Approximate groups of landmarks estimated to be close
+                together by a single representative center landmark, paired with the approaches above
+                to keep the active count low.</li>
+        </ul>
+    </section>
+
+    <section>
+        <div class="project-page-tags">
+            <span class="tag">EKF-SLAM</span>
+            <span class="tag">Extended Kalman Filter</span>
+            <span class="tag">Landmark Mapping</span>
+            <span class="tag">Covariance</span>
+            <span class="tag">Mahalanobis Distance</span>
+            <span class="tag">Python</span>
+        </div>
+        <div class="project-links">
+            <a href="https://github.com/dhruvah/16833-SLAM" target="_blank" class="btn">Code on GitHub ↗</a>
+        </div>
+    </section>
+
+    <nav class="project-nav">
+        <a href="./particle-filter.html">
+            <div class="nav-label">← Previous</div>
+            <div class="nav-title">Particle Filter Localization</div>
+        </a>
+        <a href="./slam-solvers.html" class="next">
+            <div class="nav-label">Next →</div>
+            <div class="nav-title">Linear &amp; Nonlinear SLAM Solvers</div>
+        </a>
+    </nav>
+</article>
+
+<div id="site-footer"></div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

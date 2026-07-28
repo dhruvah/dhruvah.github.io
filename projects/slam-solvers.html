@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linear and Nonlinear SLAM Solvers · Harsh Dhruva</title>
+    <meta name="description" content="Solving SLAM as a sparse least-squares problem: LU and QR factorization, COLAMD reordering, the sparsity of the square root information matrix, and Gauss-Newton for the nonlinear case.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<article class="project-page">
+    <a href="./cmu.html" class="project-back">CMU projects</a>
+
+    <header class="project-page-header">
+        <div class="project-page-category-with-logo">
+            <img src="../assets/media/about/cmu-seal.png" alt="Carnegie Mellon University" class="project-company-logo">
+            <span class="project-page-category">Mini project 3 · CMU 16-833</span>
+        </div>
+        <h1>Linear and nonlinear SLAM solvers.</h1>
+        <p class="project-page-summary">
+            Treating SLAM as one large sparse least-squares problem instead of a filter, then digging
+            into what actually makes it fast. The answer is not the factorization you pick so much as
+            how you order the columns before you factor.
+        </p>
+    </header>
+
+    <div class="project-meta">
+        <div class="project-meta-item">
+            <span class="label">Course</span>
+            <span class="value">16-833 Robot Localization &amp; Mapping</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Timeline</span>
+            <span class="value">April 2021</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Approach</span>
+            <span class="value">Sparse least squares</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Stack</span>
+            <span class="value">Python · SciPy sparse</span>
+        </div>
+    </div>
+
+    <section>
+        <h2>SLAM as least squares</h2>
+        <p>
+            The filtering approaches in the earlier mini projects process measurements sequentially,
+            carrying a belief forward. This one takes the batch view: stack every odometry and
+            landmark measurement into one big linear system and solve it all at once. Each odometry
+            measurement constrains consecutive poses, each landmark observation constrains a pose to a
+            landmark, and the resulting matrix is enormous but extremely sparse, since any given
+            measurement touches only a handful of variables.
+        </p>
+        <p>
+            For the linear case both measurement functions are simple differences, which makes their
+            Jacobians constant:
+        </p>
+    </section>
+
+    <div class="code-block">Odometry:  h(rt, rt+1) = rt+1 - rt        H = [-1  0  1  0]
+                                           [ 0 -1  0  1]
+
+Landmark:  h(rt, lk)  = lk - rt          H = [-1  0  1  0]
+                                           [ 0 -1  0  1]</div>
+
+    <p>
+        Because the model is linear, the solution comes directly from solving the normal equations in
+        a single batch, exploiting sparsity. The estimated trajectory and landmarks sit essentially on
+        top of ground truth.
+    </p>
+
+    <figure class="fig-row one">
+        <img src="../assets/media/slam-solvers/linear_default.png" alt="Estimated trajectory and landmarks for the 2D linear dataset against ground truth">
+        <figcaption>2D linear dataset: estimated poses and landmarks overlaid on ground truth.</figcaption>
+    </figure>
+
+    <section>
+        <h2>Which solver, and why</h2>
+        <p>
+            I benchmarked seven methods on the linear dataset. The ranking is not what you would guess
+            from the names alone:
+        </p>
+    </section>
+
+    <div class="code-block">Method       Time (s)
+lu           0.03643
+default      0.06413
+lu colamd    0.11306
+qr colamd    0.69140
+qr           0.71495
+pinv         1.51051
+lu bonus     1.51113</div>
+
+    <p>
+        LU with <code>NATURAL</code> ordering is fastest. In general LU beats QR here because LU
+        operates on AᵀA, a smaller square matrix, while QR factorizes A itself, the larger rectangular
+        one. The pseudo-inverse is slowest for the obvious reason: it does not exploit sparsity at
+        all, which on a problem defined by its sparsity is fatal.
+    </p>
+
+    <p>
+        The square root information matrices explain the rest. QR with <code>COLAMD</code> ordering
+        produces a noticeably sparser R than plain QR, which is exactly why <code>qr colamd</code>
+        beats <code>qr</code>. But LU with <code>COLAMD</code> produces a <em>denser</em> matrix than
+        LU with <code>NATURAL</code>, making it slower. Reordering is not universally good; it
+        interacts with the factorization.
+    </p>
+
+    <div class="media-grid media-grid-2">
+        <figure>
+            <img src="../assets/media/slam-solvers/R_qr.png" alt="Square root information matrix for QR on linear data">
+            <figcaption>QR: dense.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/slam-solvers/R_qr_colamd.png" alt="Square root information matrix for QR with COLAMD ordering on linear data">
+            <figcaption>QR with COLAMD: sparser, and faster.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/slam-solvers/R_lu.png" alt="Square root information matrix for LU on linear data">
+            <figcaption>LU with NATURAL ordering.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/slam-solvers/R_lu_colamd.png" alt="Square root information matrix for LU with COLAMD ordering on linear data">
+            <figcaption>LU with COLAMD: denser here, and slower.</figcaption>
+        </figure>
+    </div>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/slam-solvers/R_lu_bonus.png" alt="Square root information matrix for the LU bonus method on linear data">
+            <figcaption>The LU bonus method on linear data, producing the same information matrix as LU with COLAMD.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/slam-solvers/R_lu_bonus_loop.png" alt="Square root information matrix for the LU bonus method on linear loop data">
+            <figcaption>The same method on the loop data.</figcaption>
+        </figure>
+    </div>
+
+    <section>
+        <h2>Adding a loop</h2>
+        <p>
+            The loop dataset revisits earlier parts of the trajectory, which adds constraints tying
+            distant poses together. Rerunning everything on it changes the ranking substantially, and
+            it gets faster across the board.
+        </p>
+    </section>
+
+    <div class="code-block">Method       Time (s) linear   Time (s) linear loop
+lu           0.03643            0.03699
+default      0.06413            0.00417
+lu colamd    0.11306            0.00430
+qr colamd    0.69140            0.05258
+qr           0.71495            0.39594
+pinv         1.51051            0.23392
+lu bonus     1.51113            0.25739</div>
+
+    <figure class="fig-row one">
+        <img src="../assets/media/slam-solvers/linear_loop.png" alt="Estimated trajectory and landmarks for the 2D linear loop dataset">
+        <figcaption>The linear loop dataset, where the trajectory revisits earlier regions.</figcaption>
+    </figure>
+
+    <p>
+        Here <code>COLAMD</code> ordering speeds up <em>both</em> LU and QR, the reverse of what
+        happened on the non-loop data. The reason is visible in the matrices: with loop constraints,
+        <code>NATURAL</code> ordering yields denser R matrices than in the linear case, while
+        <code>COLAMD</code> yields substantially sparser ones. LU remains faster than QR overall,
+        though QR is the numerically more stable of the two, which is the tradeoff you are actually
+        making when you choose between them.
+    </p>
+
+    <div class="media-grid media-grid-2">
+        <figure>
+            <img src="../assets/media/slam-solvers/R_qr_loop.png" alt="Square root information matrix for QR on linear loop data">
+            <figcaption>QR on loop data.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/slam-solvers/R_qr_colamd_loop.png" alt="Square root information matrix for QR with COLAMD on linear loop data">
+            <figcaption>QR with COLAMD on loop data: much sparser.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/slam-solvers/R_lu_loop.png" alt="Square root information matrix for LU on linear loop data">
+            <figcaption>LU on loop data.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/slam-solvers/R_lu_colamd_loop.png" alt="Square root information matrix for LU with COLAMD on linear loop data">
+            <figcaption>LU with COLAMD on loop data: sparser, and now faster.</figcaption>
+        </figure>
+    </div>
+
+    <section>
+        <h2>The nonlinear case</h2>
+        <p>
+            Real range-and-bearing measurements are not linear. The landmark measurement becomes an
+            arctangent for bearing and a square root for range, so the Jacobian is no longer constant
+            and now depends on the current estimate:
+        </p>
+    </section>
+
+    <div class="code-block">h(rt, lk) = [ atan2(lky - rty, lkx - rtx) ]
+            [ sqrt((lkx-rtx)² + (lky-rty)²) ]</div>
+
+    <p>
+        That difference changes the whole solution strategy. In the linear case the solution comes
+        directly from the normal equations in one batch. In the nonlinear case no direct solution
+        exists, so it is solved iteratively and requires an initial estimate: linearize the
+        measurement model about the current estimate, solve for an increment, add the increment to the
+        estimate, and repeat until convergence.
+    </p>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/slam-solvers/nonlinear_before.png" alt="Trajectory and landmarks before nonlinear optimization">
+            <figcaption>Before optimization: the initial estimate.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/slam-solvers/nonlinear_after.png" alt="Trajectory and landmarks after nonlinear optimization">
+            <figcaption>After convergence: trajectory and landmarks aligned.</figcaption>
+        </figure>
+    </div>
+
+    <section>
+        <div class="project-page-tags">
+            <span class="tag">Sparse Least Squares</span>
+            <span class="tag">LU Factorization</span>
+            <span class="tag">QR Factorization</span>
+            <span class="tag">COLAMD</span>
+            <span class="tag">Gauss-Newton</span>
+            <span class="tag">Information Matrix</span>
+            <span class="tag">Python</span>
+        </div>
+        <div class="project-links">
+            <a href="https://github.com/dhruvah/16833-SLAM" target="_blank" class="btn">Code on GitHub ↗</a>
+        </div>
+    </section>
+
+    <nav class="project-nav">
+        <a href="./ekf-slam.html">
+            <div class="nav-label">← Previous</div>
+            <div class="nav-title">EKF-SLAM</div>
+        </a>
+        <a href="./dense-slam.html" class="next">
+            <div class="nav-label">Next →</div>
+            <div class="nav-title">Dense SLAM with Point-based Fusion</div>
+        </a>
+    </nav>
+</article>
+
+<div id="site-footer"></div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
