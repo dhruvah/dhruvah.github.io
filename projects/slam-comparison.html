@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparative Analysis of Visual and Lidar SLAM · Harsh Dhruva</title>
+    <meta name="description" content="Benchmarking ORB-SLAM2, RTAB-Map and Google Cartographer in ROS against TUM RGB-D data and four self-generated CARLA driving scenarios, compared on absolute pose error.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<article class="project-page">
+    <a href="./cmu.html" class="project-back">CMU projects</a>
+
+    <header class="project-page-header">
+        <div class="project-page-category-with-logo">
+            <img src="../assets/media/about/cmu-seal.png" alt="Carnegie Mellon University" class="project-company-logo">
+            <span class="project-page-category">Course Project · CMU 16-833</span>
+        </div>
+        <h1>Comparative analysis of visual and lidar SLAM.</h1>
+        <p class="project-page-summary">
+            There is no single best SLAM algorithm, only ones that fail differently. We set up
+            ORB-SLAM2, RTAB-Map and Google Cartographer in ROS, ran them all against the same
+            benchmark data and the same four driving scenarios we generated in the CARLA simulator,
+            and compared where each one breaks.
+        </p>
+    </header>
+
+    <div class="project-meta">
+        <div class="project-meta-item">
+            <span class="label">Course</span>
+            <span class="value">16-833 Robot Localization &amp; Mapping</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Timeline</span>
+            <span class="value">Spring 2021</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Team</span>
+            <span class="value">4 people</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Stack</span>
+            <span class="value">ROS Melodic · CARLA · Python</span>
+        </div>
+    </div>
+
+    <section>
+        <h2>Why this is hard</h2>
+        <p>
+            SLAM asks a robot to build a map of its environment and localize itself within that map at
+            the same time. The difficulty is the circularity: to localize itself the robot needs a
+            consistent map, and to acquire that map it needs a good estimate of its own location. That
+            mutual dependency between pose and map is what makes SLAM a search in a high-dimensional
+            space rather than a straightforward estimation problem.
+        </p>
+        <p>
+            Because the problem is hard, the field has produced many solutions, each with its own
+            advantages and disadvantages. Some work well indoors and poorly outdoors; others the
+            reverse. The aim of this project was to explore lidar and visual SLAM algorithms in ROS
+            and compare them directly, running each against identical datasets so the differences
+            we observed came from the algorithms rather than the data.
+        </p>
+        <p>
+            A four-person project with Ashwin Nehete, Xikai Dai and Vimalesh Vasu, for 16-833 taught
+            by Prof. Michael Kaess.
+        </p>
+    </section>
+
+    <section>
+        <h2>The algorithms</h2>
+        <h3>ORB-SLAM2</h3>
+        <p>
+            A complete SLAM system for monocular, stereo and RGB-D sensors, focused on building
+            globally consistent maps. It runs three parallel threads: <strong>tracking</strong>, which
+            localizes the camera by recognizing ORB features in every frame and minimizing
+            reprojection error; <strong>local mapping</strong>, which optimizes via local bundle
+            adjustment; and <strong>loop closing</strong>, which detects loops and runs pose-graph
+            optimization to correct accumulated drift.
+        </p>
+        <p>
+            ORB features are binary, and invariant to rotation and scale within a range, which makes
+            for a very fast recognizer with good viewpoint invariance. The system maintains a
+            covisibility graph linking keyframes that observe common points, and uses DBoW2 to
+            relocalize when tracking fails. It achieves zero-drift localization in areas already
+            mapped, and demonstrates that bundle adjustment outperforms direct methods or ICP where
+            accurate camera localization matters.
+        </p>
+
+        <h3>RTAB-Map</h3>
+        <p>
+            RTAB-Map with RGB-D uses visual and depth images for feature extraction and matching, for
+            incremental appearance-based loop detection. What distinguishes it is memory management.
+            It splits storage into Long-Term Memory (LTM) and Working Memory (WM), classifying nodes
+            by weight, where weight reflects how often a location is visited. When loop-closure
+            processing time exceeds a threshold, the lowest-weight location is moved into LTM to free
+            up memory, and retrieved back into WM if its neighbors become relevant again.
+        </p>
+        <p>
+            Loop closure itself uses Bayesian filtering to estimate the probability of a loop,
+            comparing newly scanned nodes against those in WM. Together LTM, WM and Short-Term Memory
+            keep the active node count bounded, which caps memory usage. That is what makes RTAB-Map
+            attractive for large-scale reconstruction and long-term scanning.
+        </p>
+
+        <h3>Google Cartographer</h3>
+        <p>
+            Cartographer performs real-time SLAM in 2D and 3D across multiple sensor suites, split
+            into two interrelated subsystems. <strong>Local SLAM</strong> successively builds submaps
+            that are locally consistent but drift over time, inserting each new scan by scan matching.
+            Submaps have to be small enough to minimize drift and large enough for loop closure to
+            work. <strong>Global SLAM</strong> runs background threads that detect loop-closure
+            constraints by matching scans against existing submaps, then ties the submaps together
+            through pose-graph optimization, with cost functions accounting for global and non-global
+            constraints, IMU data, local SLAM poses and fixed-frame odometry.
+        </p>
+        <p>
+            Incoming range measurements pass through a band-pass filter, then a fixed-size voxel
+            filter to subsample the point cloud, then an adaptive voxel filter to hit a target point
+            count. An IMU is optional in 2D but required in 3D, where it supplies the initial guess
+            for scan orientation.
+        </p>
+    </section>
+
+    <section>
+        <h2>Data</h2>
+        <h3>Benchmark datasets</h3>
+        <p>
+            Before collecting our own data we ran the algorithms on established benchmarks, to see
+            each one working with the best available data sources and to build control results for
+            comparison. This is how we got a feel for sparsity, loop-closure behavior and robustness
+            per algorithm. We used the TUM RGB-D dataset from the Computer Vision Group at the
+            Technical University of Munich, recorded from a Microsoft Kinect, which supplies RGB-D
+            data along with ground truth.
+        </p>
+
+        <h3>CARLA driving simulator</h3>
+        <p>
+            For our own data we used CARLA, an open-source urban driving simulator built on Unreal
+            Engine 4. What drew us to it was the flexibility of its sensor suite and its ROS bridge,
+            which translates CARLA sensor data into ROS topics that feed straight into a SLAM system,
+            and translates ROS messages back into commands for the simulated agent. Our simulated car
+            carried a front RGB camera, a front depth camera, an IMU and a lidar.
+        </p>
+        <p>We generated four scenarios, chosen to stress different failure modes:</p>
+        <ul>
+            <li><strong>Bag1</strong> — a long drive with no loops.</li>
+            <li><strong>Bag2</strong> — three loops around a block.</li>
+            <li><strong>Bag3</strong> — a loop around a block in a dynamic environment, with cars and
+                pedestrians.</li>
+            <li><strong>Bag4</strong> — a quarter circle with constant turning.</li>
+        </ul>
+    </section>
+
+    <figure class="fig-row one">
+        <img src="../assets/media/slam-comparison/carla-camera-pov.png" alt="The simulated vehicle's forward RGB camera view in CARLA">
+        <figcaption>The simulated car's RGB camera view in CARLA. Note how much of the frame is road surface, which turns out to matter.</figcaption>
+    </figure>
+
+    <section>
+        <h3>Metrics</h3>
+        <p>
+            A SLAM system outputs an estimated trajectory and an estimated map, but a good trajectory
+            does not guarantee a good map. Evaluating map quality directly is possible in principle
+            and difficult in practice, because accurate ground-truth maps are hard to obtain. So we
+            evaluated the estimated trajectory against ground-truth poses instead, using two measures:
+            <strong>absolute pose error (APE)</strong>, which captures the global consistency of the
+            estimated trajectory by comparing absolute distances against ground truth, and
+            <strong>relative pose error (RPE)</strong>, which measures local accuracy and accounts for
+            drift.
+        </p>
+    </section>
+
+    <section>
+        <h2>Initial testing</h2>
+        <h3>ORB-SLAM2 on TUM sequences</h3>
+        <p>
+            We verified our ORB-SLAM2 setup on TUM sequences chosen to test different situations.
+            <code>freiburg2_pioneer_360</code> was recorded from a Kinect on an ActiveMedia Pioneer 3
+            robot, testing applicability to wheeled robots in a large hall containing office
+            containers and boxes. <code>freiburg3_long_office_household</code> moves an RGB-D sensor
+            through a texture-rich and structure-rich office scene, with the end of the trajectory
+            overlapping the start to force a large loop closure. <code>freiburg3_teddy</code> circles
+            a teddy bear twice at different heights.
+        </p>
+    </section>
+
+    <div class="code-block">Dataset                  APE     RPE
+Motor 2                  0.090   0.393
+long_office_household    0.022   0.470
+freiburg_teddy           0.029   0.509</div>
+
+    <section>
+        <h3>RTAB-Map, and the question it raised</h3>
+        <p>
+            We first ran RTAB-Map's own demo on the TUM freiburg dataset. The Rtabmapviz plugin
+            visualizes both the reconstruction and the camera trajectory, and exporting the mapping
+            results lets the trajectory accuracy be computed. Watching the reconstruction build, it
+            was clear RTAB-Map suits handheld mapping and maps relatively quickly.
+        </p>
+    </section>
+
+    <figure class="fig-row one" style="max-width: 460px;">
+        <img src="../assets/media/slam-comparison/rtabmap-demo.png" alt="RTAB-Map demo reconstruction and camera trajectory on the TUM freiburg dataset">
+        <figcaption>The RTAB-Map demo run on TUM freiburg: reconstruction plus camera trajectory.</figcaption>
+    </figure>
+
+    <p>
+        Feeding in our CARLA RGB-D data was a different story. Here RTAB-Map received only RGB-D
+        images, deriving odometry through visual odometry alone, and its reconstruction turned out to
+        be heavily affected by the simulated car's speed. With a fixed camera frame rate, faster
+        driving means larger differences between consecutive frames, which causes RTAB-Map to fail at
+        matching the same feature locations across frames, and eventually to lose tracking.
+    </p>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/slam-comparison/rtabmap-carla-pointcloud.png" alt="Point cloud projection from CARLA data with road surfaces in grey">
+            <figcaption>Point cloud projection, road surfaces in grey.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/slam-comparison/rtabmap-road-surfaces.png" alt="Reconstructed colour points showing only road surfaces">
+            <figcaption>The reconstruction models road surfaces and little else.</figcaption>
+        </figure>
+    </div>
+
+    <p>
+        The reconstruction captured the road and almost none of the surroundings. Looking back at the
+        camera view explains why: most of the frame <em>is</em> road surface. Combine that with an
+        open driving environment and comparatively high speed, and there is little for RTAB-Map to
+        latch onto as stable features.
+    </p>
+
+    <figure class="fig-row one">
+        <img src="../assets/media/slam-comparison/rtabmap-loop-rejection.png" alt="Two nearly identical camera frames where RTAB-Map rejected the loop hypothesis">
+        <figcaption>Loop rejection on Bag4: two nearly identical frames, and RTAB-Map still rejects the loop hypothesis.</figcaption>
+    </figure>
+
+    <p>
+        It also failed loop detection on two very similar images, rejecting the hypothesis over a
+        small difference, which shows how sensitive it is to minor image variation. Since the CARLA
+        result fell short of expectations, we ran an extra experiment outside the original project
+        plan to find out what RTAB-Map could really do, using an Intel RealSense L515 camera with IMU
+        and RGB-D input.
+    </p>
+
+    <figure class="fig-row one">
+        <img src="../assets/media/slam-comparison/rtabmap-l515.png" alt="RTAB-Map real-time reconstruction using an Intel RealSense L515 camera">
+        <figcaption>RTAB-Map with the RealSense L515: still sensitive to sudden camera movement and slow-moving objects.</figcaption>
+    </figure>
+
+    <p>
+        The result was again very different from the demo. RTAB-Map remained highly environment
+        sensitive, responding aggressively to sudden camera movement or slow-moving objects in front
+        of it and losing track. One likely factor is hyperparameter tuning: apart from the parameters
+        needed to subscribe to ROS topics, everything was left at its launch-file default, so there
+        is real headroom here. And despite the mapping trouble, its tracking remained impressive.
+    </p>
+
+    <section>
+        <h3>Cartographer</h3>
+        <p>
+            We tested Cartographer on the Deutsches Museum demo bags for 2D and 3D SLAM, and on the
+            CARLA data. Setup was relatively straightforward. Cartographer proved comparatively good
+            at detecting loop closure, but shares the family weakness: it is very sensitive to a
+            dynamic environment in front of the scan.
+        </p>
+    </section>
+
+    <figure class="fig-row one" style="max-width: 480px;">
+        <img src="../assets/media/slam-comparison/cartographer-occupancy-bag4.png" alt="Cartographer occupancy map and factor graph for the Bag4 scenario">
+        <figcaption>Cartographer's occupancy map and factor graph for Bag4, the constant-turning scenario.</figcaption>
+    </figure>
+
+    <section>
+        <h2>Results on the CARLA scenarios</h2>
+        <p>
+            Below are the estimated trajectories for Bag1, the long drive with no loops, with error
+            mapped onto the trajectory. The differences between the algorithms are visible directly in
+            the shape.
+        </p>
+    </section>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/slam-comparison/traj-orb-mono-bag1-scaled.png" alt="Estimated trajectory for monocular ORB-SLAM2 on Bag1">
+            <figcaption>Monocular ORB-SLAM2. The shape is right, but look at the axis values: monocular SLAM has no scale.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/slam-comparison/traj-orb-rgbd-bag1.png" alt="Estimated trajectory for RGB-D ORB-SLAM2 on Bag1">
+            <figcaption>RGB-D ORB-SLAM2, which recovers scale but starts from a false position and drifts.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/slam-comparison/traj-rtabmap-bag1.png" alt="Estimated trajectory for RGB-D RTAB-Map on Bag1">
+            <figcaption>RTAB-Map RGB-D, the most accurate trajectory of the four, helped by using odometry data.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/slam-comparison/traj-cartographer-bag1.png" alt="Estimated trajectory for Cartographer on Bag1">
+            <figcaption>Cartographer, landing midway on error, with no loop closure occurring on this scenario.</figcaption>
+        </figure>
+    </div>
+
+    <p>
+        <strong>Monocular ORB-SLAM2</strong> had the highest APE of the group, which follows from
+        having no scale and being most prone to drift, so its estimated trajectory comes out scaled
+        down against ground truth. It did produce denser maps than the RGB-D variant, and performed
+        loop closure successfully on Bag2, correcting the map from it. On Bag3 it lost tracking in the
+        dynamic environment once cars and pedestrians were added. Recurring failure modes were
+        tracking loss at high speed and in dynamic scenes, maps built on distant static landmarks, and
+        false relocalization in repetitive environments, which a procedurally generated city has in
+        abundance.
+    </p>
+
+    <figure class="fig-row one" style="max-width: 420px;">
+        <img src="../assets/media/slam-comparison/pointcloud-orb-mono-bag1.png" alt="Sparse point cloud map from monocular ORB-SLAM2 on Bag1">
+        <figcaption>The sparse point cloud reconstructed by monocular ORB-SLAM2 on Bag1.</figcaption>
+    </figure>
+
+    <p>
+        <strong>RGB-D ORB-SLAM2</strong> performed similarly to monocular on Bag1 but still produced a
+        scaled trajectory, starting false and drifting over time. On Bag2 it lost track during a
+        sharper turn where monocular did not, likely because fewer feature points were detected in the
+        RGB-D configuration. Bag3 again cost it tracking, this time to heavy traffic during the turn.
+        On Bag4 the trajectory came out mismatched in scale, but it held tracking through both the
+        sharp turns and the constant-radius curve.
+    </p>
+
+    <p>
+        <strong>RTAB-Map RGB-D</strong> recorded the lowest APE values of any system tested, which
+        supports the idea that it performs well on outdoor data. On Bag1 it gave the most accurate
+        trajectory, helped by its use of odometry. Bag2's loop closure was achieved cleanly without
+        losing track through the higher-speed maneuvers. Bag3 cost it tracking in the high-traffic
+        areas, as it did for everything else. On Bag4 it performed extremely well, with the least
+        absolute pose error of the group.
+    </p>
+
+    <p>
+        <strong>Cartographer</strong> landed midway between the others on APE. On Bag1 no loop closure
+        took place at all, which we suspect is why its error exceeded RTAB-Map's on that scenario.
+    </p>
+
+    <figure class="fig-row one" style="max-width: 480px;">
+        <img src="../assets/media/slam-comparison/cartographer-occupancy-bag1.png" alt="Cartographer occupancy grid map and pose graph for Bag1">
+        <figcaption>Cartographer's occupancy grid map and pose graph for Bag1.</figcaption>
+    </figure>
+
+    <section>
+        <h2>Conclusion</h2>
+        <p>
+            <strong>Monocular ORB-SLAM2</strong> provides reliable tracking with relatively low
+            errors, but like the others it is very sensitive to sudden movement and loses tracking
+            when objects move in front of the camera.
+        </p>
+        <p>
+            <strong>RTAB-Map</strong> has a very strong visual odometry tracking algorithm. Even
+            though the CARLA results did not match our expectations for 3D map generation, the
+            RealSense L515 test proved the capability is there. With parameter exploration and
+            tuning, it is a powerful way to attack a SLAM problem.
+        </p>
+        <p>
+            <strong>Google Cartographer</strong> is relatively good at loop-closure detection, but
+            suffers from a characteristic of laser data: in certain environments reflections and
+            deflections produce inaccurate localization and tracking. It too is sensitive to moving
+            objects in front of the scan and underperforms in highly dynamic environments.
+        </p>
+        <p>
+            The common thread across all three is worth stating plainly: every system we tested
+            degraded in dynamic environments and under fast motion. The differences were in how they
+            degraded, not whether. Some of these 3D algorithms also support 2D localization and
+            tracking, and with further research can sometimes perform on par with dedicated 2D
+            approaches.
+        </p>
+        <p>
+            For a team new to SLAM, the value was in setting the systems up across varied sensor
+            suites and porting data through CARLA, which meant directly debugging important components
+            of each pipeline and getting real insight into how they are built internally.
+        </p>
+    </section>
+
+    <section>
+        <h2>Future work</h2>
+        <p>
+            CARLA can simulate a great deal more than we asked of it. The natural extension is
+            generating datasets under conditions like varying weather, which increases slip and drag,
+            or dynamic lighting. Beyond simulation, the more valuable step is a real mobile robot
+            fitted with lidar and RGB-D cameras, collecting indoor data under changing lighting and
+            outdoor data under real wind and sunlight, so the comparison reflects the conditions the
+            algorithms would actually face.
+        </p>
+
+        <div class="project-page-tags">
+            <span class="tag">SLAM</span>
+            <span class="tag">ORB-SLAM2</span>
+            <span class="tag">RTAB-Map</span>
+            <span class="tag">Cartographer</span>
+            <span class="tag">ROS</span>
+            <span class="tag">CARLA</span>
+            <span class="tag">RGB-D</span>
+            <span class="tag">Lidar</span>
+            <span class="tag">Loop Closure</span>
+        </div>
+        <div class="project-links">
+            <a href="../assets/media/slam-comparison/slam-comparison-report.pdf" target="_blank" class="btn">Read the full report (PDF) ↗</a>
+        </div>
+    </section>
+
+    <nav class="project-nav">
+        <a href="./particle-filter.html">
+            <div class="nav-label">← Previous</div>
+            <div class="nav-title">Particle Filter Localization</div>
+        </a>
+        <a href="./cmu.html" class="next">
+            <div class="nav-label">Next →</div>
+            <div class="nav-title">CMU Projects</div>
+        </a>
+    </nav>
+</article>
+
+<div id="site-footer"></div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
