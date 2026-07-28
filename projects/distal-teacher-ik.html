@@ -79,12 +79,12 @@
         </p>
     </section>
 
-    <figure class="fig-row one">
+    <figure class="fig-row one" style="max-width: 395px; margin: 2rem auto;">
         <img src="../assets/media/aiml/forward-net.png" alt="Forward model training architecture">
         <figcaption>Training the forward network: joint angles feed both the network and the real kinematics, and the difference trains the network.</figcaption>
     </figure>
 
-    <figure class="fig-row one">
+    <figure class="fig-row one" style="max-width: 400px; margin: 2rem auto;">
         <img src="../assets/media/aiml/forward-net-fit.png" alt="Forward network predictions plotted against target positions, and the training error curve">
         <figcaption>Predictions plotted on top of the targets, and the sum-squared error falling across training epochs.</figcaption>
     </figure>
@@ -103,7 +103,7 @@
         </p>
     </section>
 
-    <figure class="fig-row one">
+    <figure class="fig-row one" style="max-width: 600px; margin: 2rem auto;">
         <img src="../assets/media/aiml/inverse-net.png" alt="Distal teacher architecture with inverse and forward networks trained together">
         <figcaption>The distal teacher setup. Position error is backpropagated through the forward model to train the inverse network.</figcaption>
     </figure>
@@ -114,7 +114,7 @@
         to a very low sum-squared error.
     </p>
 
-    <figure class="fig-row one">
+    <figure class="fig-row one" style="max-width: 410px; margin: 2rem auto;">
         <img src="../assets/media/aiml/inverse-net-positions.png" alt="Desired versus achieved end effector positions over a grid of test points, and convergence curves">
         <figcaption>121 test points: desired positions and achieved positions overlap, with the convergence of both networks below.</figcaption>
     </figure>
@@ -128,7 +128,7 @@
         </p>
     </section>
 
-    <figure class="fig-row one" style="max-width: 460px;">
+    <figure class="fig-row one" style="max-width: 455px; margin: 2rem auto;">
         <img src="../assets/media/aiml/inverse-net-test.png" alt="The trained inverse network used on its own as a controller">
         <figcaption>The trained inverse network used on its own: desired position in, joint angles out.</figcaption>
     </figure>
