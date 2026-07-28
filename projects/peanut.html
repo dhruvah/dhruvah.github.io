@@ -156,6 +156,69 @@
         <figcaption>Result: the robot scrubbing a surface using a live-recorded trajectory.</figcaption>
     </figure>
 
+    <section>
+        <h3>Impact</h3>
+        <p>
+            The training-time number is the headline, but it was not the only thing that changed. Four
+            effects came out of it:
+        </p>
+        <ul>
+            <li><strong>Training time collapsed.</strong> About 10 minutes against 2 to 4 hours on the
+                sink and counter.</li>
+            <li><strong>Cleaning quality improved on edges and corners.</strong> These are precisely
+                the places a joystick-jogged path handles badly, because approximating a curve through
+                sparse captured joint positions rounds off exactly the detail that matters at a
+                boundary.</li>
+            <li><strong>Trajectories became something you could prototype.</strong> When a path takes
+                hours to author, you get one attempt and you live with it; when it takes ten minutes,
+                you can try a variation and throw it away.</li>
+            <li><strong>Human-intuitive wrist motion became expressible.</strong> Guiding the arm by
+                hand lets an operator apply pressure and roll the wrist the way a person actually
+                scrubs, which is difficult to specify through a joystick at all.</li>
+        </ul>
+
+        <p>
+            That third point is the one with the longest tail. Cheap trajectories turned into a testing
+            instrument for the rest of the robot, and the team used it to run:
+        </p>
+        <ul>
+            <li>Cleaning tests, checking scrubber contact quality against the surface</li>
+            <li>Comparisons between different cleaning tools</li>
+            <li>Corner and ledge tests</li>
+            <li>Scrubber RPM tests</li>
+            <li>Flat-surface behavior</li>
+            <li>Pressure tests on difficult surfaces such as mirrors</li>
+        </ul>
+
+        <h3>Where it fell short</h3>
+        <p>
+            Worth being honest about, since these were real constraints operators worked around rather
+            than theoretical concerns:
+        </p>
+        <ul>
+            <li>Recording had to start from zero velocity.</li>
+            <li>It required near-perfect choreography from the operator, since any hesitation was
+                faithfully recorded as a pause in the trajectory.</li>
+            <li>Manipulating the arm by hand was awkward in tight spaces, which a bathroom has plenty
+                of.</li>
+            <li>Operators could record physically "illegal" moves, such as accelerations the arm should
+                not reproduce.</li>
+            <li>Resume functionality broke on live-recorded paths.</li>
+        </ul>
+
+        <h3>Where it was going next</h3>
+        <ul>
+            <li><strong>Trajectory stitching</strong>, so separately recorded segments could be joined
+                instead of choreographed in one take.</li>
+            <li><strong>Post-processing to strip out pauses</strong>, which removes the choreography
+                burden rather than asking operators to be perfect.</li>
+            <li><strong>Remote-control arm operation</strong>, sidestepping the tight-space problem.</li>
+            <li><strong>Partially torquing the wrist motors</strong> to limit wrist movement and keep
+                recordings within what the arm can safely execute.</li>
+            <li><strong>Resuming with TOPPRA trajectories</strong>, to fix the broken resume path.</li>
+        </ul>
+    </section>
+
     <!-- ── 2. ROOM TO ROOM VARIATION ── -->
     <section>
         <h2>2. Room to Room Variation</h2>
