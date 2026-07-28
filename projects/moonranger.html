@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MoonRanger — Harsh Dhruva</title>
-    <meta name="description" content="Software perception for an autonomous lunar micro-rover.">
+    <title>MoonRanger · Harsh Dhruva</title>
+    <meta name="description" content="Software perception for MoonRanger, an autonomous lunar micro-rover: stereo reconstruction data handling and disparity-map tooling on NASA cFS.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -15,15 +15,15 @@
 <div id="site-header"></div>
 
 <article class="project-page">
-    <a href="../index.html" class="project-back">All work</a>
+    <a href="./cmu.html" class="project-back">CMU projects</a>
 
     <header class="project-page-header">
         <div class="project-page-category">Space Robotics · CMU</div>
-        <h1>MoonRanger — lunar micro-rover perception.</h1>
+        <h1>MoonRanger: lunar micro-rover perception.</h1>
         <p class="project-page-summary">
-            Software perception team for one of the first truly autonomous micro-rovers targeted
-            for the lunar surface. Built tooling around the stereo reconstruction pipeline for
-            disparity map inspection.
+            Software perception for one of the first truly autonomous micro-rovers targeted for the
+            lunar surface. I worked on the stereo reconstruction pipeline, getting disparity data
+            saved and inspectable so the team could debug failures offline.
         </p>
     </header>
 
@@ -34,7 +34,7 @@
         </div>
         <div class="project-meta-item">
             <span class="label">Timeline</span>
-            <span class="value">Feb 2022 — May 2022</span>
+            <span class="value">Feb 2022 to May 2022</span>
         </div>
         <div class="project-meta-item">
             <span class="label">Team</span>
@@ -42,43 +42,80 @@
         </div>
         <div class="project-meta-item">
             <span class="label">Stack</span>
-            <span class="value">C++ · Stereo Vision</span>
+            <span class="value">C++ · ROS · Stereo Vision · NASA cFS</span>
         </div>
     </div>
+
+    <figure class="fig-row one" style="max-width: 420px; margin: 2rem auto 0;">
+        <img src="../assets/media/moonranger/rover.png" alt="The MoonRanger lunar micro-rover">
+        <figcaption>The MoonRanger rover. Image: CMU Robotics Institute.</figcaption>
+    </figure>
 
     <section>
         <h2>Context</h2>
         <p>
             MoonRanger is a small, fast lunar rover being built at Carnegie Mellon to demonstrate
-            <strong>autonomous navigation on the moon</strong> — without continuous earth-based
-            teleoperation. The mission targets prospecting for water ice near the lunar south pole.
+            autonomous navigation on the moon, without continuous earth-based teleoperation. The
+            mission targets prospecting for water ice near the lunar south pole, which means the rover
+            has to see and understand the terrain in front of it entirely on its own.
         </p>
     </section>
 
     <section>
         <h2>My contribution</h2>
         <p>
-            I worked on the <strong>stereo reconstruction pipeline</strong>, specifically adding
-            functionality and unit tests for writing disparity map image data to disk for offline
-            inspection and debugging.
+            I worked on the perception team, on the data side of the stereo reconstruction pipeline:
+            getting disparity and image data flowing, saved, and inspectable so the rest of the team
+            could debug the pipeline.
+        </p>
+        <p>
+            Concretely, I added the ability to write disparity-map data to disk, storing it as a
+            grayscale image instead of the CSV format that had been used before, and wired up ROS
+            <code>image_transport</code> to save image data during a run. Along the way I cleaned up the
+            codebase, removing dead code and tightening how image data (<code>cv::Mat</code>) was
+            handled, and added unit tests around the disk-writing functionality.
         </p>
         <p>
             The motivation is that stereo failures are hard to debug live. A disparity map can look
-            plausible on a screen and still be quietly wrong — bad matches in low-texture regions,
-            edge fattening, holes where the lunar surface has too little contrast. Being able to dump
-            the raw disparity data to disk meant the perception team could replay a run frame by
-            frame against ground truth and actually see where the pipeline broke, instead of guessing
-            from a downstream navigation failure.
+            plausible on a screen and still be quietly wrong: bad matches in low-texture regions, edge
+            fattening, or holes where the surface has too little contrast. Being able to dump the raw
+            disparity to disk meant the team could replay a run frame by frame and actually see where
+            the pipeline broke, instead of guessing from a downstream navigation failure.
+        </p>
+    </section>
+
+    <section>
+        <h2>The stereo pipeline</h2>
+        <p>
+            The rover's depth perception is classical stereo. Two calibrated cameras view the same
+            scene, and the disparity between a point's position in the two images gives its depth by
+            triangulation. MoonRanger's pipeline builds on ROS <code>stereo_image_proc</code>, using
+            block matching to compute the disparity map after a careful stereo camera calibration,
+            since stereo depth is only ever as good as the calibration behind it. The perception
+            software runs on NASA's core Flight System (cFS), the flight-software framework the rover
+            is built on.
+        </p>
+    </section>
+
+    <section>
+        <h2>Challenges</h2>
+        <p>
+            The moon is a hostile place for stereo vision. The sun sits at a very low angle near the
+            horizon throughout the lunar day, which casts long shadows and produces extremely
+            high-contrast scenes. High contrast actually helps stereo matching, since it gives texture
+            to lock onto, but the long shadows and glare are punishing. We tested in a sandbox rig on
+            the ground; the closest earthly analogy is driving across terrain blanketed after a
+            snowstorm, where the surface is bright, low on texture, and hard to read.
         </p>
     </section>
 
     <section>
         <h2>What I learned</h2>
         <p>
-            This was my first time inside a research codebase that was actually headed for flight
-            hardware. The bar for testing and reproducibility is different when the system has to run
-            autonomously on the moon with no one able to patch it — every capability needs a way to
-            be inspected and verified offline, and "it works on my machine" isn't a finish line.
+            This was my first time inside a research codebase actually headed for flight hardware. The
+            bar for testing and reproducibility is different when the system has to run autonomously on
+            the moon with no one able to patch it: every capability needs a way to be inspected and
+            verified offline, and "it works on my machine" isn't a finish line.
         </p>
     </section>
 
@@ -86,12 +123,16 @@
         <h2>Stack &amp; links</h2>
         <div class="project-page-tags">
             <span class="tag">C++</span>
+            <span class="tag">ROS</span>
             <span class="tag">Stereo Vision</span>
-            <span class="tag">Autonomy</span>
+            <span class="tag">stereo_image_proc</span>
+            <span class="tag">image_transport</span>
+            <span class="tag">NASA cFS</span>
             <span class="tag">Disparity Maps</span>
+            <span class="tag">Autonomy</span>
         </div>
         <div class="project-links">
-            <a href="https://labs.ri.cmu.edu/moonranger/" target="_blank" class="btn">CMU MoonRanger</a>
+            <a href="https://labs.ri.cmu.edu/moonranger/" target="_blank" class="btn">CMU MoonRanger ↗</a>
         </div>
     </section>
 
