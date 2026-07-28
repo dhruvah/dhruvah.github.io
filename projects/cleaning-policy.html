@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact-Rich Cleaning — Harsh Dhruva</title>
+    <title>Contact-Rich Cleaning · Harsh Dhruva</title>
     <meta name="description" content="ROS2 framework combining diffusion policy with classical state machines for surface cleaning.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,7 +21,7 @@
         <div class="project-page-category">AI Robotics · In Progress</div>
         <h1>Contact-rich cleaning with learned policies.</h1>
         <p class="project-page-summary">
-            An open-source ROS2 framework for contact-rich surface cleaning manipulation —
+            An open-source ROS2 framework for contact-rich surface cleaning manipulation:
             combining diffusion policy with classical state machines, force feedback, and recovery
             behaviors. Built on the SO-101 arm from my XLERobot setup.
         </p>
@@ -54,7 +54,7 @@
     <section>
         <h2>Motivation</h2>
         <p>
-            Contact-rich manipulation — wiping, scrubbing, polishing — is exactly where pure
+            Contact-rich manipulation (wiping, scrubbing, polishing) is exactly where pure
             learned policies struggle and pure classical control is too brittle. The interesting
             question isn't "which is better?" but <strong>"what's the right architecture for
             combining them?"</strong>
@@ -73,7 +73,7 @@
             High-level architecture I'm exploring:
         </p>
         <ul>
-            <li><strong>Diffusion policy</strong> for the contact-rich core motion — the part that benefits from imitation learning across many demonstrations.</li>
+            <li><strong>Diffusion policy</strong> for the contact-rich core motion: the part that benefits from imitation learning across many demonstrations.</li>
             <li><strong>Classical state machine</strong> for high-level task orchestration: approach, engage, clean, retract, recover.</li>
             <li><strong>Force feedback</strong> in the inner loop to bound contact forces regardless of what the policy outputs.</li>
             <li><strong>Recovery behaviors</strong> as classical fallbacks when the policy's predicted action falls outside a confidence envelope or when force/torque sensing detects an off-nominal interaction.</li>

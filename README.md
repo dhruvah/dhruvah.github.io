@@ -1,6 +1,6 @@
 # dhruvah.github.io
 
-Personal portfolio site for Harsh Dhruva — robotics engineer.
+Personal portfolio site for Harsh Dhruva, robotics engineer.
 
 ---
 
@@ -100,7 +100,7 @@ Replace them with real media:
 </div>
 ```
 
-For preview clips, aim for 5–10 seconds, 720p, H.264, ~2–5 MB per file.
+For preview clips, aim for 5 to 10 seconds, 720p, H.264, ~2 to 5 MB per file.
 GitHub Pages caps total site size at 1 GB and individual files at 100 MB.
 
 ---
@@ -131,8 +131,8 @@ Things to fill in / replace across the site:
 
 - [ ] **Replace all `YOUR_VIDEO_ID`** placeholders with real YouTube IDs
 - [ ] **Replace emoji placeholders** on home page cards with real images or video previews
-- [ ] **Verify `linkedin.com/in/harshdhruva`** — check your LinkedIn profile URL and update in `components/header.html`, `index.html`, `about.html` if your handle differs
-- [x] **Update `github.com/dhruvah`** — done across header.html, index.html, about.html, cleaning-policy.html
+- [ ] **Verify `linkedin.com/in/harshdhruva`**: check your LinkedIn profile URL and update in `components/header.html`, `index.html`, `about.html` if your handle differs
+- [x] **Update `github.com/dhruvah`**: done across header.html, index.html, about.html, cleaning-policy.html
 - [ ] **Fill in [TODO] sections** inside each project page with real writeup
 - [ ] **Add resume PDF** and enable the link in `about.html`
 - [ ] Customize the meta descriptions and og:title in each `<head>` for better link previews
@@ -141,7 +141,7 @@ Things to fill in / replace across the site:
 
 ## Future ideas
 
-- Custom domain (e.g. `harshdhruva.com`) — buy domain, add CNAME file pointing at `dhruvah.github.io`, configure DNS
+- Custom domain (e.g. `harshdhruva.com`): buy domain, add CNAME file pointing at `dhruvah.github.io`, configure DNS
 - Add a `/now` page (see https://nownownow.com) for current focus / what you're learning
 - Add a `writing/` directory for technical blog posts
 - Replace emoji thumbnails with looping preview clips (biggest visual upgrade)

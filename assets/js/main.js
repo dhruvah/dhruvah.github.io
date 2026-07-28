@@ -1,4 +1,4 @@
-// Site-wide JS — handles nav injection, scroll state, mobile menu
+// Site-wide JS: handles nav injection, scroll state, mobile menu
 
 (function() {
     // Determine path depth (root pages = 0, /projects/* = 1)
@@ -6,7 +6,7 @@
     const basePath = isProject ? '../' : './';
 
     // Shared header/footer are built here (not fetched) so the nav works
-    // everywhere — including opening the pages directly via file://, where
+    // everywhere, including opening the pages directly via file://, where
     // fetch() is blocked by the browser.
     const headerHTML = `
 <nav class="site-nav">

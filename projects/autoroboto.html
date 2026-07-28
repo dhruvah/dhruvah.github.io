@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Autoroboto · Google — Harsh Dhruva</title>
+    <title>Autoroboto at Google · Harsh Dhruva</title>
     <meta name="description" content="Automated robotic system for hardware security testing on Pixel devices.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,7 +38,7 @@
         </div>
         <div class="project-meta-item">
             <span class="label">Timeline</span>
-            <span class="value">Jul 2024 — Present</span>
+            <span class="value">Jul 2024 to Present</span>
         </div>
         <div class="project-meta-item">
             <span class="label">Team</span>
@@ -60,7 +60,7 @@
         <p>
             Modern phone biometrics (face unlock, fingerprint) need to be tested against a wide
             range of physical attack vectors. Doing that by hand is slow, inconsistent, and
-            limited in coverage. Autoroboto automates this — using a robotic arm to systematically
+            limited in coverage. Autoroboto automates this, using a robotic arm to systematically
             test biometric security across a large attack space.
         </p>
     </section>
@@ -68,9 +68,9 @@
     <section>
         <h2>What I work on</h2>
         <ul>
-            <li><strong>Trajectory libraries:</strong> Designed a two-phase approach to robot motion — broad calibration sweeps to map the test space, followed by targeted motions at high-priority points. Built to mirror how a human security researcher would systematically explore vulnerabilities.</li>
+            <li><strong>Trajectory libraries:</strong> Designed a two-phase approach to robot motion: broad calibration sweeps to map the test space, followed by targeted motions at high-priority points. Built to mirror how a human security researcher would systematically explore vulnerabilities.</li>
             <li><strong>ROS1 → ROS2 migration:</strong> Led the full upgrade of the system to ROS2 for modern tooling and long-term support. Tackled threading model changes, REST API integration, motion planner setup, and launch file rewrites.</li>
-            <li><strong>Node architecture refactor:</strong> Separated motion planning from motion execution to eliminate idle wait time — phone camera recording was starting before the robot moved. The new architecture ensures tight synchronization across robot and camera.</li>
+            <li><strong>Node architecture refactor:</strong> Separated motion planning from motion execution to eliminate idle wait time, since phone camera recording was starting before the robot moved. The new architecture ensures tight synchronization across robot and camera.</li>
             <li><strong>System integration:</strong> Wire-up across robot, vision pipeline, device under test, and orchestration layer.</li>
         </ul>
     </section>
@@ -79,12 +79,12 @@
         <h2>Themes I think about</h2>
         <p>
             Building test infrastructure forces a different mindset than building product robotics.
-            The robot isn't the deliverable — <strong>reliable coverage of an attack space is the
+            The robot isn't the deliverable; <strong>reliable coverage of an attack space is the
             deliverable.</strong> That changes how I think about determinism, repeatability,
             and what "good enough" means for trajectory quality.
         </p>
         <p>
-            Most of the work is in the seams between subsystems — the robot, the device under test,
+            Most of the work is in the seams between subsystems: the robot, the device under test,
             the camera capture, and the orchestration layer all run on different clocks, and a test
             is only as trustworthy as the weakest synchronization point between them. A lot of my
             time goes into making the system deterministic enough that a failed test means a real

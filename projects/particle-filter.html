@@ -203,26 +203,26 @@ Visualise laser_ray onto the map</div>
         directions:
     </p>
     <ul>
-        <li><strong>z<sub>hit</sub></strong> — raising it says the sensor is more accurate, rewarding
+        <li><strong>z<sub>hit</sub></strong>: raising it says the sensor is more accurate, rewarding
             readings that match the true range. Too high, and particles converge very fast, usually to
             the wrong place.</li>
-        <li><strong>z<sub>short</sub></strong> — raising it rewards readings short of the true range.
+        <li><strong>z<sub>short</sub></strong>: raising it rewards readings short of the true range.
             Tricky, because the dataset visibly has a person walking in front of the robot, so short
             readings are genuinely expected. But too high and particles facing an obstacle in the
             wrong location survive anyway.</li>
-        <li><strong>z<sub>max</sub></strong> — set between the uniform random floor and the peak of
+        <li><strong>z<sub>max</sub></strong>: set between the uniform random floor and the peak of
             the Gaussian.</li>
-        <li><strong>z<sub>rand</sub></strong> — tuned to bring likelihoods close to 1 and avoid
+        <li><strong>z<sub>rand</sub></strong>: tuned to bring likelihoods close to 1 and avoid
             numerical issues. Set the uniform floor too low against the Gaussian and particles die
             off fast from tiny weights.</li>
-        <li><strong>σ<sub>hit</sub></strong> — widens the Gaussian, giving the model slack around the
+        <li><strong>σ<sub>hit</sub></strong>: widens the Gaussian, giving the model slack around the
             true range. Slows convergence but makes the filter more robust.</li>
-        <li><strong>λ<sub>short</sub></strong> — scales the short distribution, adjusted alongside
+        <li><strong>λ<sub>short</sub></strong>: scales the short distribution, adjusted alongside
             z<sub>short</sub>.</li>
-        <li><strong>max_range</strong> — 8191 cm, the largest value observed across all logs. Our ray
+        <li><strong>max_range</strong>: 8191 cm, the largest value observed across all logs. Our ray
             casting never produced a true range above about 5000 cm, so we treat any reading well
             above that as an error measurement.</li>
-        <li><strong>subsampling</strong> — how many of the 180 beams to actually use. We used every
+        <li><strong>subsampling</strong>: how many of the 180 beams to actually use. We used every
             5th; sampling more costs computation time.</li>
     </ul>
 

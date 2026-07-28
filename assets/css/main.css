@@ -202,7 +202,7 @@ nav.site-nav.scrolled {
     color: var(--ink-muted);
 }
 
-/* Second section (Home lab) sits directly under the first — no double padding */
+/* Second section (Home lab) sits directly under the first: no double padding */
 .projects-section + .projects-section { padding-top: 0; }
 
 .projects-section-sub {
@@ -212,7 +212,7 @@ nav.site-nav.scrolled {
     line-height: 1.6;
 }
 
-/* Grouped "hub" project pages (CMU / Rose-Hulman) — many small projects per page */
+/* Grouped "hub" project pages (CMU / Rose-Hulman): many small projects per page */
 .coursework-group { margin: 2.5rem 0; }
 .coursework-group > h2 {
     font-size: 1.5rem;
@@ -309,6 +309,70 @@ nav.site-nav.scrolled {
     max-width: 46%; max-height: 48%;
     object-fit: contain;
 }
+/* Card thumbnail: two logos side by side */
+.project-thumb.thumb-logo-pair {
+    background: var(--bg-elevated);
+    gap: 1.75rem;
+}
+.project-thumb.thumb-logo-pair img {
+    width: auto; height: auto;
+    max-width: 30%; max-height: 42%;
+    object-fit: contain;
+}
+
+/* Card thumbnail: mosaic of project images behind a centred logo badge */
+.project-thumb.thumb-mosaic { background: var(--bg-elevated); }
+.project-thumb.thumb-mosaic .mosaic-grid {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 3px;
+}
+.project-thumb.thumb-mosaic .mosaic-grid img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.project-thumb.thumb-mosaic::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(17, 17, 16, 0.42);
+    z-index: 1;
+    transition: background 0.4s var(--ease);
+}
+.project-card:hover .project-thumb.thumb-mosaic::after {
+    background: rgba(17, 17, 16, 0.3);
+}
+.project-thumb.thumb-mosaic .mosaic-badge {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 92px; height: 92px;
+    border-radius: 50%;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(17, 17, 16, 0.28);
+    z-index: 2;
+    transition: transform 0.4s var(--ease);
+}
+.project-card:hover .project-thumb.thumb-mosaic .mosaic-badge {
+    transform: translate(-50%, -50%) scale(1.06);
+}
+.project-thumb.thumb-mosaic .mosaic-badge img {
+    width: 62%; height: 62%;
+    object-fit: contain;
+    transform: none;
+}
+.project-card:hover .project-thumb.thumb-mosaic .mosaic-badge img { transform: none; }
+@media (max-width: 768px) {
+    .project-thumb.thumb-mosaic .mosaic-badge { width: 72px; height: 72px; }
+}
+
 .project-thumb-placeholder {
     font-size: 3rem;
     opacity: 0.4;
@@ -583,7 +647,7 @@ nav.site-nav.scrolled {
 }
 .pa p { margin-bottom: 0; }
 
-/* In-memoriam closer — gary.png is itself a designed memorial card */
+/* In-memoriam closer: gary.png is itself a designed memorial card */
 .memorial-figure {
     margin: 4rem auto 1rem;
     max-width: 440px;
@@ -595,7 +659,7 @@ nav.site-nav.scrolled {
     border: 1px solid var(--border);
 }
 
-/* Diagrams & landscape video — keep natural aspect, never crop */
+/* Diagrams & landscape video: keep natural aspect, never crop */
 .fig-row {
     display: grid;
     gap: 1rem;
@@ -616,7 +680,7 @@ nav.site-nav.scrolled {
 }
 @media (max-width: 640px) { .fig-row { grid-template-columns: 1fr; } }
 
-/* Portrait phone-shot videos/photos — 9:16 gallery */
+/* Portrait phone-shot videos/photos: 9:16 gallery */
 .portrait-gallery {
     display: grid;
     gap: 1rem;
