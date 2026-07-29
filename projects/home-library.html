@@ -75,19 +75,43 @@
     <section>
         <h2>How far it generalized</h2>
         <p>
-            Two tests worth calling out, because they are the ones that usually break a policy that has
-            simply latched onto a visual template.
-        </p>
-        <p>
-            <strong>A different book.</strong> Hand the policy a book it was not trained on, with a
-            different cover and different proportions, and it still picks it up.
-        </p>
-        <p>
-            <strong>Partial occlusion.</strong> Obscure part of the book so the policy cannot see the
-            whole object, and it still works. This is the more interesting of the two: a policy keyed
-            to a memorized appearance tends to fail as soon as that appearance is incomplete.
+            Same approach as the pen task: hold the policy fixed and change one thing at a time. Both
+            of these are tests that usually break a policy which has simply latched onto a visual
+            template.
         </p>
     </section>
+
+    <div class="data-table-wrap">
+        <table class="data-table">
+            <caption>Factor sweep · ACT on book pickup</caption>
+            <thead>
+                <tr><th>Factor</th><th>Condition</th><th>ACT</th></tr>
+            </thead>
+            <tbody>
+                <tr class="baseline">
+                    <td class="factor">Baseline</td>
+                    <td>Trained book, fully visible</td>
+                    <td class="pass">Works</td>
+                </tr>
+                <tr>
+                    <td class="factor">Book identity</td>
+                    <td>Unseen book, different cover and proportions</td>
+                    <td class="pass">Works</td>
+                </tr>
+                <tr>
+                    <td class="factor">Visibility</td>
+                    <td>Book partially occluded</td>
+                    <td class="pass">Works</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p>
+        The occlusion row is the more interesting of the two. A policy keyed to a memorized appearance
+        tends to fail as soon as that appearance is incomplete, so surviving partial occlusion suggests
+        it picked up something closer to the shape and the graspable edge than to a specific cover.
+    </p>
 
     <div class="fig-row">
         <figure>

@@ -593,6 +593,61 @@ nav.site-nav.scrolled {
     margin: 1.5rem 0;
 }
 
+/* Data tables: experiment matrices, results, benchmarks.
+   Always wrap in .data-table-wrap so wide tables scroll themselves
+   instead of pushing the page sideways. */
+.data-table-wrap {
+    overflow-x: auto;
+    margin: 1.75rem 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+.data-table th,
+.data-table td {
+    text-align: left;
+    padding: 0.65rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+}
+.data-table thead th {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--ink-muted);
+    background: var(--bg-elevated);
+    border-bottom: 1px solid var(--border-strong);
+    white-space: nowrap;
+}
+.data-table tbody tr:last-child td { border-bottom: none; }
+.data-table caption {
+    caption-side: top;
+    text-align: left;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--accent);
+    padding: 0.7rem 0.9rem 0;
+}
+/* First column of a matrix: the factor being varied */
+.data-table td.factor {
+    font-weight: 600;
+    color: var(--ink);
+    white-space: nowrap;
+}
+.data-table .baseline td { background: var(--accent-soft); }
+.pass { color: #2C7A4B; font-weight: 600; }
+.fail { color: #A93B26; font-weight: 600; }
+.untested { color: var(--ink-faint); }
+
 .callout {
     padding: 1.25rem 1.5rem;
     background: var(--accent-soft);

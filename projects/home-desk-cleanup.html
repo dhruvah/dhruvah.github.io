@@ -76,6 +76,35 @@
             home setup.
         </p>
 
+        <div class="data-table-wrap">
+            <table class="data-table">
+                <caption>Run 1 · policy sweep on the merged dataset</caption>
+                <thead>
+                    <tr><th>Policy</th><th>Training data</th><th>Outcome</th><th>Note</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="factor">SmolVLA</td>
+                        <td>merged, 100 ep</td>
+                        <td class="fail">Poor</td>
+                        <td>Did not reliably complete the task</td>
+                    </tr>
+                    <tr>
+                        <td class="factor">Diffusion policy</td>
+                        <td>merged, 100 ep</td>
+                        <td class="fail">Poor</td>
+                        <td>Did not reliably complete the task</td>
+                    </tr>
+                    <tr>
+                        <td class="factor">π0.5</td>
+                        <td>merged, 100 ep</td>
+                        <td class="untested">Not evaluated</td>
+                        <td>Too large to run inference on 8 GB VRAM</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
         <div class="project-links">
             <a href="https://huggingface.co/datasets/hdhruva/desk_cleanup_v1_pen_single" target="_blank" class="btn">Dataset: single pen ↗</a>
             <a href="https://huggingface.co/datasets/hdhruva/desk_cleanup_v2_pen_multi" target="_blank" class="btn">Dataset: multi pen ↗</a>
@@ -109,27 +138,106 @@
     </figure>
 
     <section>
-        <h2>What ACT actually learned</h2>
+        <h2>The factor sweep</h2>
         <p>
-            Probing it revealed three specific limits, and together they say something fairly damning
-            about what the policy had really picked up:
+            With a working baseline, the useful move is to change exactly one thing at a time and see
+            what survives. The baseline is the trained condition: a single orange pen, in a trained
+            orientation, dropped into the pouch it was demonstrated with.
+        </p>
+        <p>
+            Both policies below were trained on the <em>same</em> 40 episodes. Nothing about the data
+            differs between the two columns, only the model.
+        </p>
+    </section>
+
+    <div class="data-table-wrap">
+        <table class="data-table">
+            <caption>Run 2 · one factor at a time, 40 episodes, single orange pen</caption>
+            <thead>
+                <tr><th>Factor</th><th>Condition</th><th>ACT</th><th>MolmoAct v2</th></tr>
+            </thead>
+            <tbody>
+                <tr class="baseline">
+                    <td class="factor">Baseline</td>
+                    <td>Orange pen, trained orientation, trained pouch</td>
+                    <td class="pass">Works</td>
+                    <td class="pass">Works</td>
+                </tr>
+                <tr>
+                    <td class="factor" rowspan="4">Pen color</td>
+                    <td>Purple</td>
+                    <td class="pass">Works</td>
+                    <td class="pass">Works</td>
+                </tr>
+                <tr>
+                    <td>Green</td>
+                    <td class="fail">Fails</td>
+                    <td class="pass">Works</td>
+                </tr>
+                <tr>
+                    <td>Blue</td>
+                    <td class="fail">Fails</td>
+                    <td class="pass">Works</td>
+                </tr>
+                <tr>
+                    <td>Brown</td>
+                    <td class="fail">Fails</td>
+                    <td class="untested">Not tested</td>
+                </tr>
+                <tr>
+                    <td class="factor" rowspan="2">Drop target</td>
+                    <td>Different pouch</td>
+                    <td class="fail">Fails</td>
+                    <td class="untested">Not tested</td>
+                </tr>
+                <tr>
+                    <td>Pouch removed entirely</td>
+                    <td class="fail">Drops at the learned location</td>
+                    <td class="untested">Not tested</td>
+                </tr>
+                <tr>
+                    <td class="factor">Pen orientation</td>
+                    <td>Significantly rotated</td>
+                    <td class="fail">Fails</td>
+                    <td class="untested">Not tested</td>
+                </tr>
+                <tr>
+                    <td class="factor">Object count</td>
+                    <td>Two pens, picked sequentially</td>
+                    <td class="untested">Not tested</td>
+                    <td class="pass">Works</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <section>
+        <h2>What the sweep says</h2>
+        <p>
+            Three things fall out of that table, and together they are fairly damning about what ACT
+            had really picked up.
         </p>
         <ul>
-            <li><strong>Color is doing more work than it should.</strong> The policy handled the orange
-                pen it trained on, and also a purple one, but failed on green, blue and brown pens.
-                Same shape, same task, same location. The visual feature it locked onto does not
-                transfer across color.</li>
-            <li><strong>It memorized the drop location, not the target.</strong> Take the pouch away
-                entirely and the robot still travels to where the pouch used to be and releases the
-                pen over empty table. It never learned "put it in the pouch". It learned "go here and
-                open the gripper".</li>
-            <li><strong>Orientation is brittle.</strong> Significant changes to the pen's orientation
-                cause failures, even in positions it otherwise handles.</li>
+            <li><strong>Color is doing more work than it should.</strong> Orange and purple pass, green
+                and blue and brown fail. Same shape, same task, same location. The visual feature the
+                policy locked onto does not transfer across color, which means it is keying on
+                appearance rather than on the object.</li>
+            <li><strong>It memorized the drop location, not the target.</strong> Remove the pouch
+                entirely and the robot still travels to where the pouch used to be and releases the pen
+                over empty table. It never learned "put it in the pouch". It learned "go here and open
+                the gripper".</li>
+            <li><strong>Orientation is brittle.</strong> Significant rotation of the pen causes
+                failures, even in positions the policy otherwise handles.</li>
         </ul>
         <p>
-            The pouch result is the one I keep coming back to. The policy was confidently wrong, and
+            The pouch row is the one I keep coming back to. The policy was confidently wrong, and
             nothing inside it could detect that. It has no representation of the goal, only of the
             motion that usually satisfies the goal.
+        </p>
+        <p>
+            The gaps in the right-hand column are the honest state of things: MolmoAct has been swept
+            across color and object count, not yet across the drop target or orientation. Those are the
+            next runs, and the pouch-removal test in particular is the one I most want its answer to.
         </p>
     </section>
 
