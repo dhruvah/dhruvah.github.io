@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekend Hackathon: Toasting Bread · Harsh Dhruva</title>
+    <meta name="description" content="A four-person team, two days, and one task: put bread in a toaster, press the button, retrieve the toast. Solved with ACT and SmolVLA policies on low-cost arms.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<article class="project-page">
+    <a href="./home-lab.html" class="project-back">Home lab</a>
+
+    <header class="project-page-header">
+        <div class="project-page-category">Home Robotics · Hackathon</div>
+        <h1>Weekend hackathon: toasting bread.</h1>
+        <p class="project-page-summary">
+            Four people, two days, one task: put a slice of bread into a toaster, press the button,
+            and take the toast back out once it pops. It sounds trivial. It is three separate
+            manipulation problems chained together.
+        </p>
+    </header>
+
+    <div class="project-meta">
+        <div class="project-meta-item">
+            <span class="label">Format</span>
+            <span class="value">Weekend hackathon</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Team</span>
+            <span class="value">4 people</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Policies</span>
+            <span class="value">ACT · SmolVLA</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Stack</span>
+            <span class="value">LeRobot</span>
+        </div>
+    </div>
+
+    <section>
+        <h2>Why it is harder than it sounds</h2>
+        <p>
+            Toasting bread is a good hackathon task precisely because it looks like one thing and is
+            actually three, each with a different failure mode, and a mistake in any of them ends the
+            run:
+        </p>
+        <ul>
+            <li><strong>Picking up the bread</strong> is a deformable-object grasp. A slice bends,
+                sags and slips, so the gripper cannot treat it as a rigid body.</li>
+            <li><strong>Pressing the lever</strong> needs force applied in a specific direction against
+                a compliant, spring-loaded mechanism that pushes back and only latches at the end of
+                its travel.</li>
+            <li><strong>Retrieving the toast</strong> means reaching into a narrow slot, where the
+                clearance is small and the consequences of a misjudged approach are worse than a
+                dropped grasp.</li>
+        </ul>
+        <p>
+            With two days there was no time to engineer any of that explicitly, which is the point. We
+            teleoperated demonstrations and trained <strong>ACT</strong> and <strong>SmolVLA</strong>
+            policies to reproduce the whole sequence.
+        </p>
+    </section>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/home-lab/hackathon-team.jpg" alt="The four-person hackathon team with their robot">
+            <figcaption>The team, and the robot that did the toasting.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/home-lab/hackathon.jpg" alt="Working on the robot arms during the hackathon">
+            <figcaption>Two days of setup, teleoperation and training.</figcaption>
+        </figure>
+    </div>
+
+    <section>
+        <h2>The result</h2>
+        <p>
+            The full sequence, end to end, in one run.
+        </p>
+    </section>
+
+    <figure class="fig-row one" style="max-width: 380px; margin: 2rem auto;">
+        <video controls muted playsinline preload="none" poster="../assets/media/home-lab/toasting-poster.jpg">
+            <source src="../assets/media/home-lab/toasting.mp4" type="video/mp4">
+        </video>
+        <figcaption>Bread in, button pressed, toast out.</figcaption>
+    </figure>
+
+    <p>
+        This is what started everything else on this page's siblings. Getting a learned policy to do
+        a real household task in a weekend was enough of a signal that we bought the robot and kept
+        going.
+    </p>
+
+    <section>
+        <div class="project-page-tags">
+            <span class="tag">ACT</span>
+            <span class="tag">SmolVLA</span>
+            <span class="tag">Imitation Learning</span>
+            <span class="tag">Deformable Objects</span>
+            <span class="tag">LeRobot</span>
+        </div>
+    </section>
+
+    <nav class="project-nav">
+        <a href="./home-lab.html">
+            <div class="nav-label">← Back to</div>
+            <div class="nav-title">Home Lab</div>
+        </a>
+        <a href="./home-library.html" class="next">
+            <div class="nav-label">Next →</div>
+            <div class="nav-title">Library Robot: Books</div>
+        </a>
+    </nav>
+</article>
+
+<div id="site-footer"></div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

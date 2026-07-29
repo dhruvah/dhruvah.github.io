@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desk Cleanup: The Pen Task · Harsh Dhruva</title>
+    <meta name="description" content="Comparing SmolVLA, diffusion, pi0.5, ACT and MolmoAct on a desk-cleanup pen task, and discovering that ACT had memorized the drop location rather than learned the goal.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<article class="project-page">
+    <a href="./home-lab.html" class="project-back">Home lab</a>
+
+    <header class="project-page-header">
+        <div class="project-page-category">Home Robotics · Ongoing</div>
+        <h1>Desk cleanup: the pen task.</h1>
+        <p class="project-page-summary">
+            Pick a pen off the desk and drop it in the bin. This is the experiment I have pushed
+            hardest on and learned the most from, largely by not working. The most useful result was
+            discovering that a policy which looked like it had solved the task had done nothing of
+            the kind.
+        </p>
+    </header>
+
+    <div class="project-meta">
+        <div class="project-meta-item">
+            <span class="label">Status</span>
+            <span class="value">Ongoing</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Data</span>
+            <span class="value">100 teleoperated episodes</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Policies</span>
+            <span class="value">ACT · SmolVLA · Diffusion · MolmoAct · π0.5</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Best result</span>
+            <span class="value">MolmoAct v2, two pens in sequence</span>
+        </div>
+    </div>
+
+    <section>
+        <h2>First attempt: more data, three policies, poor results</h2>
+        <p>
+            I collected two datasets, both teleoperated on the same table:
+        </p>
+        <ul>
+            <li><strong>40 episodes</strong> with a single pen dropped into a bin, varying the pen's
+                location.</li>
+            <li><strong>60 episodes</strong> with multiple pens on the table, still picking up only
+                one of them.</li>
+        </ul>
+        <p>
+            I merged the two and trained three policies on the combined set: <strong>SmolVLA</strong>,
+            a <strong>diffusion policy</strong>, and <strong>π0.5</strong>.
+        </p>
+        <p>
+            The results were poor across the board. None of the three performed well. My working
+            hypothesis is that the merge itself was the problem: mixing single-pen and multi-pen scenes
+            gives the policy two visually different situations that demand the same behavior, and with
+            this little data that ambiguity is more likely to confuse it than to teach it robustness.
+            More data would probably help; a cleaner task definition seemed more likely to.
+        </p>
+        <p>
+            I also could not properly evaluate π0.5, for an unglamorous reason: my GPU has 8 GB of
+            VRAM and the model is too large to comfortably run inference on, never mind train. That
+            constraint is worth stating plainly, because it rules out an entire class of model from a
+            home setup.
+        </p>
+
+        <div class="project-links">
+            <a href="https://huggingface.co/datasets/hdhruva/desk_cleanup_v1_pen_single" target="_blank" class="btn">Dataset: single pen ↗</a>
+            <a href="https://huggingface.co/datasets/hdhruva/desk_cleanup_v2_pen_multi" target="_blank" class="btn">Dataset: multi pen ↗</a>
+            <a href="https://huggingface.co/datasets/hdhruva/desk_cleanup_merged" target="_blank" class="btn">Dataset: merged ↗</a>
+        </div>
+        <div class="project-links" style="margin-top: 0.5rem;">
+            <a href="https://huggingface.co/hdhruva/smolvla_desk_cleanup" target="_blank" class="btn">Model: SmolVLA ↗</a>
+            <a href="https://huggingface.co/hdhruva/diffusion_desk_cleanup" target="_blank" class="btn">Model: diffusion ↗</a>
+            <a href="https://huggingface.co/hdhruva/pi05-libero-finetuned-desk-cleanup-merged-7fc95c9c" target="_blank" class="btn">Model: π0.5 ↗</a>
+        </div>
+    </section>
+
+    <section>
+        <h2>Simplify: one orange pen</h2>
+        <p>
+            So I cut the task down to its simplest honest version: a single orange pen, 40 recorded
+            episodes of picking it up and dropping it into a pouch. Get that solid, then add variation
+            back one axis at a time.
+        </p>
+        <p>
+            And it worked. Which is where it gets interesting, because a policy that works is the
+            hardest kind to learn anything from until you start deliberately breaking assumptions.
+        </p>
+    </section>
+
+    <figure class="fig-row one">
+        <video controls muted playsinline preload="none" poster="../assets/media/home-lab/act-pen-pickup-poster.jpg">
+            <source src="../assets/media/home-lab/act-pen-pickup.mp4" type="video/mp4">
+        </video>
+        <figcaption>ACT on the simplified pen pickup task.</figcaption>
+    </figure>
+
+    <section>
+        <h2>What ACT actually learned</h2>
+        <p>
+            Probing it revealed three specific limits, and together they say something fairly damning
+            about what the policy had really picked up:
+        </p>
+        <ul>
+            <li><strong>Color is doing more work than it should.</strong> The policy handled the orange
+                pen it trained on, and also a purple one, but failed on green, blue and brown pens.
+                Same shape, same task, same location. The visual feature it locked onto does not
+                transfer across color.</li>
+            <li><strong>It memorized the drop location, not the target.</strong> Take the pouch away
+                entirely and the robot still travels to where the pouch used to be and releases the
+                pen over empty table. It never learned "put it in the pouch". It learned "go here and
+                open the gripper".</li>
+            <li><strong>Orientation is brittle.</strong> Significant changes to the pen's orientation
+                cause failures, even in positions it otherwise handles.</li>
+        </ul>
+        <p>
+            The pouch result is the one I keep coming back to. The policy was confidently wrong, and
+            nothing inside it could detect that. It has no representation of the goal, only of the
+            motion that usually satisfies the goal.
+        </p>
+    </section>
+
+    <figure class="fig-row one" style="max-width: 380px; margin: 2rem auto;">
+        <video controls muted playsinline preload="none" poster="../assets/media/home-lab/act-different-pouch-poster.jpg">
+            <source src="../assets/media/home-lab/act-different-pouch.mp4" type="video/mp4">
+        </video>
+        <figcaption>ACT with a different pouch. The drop point is learned as a location, not as a container.</figcaption>
+    </figure>
+
+    <section>
+        <h2>MolmoAct: swapping in a VLM backbone</h2>
+        <p>
+            The color result was the interesting thread to pull. If the policy fails on a green pen
+            purely because it has never seen green, then a model carrying real visual-semantic priors
+            should not have that problem, since it already knows what a pen is independently of this
+            dataset.
+        </p>
+        <p>
+            So I trained <strong>MolmoAct v2</strong>, which has a VLM backbone, on the exact same
+            dataset. No new demonstrations, no relabeling, just a different model over identical data.
+            It handled green, blue and the other pens quite well, which makes this a clean controlled
+            result: the limitation was in the representation, not in the data.
+        </p>
+        <p>
+            The best run so far came out of this. With two pens placed on the table, the robot picked
+            them up one at a time and placed each in the bin.
+        </p>
+    </section>
+
+    <figure class="fig-row one" style="max-width: 420px; margin: 2rem auto;">
+        <video controls muted playsinline preload="none" poster="../assets/media/home-lab/molmoact-pen-pickup-poster.jpg">
+            <source src="../assets/media/home-lab/molmoact-pen-pickup.mp4" type="video/mp4">
+        </video>
+        <figcaption>MolmoAct v2 on the pen pickup task, generalizing across pen colors.</figcaption>
+    </figure>
+
+    <section>
+        <h2>Where it goes next</h2>
+        <p>
+            Adding variation back onto the single-pen task in a controlled way, orientation and
+            location before color, and then moving to multiple pens once the simple case is genuinely
+            solid rather than apparently solid. The distinction between those two is the whole lesson
+            of this experiment.
+        </p>
+    </section>
+
+    <section>
+        <div class="project-page-tags">
+            <span class="tag">ACT</span>
+            <span class="tag">SmolVLA</span>
+            <span class="tag">Diffusion Policy</span>
+            <span class="tag">MolmoAct</span>
+            <span class="tag">π0.5</span>
+            <span class="tag">VLA</span>
+            <span class="tag">LeRobot</span>
+        </div>
+        <div class="project-links">
+            <a href="https://huggingface.co/hdhruva" target="_blank" class="btn">All datasets and models ↗</a>
+        </div>
+    </section>
+
+    <nav class="project-nav">
+        <a href="./home-library.html">
+            <div class="nav-label">← Previous</div>
+            <div class="nav-title">Library Robot: Books</div>
+        </a>
+        <a href="./home-lab.html" class="next">
+            <div class="nav-label">Next →</div>
+            <div class="nav-title">Home Lab</div>
+        </a>
+    </nav>
+</article>
+
+<div id="site-footer"></div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

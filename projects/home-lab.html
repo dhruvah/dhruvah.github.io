@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Lab: Teaching a Low-Cost Arm Real Tasks · Harsh Dhruva</title>
+    <title>Home Lab · Harsh Dhruva</title>
     <meta name="description" content="Ongoing home robotics experiments with low-cost arms and learned policies: a weekend hackathon toasting bread, a library robot stacking books, and a desk-cleanup pen task comparing ACT, SmolVLA, diffusion and MolmoAct.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,15 +14,15 @@
 
 <div id="site-header"></div>
 
-<article class="project-page">
+<article class="project-page hub">
     <a href="../index.html" class="project-back">All work</a>
 
     <header class="project-page-header">
         <div class="project-page-category">Home Robotics · Ongoing</div>
-        <h1>Home lab: teaching a low-cost arm real tasks.</h1>
+        <h1>Home lab.</h1>
         <p class="project-page-summary">
             A running set of experiments with cheap arms on my living-room table, pointed at ordinary
-            household jobs. The interesting part is not that the policies work, it is discovering
+            household jobs. The interesting part is not that the policies work, it is finding out
             exactly what they have and have not learned when they do.
         </p>
     </header>
@@ -34,7 +34,7 @@
         </div>
         <div class="project-meta-item">
             <span class="label">Hardware</span>
-            <span class="value">Low-cost arms · XLeRobot</span>
+            <span class="value">SO-101 arms · XLeRobot</span>
         </div>
         <div class="project-meta-item">
             <span class="label">Policies</span>
@@ -46,16 +46,99 @@
         </div>
     </div>
 
+    <div class="coursework-group">
+        <div class="projects-grid hub-grid">
+
+            <a href="./home-toasting.html" class="project-card">
+                <div class="project-thumb">
+                    <img src="../assets/media/home-lab/toasting-poster.jpg" alt="A robot arm placing bread into a toaster" loading="lazy">
+                </div>
+                <div class="project-body">
+                    <div class="project-category">Hackathon · 2 days</div>
+                    <div class="project-title">Toasting bread</div>
+                    <div class="project-desc">
+                        Four people, one weekend: bread into the toaster, press the button, retrieve the
+                        toast. Three manipulation problems chained together, solved with ACT and
+                        SmolVLA.
+                    </div>
+                    <div class="project-tags">
+                        <span class="tag">ACT</span>
+                        <span class="tag">SmolVLA</span>
+                        <span class="tag">Deformable Objects</span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="./home-library.html" class="project-card">
+                <div class="project-thumb">
+                    <img src="../assets/media/home-lab/library-book-pickup-poster.jpg" alt="Robot arms picking up and stacking books on a table" loading="lazy">
+                </div>
+                <div class="project-body">
+                    <div class="project-category">Library robot · Ongoing</div>
+                    <div class="project-title">Picking and stacking books</div>
+                    <div class="project-desc">
+                        A plain ACT policy generalized further than expected: it kept working on books
+                        it had never seen, and kept working when the book was partly occluded.
+                    </div>
+                    <div class="project-tags">
+                        <span class="tag">ACT</span>
+                        <span class="tag">Generalization</span>
+                        <span class="tag">Occlusion</span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="./home-desk-cleanup.html" class="project-card">
+                <div class="project-thumb">
+                    <img src="../assets/media/home-lab/molmoact-pen-pickup-poster.jpg" alt="A robot arm picking up a pen from a table" loading="lazy">
+                </div>
+                <div class="project-body">
+                    <div class="project-category">Desk cleanup · Ongoing</div>
+                    <div class="project-title">The pen task</div>
+                    <div class="project-desc">
+                        Five policies on one task. ACT looked like it had solved it, until removing the
+                        pouch showed it had memorized a drop location rather than learned the goal. A
+                        VLM backbone fixed what more data could not.
+                    </div>
+                    <div class="project-tags">
+                        <span class="tag">MolmoAct</span>
+                        <span class="tag">Diffusion Policy</span>
+                        <span class="tag">π0.5</span>
+                        <span class="tag">VLA</span>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+    </div>
+
+    <section>
+        <h2>Why I'm doing this</h2>
+        <p>
+            I spent two years on a real cleaning manipulator at Peanut Robotics using almost entirely
+            classical methods: trajectory generation, ICP, state machines. This is the inverse
+            experiment. Start from learned policies, fall back to classical control only where it earns
+            its place, and find the principled boundary between the two by running into it.
+        </p>
+        <p>
+            Contact-rich manipulation is the interesting arena for that question, because it is exactly
+            where pure learned policies struggle and pure classical control is too brittle. The useful
+            question is not which one is better, it is what the right architecture for combining them
+            looks like.
+        </p>
+    </section>
+
     <section>
         <h2>The setup</h2>
         <p>
-            Everything here runs on inexpensive arms driven by the LeRobot stack: teleoperate the arm
-            to record demonstrations, push the dataset to Hugging Face, train a policy on it, then run
-            that policy back on the same hardware. No motion planner, no hand-written controller. The
-            robot learns the task from the demonstrations or it does not do the task.
+            Everything here runs on SO-101 arms from my XLeRobot setup, driven by the LeRobot stack:
+            teleoperate the arm to record demonstrations, push the dataset to Hugging Face, train a
+            policy on it, then run that policy back on the same hardware. No motion planner, no
+            hand-written controller. The robot learns the task from the demonstrations or it does not
+            do the task.
         </p>
         <p>
-            That makes the failure modes unusually informative, which is really why this page exists.
+            That makes the failure modes unusually informative, which is really why these pages exist.
             When a classical pipeline fails you can trace it to a line of code. When a learned policy
             fails, you have to design an experiment to find out what it actually learned.
         </p>
@@ -68,213 +151,13 @@
         <figcaption>XLeRobot set up and running at home.</figcaption>
     </figure>
 
-    <!-- ── HACKATHON ── -->
-    <section>
-        <h2>Weekend hackathon: toasting bread</h2>
-        <p>
-            The starting point was a hackathon: a four-person team, two days, one task. Put a slice of
-            bread into a toaster, press the button, and take the bread back out once it pops.
-        </p>
-        <p>
-            It sounds trivial and is not. It is three separate manipulation problems chained together,
-            each with a different failure mode, and a mistake in any one of them ends the run. Picking
-            up a floppy slice of bread is a deformable-object grasp. Pressing the lever needs force in
-            a specific direction against a compliant mechanism. Retrieving the toast means reaching
-            into a narrow slot. We trained ACT and SmolVLA policies on teleoperated demonstrations to
-            get through it.
-        </p>
-    </section>
-
-    <div class="fig-row">
-        <figure>
-            <img src="../assets/media/home-lab/hackathon-team.jpg" alt="The four-person hackathon team with their robot">
-            <figcaption>The team, and the robot that did the toasting.</figcaption>
-        </figure>
-        <figure>
-            <img src="../assets/media/home-lab/hackathon.jpg" alt="Working on the robot arms during the hackathon">
-            <figcaption>Two days of setup, teleoperation and training.</figcaption>
-        </figure>
-    </div>
-
-    <figure class="fig-row one" style="max-width: 380px; margin: 2rem auto;">
-        <video controls muted playsinline preload="none" poster="../assets/media/home-lab/toasting-poster.jpg">
-            <source src="../assets/media/home-lab/toasting.mp4" type="video/mp4">
-        </video>
-        <figcaption>The full sequence: bread in, button pressed, toast out.</figcaption>
-    </figure>
-
-    <!-- ── LIBRARY ── -->
-    <section>
-        <h2>Library robot: picking and stacking books</h2>
-        <p>
-            After the hackathon we bought the robot, and the team started building library
-            applications on it: picking up books and stacking them. Books are a good next step up from
-            bread. They are rigid, which removes the deformable-grasp problem, but they vary hugely in
-            size, thickness, cover design and how they sit on a surface.
-        </p>
-    </section>
-
-    <div class="fig-row">
-        <figure>
-            <video controls muted playsinline preload="none" poster="../assets/media/home-lab/library-book-pickup-poster.jpg">
-                <source src="../assets/media/home-lab/library-book-pickup.mp4" type="video/mp4">
-            </video>
-            <figcaption>Book pickup, with a second arm staging the stack.</figcaption>
-        </figure>
-        <figure>
-            <video controls muted playsinline preload="none" poster="../assets/media/home-lab/library-book-pickup-2-poster.jpg">
-                <source src="../assets/media/home-lab/library-book-pickup-2.mp4" type="video/mp4">
-            </video>
-            <figcaption>Another pickup run.</figcaption>
-        </figure>
-    </div>
-
-    <p>
-        The encouraging result here is that a plain ACT policy generalized further than expected. It
-        kept working when handed a book it had not been trained on, and it kept working when the book
-        was partially occluded, which is the case that usually breaks a policy that has simply
-        memorized a visual template.
-    </p>
-
-    <div class="fig-row">
-        <figure>
-            <video controls muted playsinline preload="none" poster="../assets/media/home-lab/act-different-book-poster.jpg">
-                <source src="../assets/media/home-lab/act-different-book.mp4" type="video/mp4">
-            </video>
-            <figcaption>A different book: ACT still works.</figcaption>
-        </figure>
-        <figure>
-            <video controls muted playsinline preload="none" poster="../assets/media/home-lab/act-book-occlusion-poster.jpg">
-                <source src="../assets/media/home-lab/act-book-occlusion.mp4" type="video/mp4">
-            </video>
-            <figcaption>Partial occlusion: still works.</figcaption>
-        </figure>
-    </div>
-
-    <!-- ── DESK CLEANUP ── -->
-    <section>
-        <h2>Desk cleanup: the pen task</h2>
-        <p>
-            This is the experiment I have pushed hardest on, and the one that has taught me the most,
-            largely by not working.
-        </p>
-
-        <h3>First attempt: more data, three policies, poor results</h3>
-        <p>
-            I collected two datasets, both teleoperated on the same table:
-        </p>
-        <ul>
-            <li><strong>40 episodes</strong> with a single pen dropped into a bin, varying the pen's
-                location.</li>
-            <li><strong>60 episodes</strong> with multiple pens on the table, still picking up only
-                one of them.</li>
-        </ul>
-        <p>
-            I merged the two and trained three policies on the combined set: <strong>SmolVLA</strong>,
-            a <strong>diffusion policy</strong>, and <strong>π0.5</strong>.
-        </p>
-        <p>
-            The results were poor across the board. None of the three performed well. My working
-            hypothesis is that the merge itself was the problem: mixing single-pen and multi-pen scenes
-            gives the policy two visually different situations that demand the same behavior, and with
-            this little data that ambiguity is more likely to confuse it than to teach it robustness.
-            More data would probably help; a cleaner task definition seemed more likely to.
-        </p>
-        <p>
-            I also could not properly evaluate π0.5, for an unglamorous reason: my GPU has 8 GB of
-            VRAM and the model is too large to comfortably run inference on, never mind train.
-        </p>
-
-        <div class="project-links">
-            <a href="https://huggingface.co/datasets/hdhruva/desk_cleanup_v1_pen_single" target="_blank" class="btn">Dataset: single pen ↗</a>
-            <a href="https://huggingface.co/datasets/hdhruva/desk_cleanup_v2_pen_multi" target="_blank" class="btn">Dataset: multi pen ↗</a>
-            <a href="https://huggingface.co/datasets/hdhruva/desk_cleanup_merged" target="_blank" class="btn">Dataset: merged ↗</a>
-        </div>
-        <div class="project-links" style="margin-top: 0.5rem;">
-            <a href="https://huggingface.co/hdhruva/smolvla_desk_cleanup" target="_blank" class="btn">Model: SmolVLA ↗</a>
-            <a href="https://huggingface.co/hdhruva/diffusion_desk_cleanup" target="_blank" class="btn">Model: diffusion ↗</a>
-            <a href="https://huggingface.co/hdhruva/pi05-libero-finetuned-desk-cleanup-merged-7fc95c9c" target="_blank" class="btn">Model: π0.5 ↗</a>
-        </div>
-    </section>
-
-    <section>
-        <h3>Simplify: one orange pen</h3>
-        <p>
-            So I cut the task down to its simplest honest version: a single orange pen, 40 recorded
-            episodes of picking it up and dropping it into a pouch. Get that solid, then add
-            variation back one axis at a time.
-        </p>
-    </section>
-
-    <figure class="fig-row one">
-        <video controls muted playsinline preload="none" poster="../assets/media/home-lab/act-pen-pickup-poster.jpg">
-            <source src="../assets/media/home-lab/act-pen-pickup.mp4" type="video/mp4">
-        </video>
-        <figcaption>ACT on the simplified pen pickup task.</figcaption>
-    </figure>
-
-    <section>
-        <h3>What ACT actually learned</h3>
-        <p>
-            It worked. Then probing it revealed three quite specific limits, and together they say
-            something about what the policy had really picked up:
-        </p>
-        <ul>
-            <li><strong>Color is doing more work than it should.</strong> The policy handled the orange
-                pen it trained on, and also a purple one, but failed on green, blue and brown pens.
-                Same shape, same task, same location. The visual feature it locked onto does not
-                transfer across color.</li>
-            <li><strong>It memorized the drop location rather than the target.</strong> Take the pouch
-                away entirely and the robot still travels to where the pouch used to be and releases
-                the pen over empty table. It never learned "put it in the pouch", it learned "go
-                here and open the gripper".</li>
-            <li><strong>Orientation is brittle.</strong> Significant changes to the pen's orientation
-                cause failures, even in positions it otherwise handles.</li>
-        </ul>
-    </section>
-
-    <figure class="fig-row one" style="max-width: 380px; margin: 2rem auto;">
-        <video controls muted playsinline preload="none" poster="../assets/media/home-lab/act-different-pouch-poster.jpg">
-            <source src="../assets/media/home-lab/act-different-pouch.mp4" type="video/mp4">
-        </video>
-        <figcaption>ACT with a different pouch. The drop point is learned as a location, not as a container.</figcaption>
-    </figure>
-
-    <section>
-        <h3>MolmoAct: swapping in a VLM backbone</h3>
-        <p>
-            The color result was the interesting thread to pull. If the policy fails on a green pen
-            purely because it has never seen green, then a model carrying real visual-semantic priors
-            should not have that problem, since it already knows what a pen is independently of this
-            dataset.
-        </p>
-        <p>
-            So I trained <strong>MolmoAct v2</strong>, which has a VLM backbone, on the exact same
-            dataset. No new demonstrations, no relabeling, just a different model over identical data.
-            It handled green, blue and the other pens quite well, which is a clean result: the
-            limitation was in the representation, not in the data.
-        </p>
-        <p>
-            The best run so far came out of this. With two pens placed on the table, the robot picked
-            them up one at a time and placed each in the bin.
-        </p>
-    </section>
-
-    <figure class="fig-row one" style="max-width: 420px; margin: 2rem auto;">
-        <video controls muted playsinline preload="none" poster="../assets/media/home-lab/molmoact-pen-pickup-poster.jpg">
-            <source src="../assets/media/home-lab/molmoact-pen-pickup.mp4" type="video/mp4">
-        </video>
-        <figcaption>MolmoAct v2 on the pen pickup task, generalizing across pen colors.</figcaption>
-    </figure>
-
-    <!-- ── TAKEAWAYS ── -->
     <section>
         <h2>What I take from it so far</h2>
         <ul>
             <li><strong>A working demo tells you very little.</strong> ACT picking up the orange pen
                 looks identical to ACT understanding the task. The difference only shows up when you
                 deliberately break an assumption, which is why removing the pouch was the most useful
-                five minutes of the project.</li>
+                five minutes of the whole project.</li>
             <li><strong>More data was the wrong instinct.</strong> My first move on poor results was to
                 merge datasets and train bigger models. Cutting the task down to one pen taught me
                 considerably more than the merged set did.</li>
@@ -282,31 +165,38 @@
                 for.</strong> Same 40 episodes, same task; the VLM-backed policy generalized across
                 colors where ACT could not. Collecting demonstrations in every pen color would have
                 worked too, and would have cost far more.</li>
+            <li><strong>Generalization is task-dependent, not architecture-dependent.</strong> The same
+                ACT that shrugged off an unseen book and partial occlusion could not handle a pen in a
+                different color. What a policy latches onto depends on the task and the data, which is
+                the argument for probing every one of them.</li>
             <li><strong>Hardware sets the ceiling.</strong> 8 GB of VRAM quietly rules out an entire
-                class of model, which is a real constraint on what a home lab can evaluate rather
-                than a footnote.</li>
+                class of model, which is a real constraint on what a home lab can evaluate rather than
+                a footnote.</li>
         </ul>
-        <p>
-            This is all live and ongoing. Next is adding variation back onto the single-pen task in a
-            controlled way, orientation and location before color, and then moving to multiple pens
-            once the simple case is genuinely solid rather than apparently solid.
-        </p>
     </section>
 
     <section>
-        <div class="project-page-tags">
-            <span class="tag">ACT</span>
-            <span class="tag">SmolVLA</span>
-            <span class="tag">Diffusion Policy</span>
-            <span class="tag">MolmoAct</span>
-            <span class="tag">π0.5</span>
-            <span class="tag">LeRobot</span>
-            <span class="tag">Imitation Learning</span>
-            <span class="tag">VLA</span>
-        </div>
+        <h2>The open questions</h2>
+        <p>
+            Longer term, what I actually want out of this is a framework that wraps a learned policy in
+            the classical layers it needs to be trusted: a state machine for task orchestration
+            (approach, engage, clean, retract, recover), force feedback in the inner loop to bound
+            contact forces regardless of what the policy outputs, and recovery behaviors for when the
+            policy goes outside its envelope. The questions these experiments are meant to answer:
+        </p>
+        <ul>
+            <li>How small a demonstration dataset can produce a genuinely useful contact-rich policy?</li>
+            <li>Where does the principled boundary between learned and classical actually sit?</li>
+            <li>What does recovery look like for a learned policy that has no built-in concept of
+                "I don't know"? The pouch experiment is a small version of this: the policy was
+                confidently wrong, and nothing in it could detect that.</li>
+            <li>How do you expose enough hooks that someone else can plug in their own policy and
+                fallback behaviors?</li>
+        </ul>
+
         <div class="project-links">
             <a href="https://huggingface.co/hdhruva" target="_blank" class="btn">Datasets and models on Hugging Face ↗</a>
-            <a href="./cleaning-policy.html" class="btn">Related: contact-rich cleaning framework</a>
+            <a href="https://github.com/dhruvah" target="_blank" class="btn">GitHub ↗</a>
         </div>
     </section>
 
@@ -315,9 +205,9 @@
             <div class="nav-label">← Back to</div>
             <div class="nav-title">All work</div>
         </a>
-        <a href="./cleaning-policy.html" class="next">
-            <div class="nav-label">Next →</div>
-            <div class="nav-title">Contact-Rich Cleaning</div>
+        <a href="./peanut.html" class="next">
+            <div class="nav-label">Related →</div>
+            <div class="nav-title">Peanut Robotics</div>
         </a>
     </nav>
 </article>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Robot: Picking and Stacking Books · Harsh Dhruva</title>
+    <meta name="description" content="Teaching a low-cost arm to pick up and stack books with an ACT policy, and finding that it generalized to unseen books and held up under partial occlusion.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<article class="project-page">
+    <a href="./home-lab.html" class="project-back">Home lab</a>
+
+    <header class="project-page-header">
+        <div class="project-page-category">Home Robotics · Ongoing</div>
+        <h1>Library robot: picking and stacking books.</h1>
+        <p class="project-page-summary">
+            After the hackathon we bought the robot and started building library applications on it.
+            The headline result is a good one: a plain ACT policy generalized further than I expected,
+            to books it had never seen and to books it could only partly see.
+        </p>
+    </header>
+
+    <div class="project-meta">
+        <div class="project-meta-item">
+            <span class="label">Status</span>
+            <span class="value">Ongoing</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Task</span>
+            <span class="value">Book pickup and stacking</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Policy</span>
+            <span class="value">ACT</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Stack</span>
+            <span class="value">LeRobot · SO-101 arms</span>
+        </div>
+    </div>
+
+    <section>
+        <h2>Why books</h2>
+        <p>
+            Books are a sensible step up from bread. They are rigid, which removes the
+            deformable-grasp problem entirely, but they introduce variety in its place: books differ
+            enormously in size, thickness, cover design and how they sit on a surface. That makes them
+            a good instrument for asking whether a policy has learned <em>the task</em> or just
+            memorized <em>the demonstration</em>.
+        </p>
+    </section>
+
+    <div class="fig-row">
+        <figure>
+            <video controls muted playsinline preload="none" poster="../assets/media/home-lab/library-book-pickup-poster.jpg">
+                <source src="../assets/media/home-lab/library-book-pickup.mp4" type="video/mp4">
+            </video>
+            <figcaption>Book pickup, with a second arm staging the stack.</figcaption>
+        </figure>
+        <figure>
+            <video controls muted playsinline preload="none" poster="../assets/media/home-lab/library-book-pickup-2-poster.jpg">
+                <source src="../assets/media/home-lab/library-book-pickup-2.mp4" type="video/mp4">
+            </video>
+            <figcaption>Another pickup run.</figcaption>
+        </figure>
+    </div>
+
+    <section>
+        <h2>How far it generalized</h2>
+        <p>
+            Two tests worth calling out, because they are the ones that usually break a policy that has
+            simply latched onto a visual template.
+        </p>
+        <p>
+            <strong>A different book.</strong> Hand the policy a book it was not trained on, with a
+            different cover and different proportions, and it still picks it up.
+        </p>
+        <p>
+            <strong>Partial occlusion.</strong> Obscure part of the book so the policy cannot see the
+            whole object, and it still works. This is the more interesting of the two: a policy keyed
+            to a memorized appearance tends to fail as soon as that appearance is incomplete.
+        </p>
+    </section>
+
+    <div class="fig-row">
+        <figure>
+            <video controls muted playsinline preload="none" poster="../assets/media/home-lab/act-different-book-poster.jpg">
+                <source src="../assets/media/home-lab/act-different-book.mp4" type="video/mp4">
+            </video>
+            <figcaption>A different book: ACT still works.</figcaption>
+        </figure>
+        <figure>
+            <video controls muted playsinline preload="none" poster="../assets/media/home-lab/act-book-occlusion-poster.jpg">
+                <source src="../assets/media/home-lab/act-book-occlusion.mp4" type="video/mp4">
+            </video>
+            <figcaption>Partial occlusion: still works.</figcaption>
+        </figure>
+    </div>
+
+    <p>
+        Worth holding this next to the <a href="./home-desk-cleanup.html">desk cleanup experiment</a>,
+        where the same architecture on a smaller object failed to generalize across something as
+        simple as color. ACT is not uniformly brittle or uniformly robust; what it latches onto
+        depends on the task and the data, which is exactly why probing it matters.
+    </p>
+
+    <section>
+        <div class="project-page-tags">
+            <span class="tag">ACT</span>
+            <span class="tag">Imitation Learning</span>
+            <span class="tag">Generalization</span>
+            <span class="tag">Occlusion</span>
+            <span class="tag">LeRobot</span>
+        </div>
+    </section>
+
+    <nav class="project-nav">
+        <a href="./home-toasting.html">
+            <div class="nav-label">← Previous</div>
+            <div class="nav-title">Hackathon: Toasting Bread</div>
+        </a>
+        <a href="./home-desk-cleanup.html" class="next">
+            <div class="nav-label">Next →</div>
+            <div class="nav-title">Desk Cleanup: The Pen Task</div>
+        </a>
+    </nav>
+</article>
+
+<div id="site-footer"></div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
