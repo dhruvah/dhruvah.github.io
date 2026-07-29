@@ -426,6 +426,19 @@ nav.site-nav.scrolled {
     margin: 0 auto;
 }
 
+/* Hub pages (index of many projects): wide enough for a real card grid,
+   while prose stays at reading width so lines don't run long. */
+.project-page.hub { max-width: var(--max-w); }
+.project-page.hub .project-page-header,
+.project-page.hub > section,
+.project-page.hub > p { max-width: var(--reading-w); }
+
+.hub-grid { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 980px) { .hub-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 620px)  { .hub-grid { grid-template-columns: 1fr; } }
+.hub-grid .project-card.featured { grid-column: span 1; }
+.hub-grid .project-card.featured .project-thumb { height: 200px; }
+
 .project-back {
     display: inline-flex;
     align-items: center;
