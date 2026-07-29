@@ -86,19 +86,19 @@
                     <tr>
                         <td class="factor">SmolVLA</td>
                         <td>merged, 100 ep</td>
-                        <td class="fail">Poor</td>
+                        <td class="outcome"><span class="fail">Poor</span></td>
                         <td>Did not reliably complete the task</td>
                     </tr>
                     <tr>
                         <td class="factor">Diffusion policy</td>
                         <td>merged, 100 ep</td>
-                        <td class="fail">Poor</td>
+                        <td class="outcome"><span class="fail">Poor</span></td>
                         <td>Did not reliably complete the task</td>
                     </tr>
                     <tr>
                         <td class="factor">π0.5</td>
                         <td>merged, 100 ep</td>
-                        <td class="untested">Not evaluated</td>
+                        <td class="outcome"><span class="untested">Not evaluated</span></td>
                         <td>Too large to run inference on 8 GB VRAM</td>
                     </tr>
                 </tbody>
@@ -154,59 +154,59 @@
         <table class="data-table">
             <caption>Run 2 · one factor at a time, 40 episodes, single orange pen</caption>
             <thead>
-                <tr><th>Factor</th><th>Condition</th><th>ACT</th><th>MolmoAct v2</th></tr>
-            </thead>
-            <tbody>
-                <tr class="baseline">
-                    <td class="factor">Baseline</td>
-                    <td>Orange pen, trained orientation, trained pouch</td>
-                    <td class="pass">Works</td>
-                    <td class="pass">Works</td>
-                </tr>
-                <tr>
-                    <td class="factor" rowspan="4">Pen color</td>
-                    <td>Purple</td>
-                    <td class="pass">Works</td>
-                    <td class="pass">Works</td>
-                </tr>
-                <tr>
-                    <td>Green</td>
-                    <td class="fail">Fails</td>
-                    <td class="pass">Works</td>
-                </tr>
-                <tr>
-                    <td>Blue</td>
-                    <td class="fail">Fails</td>
-                    <td class="pass">Works</td>
-                </tr>
-                <tr>
-                    <td>Brown</td>
-                    <td class="fail">Fails</td>
-                    <td class="untested">Not tested</td>
-                </tr>
-                <tr>
-                    <td class="factor" rowspan="2">Drop target</td>
-                    <td>Different pouch</td>
-                    <td class="fail">Fails</td>
-                    <td class="untested">Not tested</td>
-                </tr>
-                <tr>
-                    <td>Pouch removed entirely</td>
-                    <td class="fail">Drops at the learned location</td>
-                    <td class="untested">Not tested</td>
-                </tr>
-                <tr>
-                    <td class="factor">Pen orientation</td>
-                    <td>Significantly rotated</td>
-                    <td class="fail">Fails</td>
-                    <td class="untested">Not tested</td>
-                </tr>
-                <tr>
-                    <td class="factor">Object count</td>
-                    <td>Two pens, picked sequentially</td>
-                    <td class="untested">Not tested</td>
-                    <td class="pass">Works</td>
-                </tr>
+                    <tr><th>Factor</th><th>Condition</th><th>ACT</th><th>MolmoAct v2</th></tr>
+                </thead>
+                <tbody>
+                    <tr class="baseline">
+                        <td class="factor">Baseline</td>
+                        <td>Orange pen, trained orientation, trained pouch</td>
+                        <td class="outcome"><span class="pass">Works</span></td>
+                        <td class="outcome"><span class="pass">Works</span></td>
+                    </tr>
+                    <tr class="group-start">
+                        <td class="factor" rowspan="4">Pen color</td>
+                        <td>Purple</td>
+                        <td class="outcome"><span class="pass">Works</span></td>
+                        <td class="outcome"><span class="pass">Works</span></td>
+                    </tr>
+                    <tr>
+                        <td>Green</td>
+                        <td class="outcome"><span class="fail">Fails</span></td>
+                        <td class="outcome"><span class="pass">Works</span></td>
+                    </tr>
+                    <tr>
+                        <td>Blue</td>
+                        <td class="outcome"><span class="fail">Fails</span></td>
+                        <td class="outcome"><span class="pass">Works</span></td>
+                    </tr>
+                    <tr>
+                        <td>Brown</td>
+                        <td class="outcome"><span class="fail">Fails</span></td>
+                        <td class="outcome"><span class="untested">Not tested</span></td>
+                    </tr>
+                    <tr class="group-start">
+                        <td class="factor" rowspan="2">Drop target</td>
+                        <td>Different pouch</td>
+                        <td class="outcome"><span class="fail">Fails</span></td>
+                        <td class="outcome"><span class="untested">Not tested</span></td>
+                    </tr>
+                    <tr>
+                        <td>Pouch removed entirely</td>
+                        <td class="outcome"><span class="fail">Fails</span><span class="cell-note">Drops at the learned location</span></td>
+                        <td class="outcome"><span class="untested">Not tested</span></td>
+                    </tr>
+                    <tr class="group-start">
+                        <td class="factor">Pen orientation</td>
+                        <td>Significantly rotated</td>
+                        <td class="outcome"><span class="fail">Fails</span></td>
+                        <td class="outcome"><span class="untested">Not tested</span></td>
+                    </tr>
+                    <tr class="group-start">
+                        <td class="factor">Object count</td>
+                        <td>Two pens, picked sequentially</td>
+                        <td class="outcome"><span class="untested">Not tested</span></td>
+                        <td class="outcome"><span class="pass">Works</span></td>
+                    </tr>
             </tbody>
         </table>
     </div>

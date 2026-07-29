@@ -22,7 +22,7 @@
         Open to conversations · Bay Area, CA
     </div>
 
-    <h1>Robotics engineer aspiring to make a difference in the real world.</h1>
+    <h1>Robotics engineer trying to get robots from the lab to the real world.</h1>
 
     <p>
         I'm Harsh, currently a Robotics Systems Engineer at <strong>Google</strong>,
@@ -140,34 +140,71 @@
         <span class="count">Ongoing</span>
     </div>
     <p class="projects-section-sub">
-        Robotics I'm building at home: teaching a low-cost arm to do real household tasks,
-        and figuring out where learned policies and classical control each earn their place.
-        This grows as I take on new tasks.
+        SO-101 arms on my living-room table, learned policies, and ordinary household jobs. The
+        interesting part is never that a policy works, it is finding out what it actually learned when
+        it does. <a href="./projects/home-lab.html">The setup and what I've learned so far →</a>
     </p>
 
     <div class="projects-grid">
 
-        <a href="./projects/home-lab.html" class="project-card">
+        <a href="./projects/home-toasting.html" class="project-card">
             <div class="project-thumb">
-                <img src="./assets/media/home-lab/molmoact-pen-pickup-poster.jpg" alt="A low-cost arm picking up a pen on a living-room table" loading="lazy">
+                <img src="./assets/media/home-lab/toasting-poster.jpg" alt="A robot arm placing bread into a toaster" loading="lazy">
             </div>
             <div class="project-body">
-                <div class="project-category">Home Robotics · 3 experiments</div>
-                <div class="project-title">Home lab: teaching a low-cost arm real tasks</div>
+                <div class="project-category">Hackathon · 2 days</div>
+                <div class="project-title">Toasting bread</div>
                 <div class="project-desc">
-                    Toasting bread at a weekend hackathon, a library robot stacking books, and a desk
-                    cleanup pen task where ACT turned out to have memorized a drop location rather than
-                    learned the goal. Swapping in a VLM backbone fixed what more data could not.
+                    Four people, one weekend: bread into the toaster, press the button, retrieve the
+                    toast. Three manipulation problems chained together, solved with ACT and SmolVLA.
                 </div>
                 <div class="project-tags">
                     <span class="tag">ACT</span>
                     <span class="tag">SmolVLA</span>
-                    <span class="tag">MolmoAct</span>
-                    <span class="tag">LeRobot</span>
+                    <span class="tag">Deformable Objects</span>
                 </div>
             </div>
         </a>
 
+        <a href="./projects/home-library.html" class="project-card">
+            <div class="project-thumb">
+                <img src="./assets/media/home-lab/library-book-pickup-poster.jpg" alt="Robot arms picking up and stacking books on a table" loading="lazy">
+            </div>
+            <div class="project-body">
+                <div class="project-category">Library robot · Ongoing</div>
+                <div class="project-title">Picking and stacking books</div>
+                <div class="project-desc">
+                    A plain ACT policy generalized further than expected: it kept working on books it
+                    had never seen, and kept working when the book was partly occluded.
+                </div>
+                <div class="project-tags">
+                    <span class="tag">ACT</span>
+                    <span class="tag">Generalization</span>
+                    <span class="tag">Occlusion</span>
+                </div>
+            </div>
+        </a>
+
+        <a href="./projects/home-desk-cleanup.html" class="project-card">
+            <div class="project-thumb">
+                <img src="./assets/media/home-lab/molmoact-pen-pickup-poster.jpg" alt="A robot arm picking up a pen from a table" loading="lazy">
+            </div>
+            <div class="project-body">
+                <div class="project-category">Desk cleanup · Ongoing</div>
+                <div class="project-title">The pen task</div>
+                <div class="project-desc">
+                    Five policies on one task. ACT looked like it had solved it, until removing the pouch
+                    showed it had memorized a drop location rather than learned the goal. A VLM backbone
+                    fixed what more data could not.
+                </div>
+                <div class="project-tags">
+                    <span class="tag">MolmoAct</span>
+                    <span class="tag">Diffusion Policy</span>
+                    <span class="tag">π0.5</span>
+                    <span class="tag">VLA</span>
+                </div>
+            </div>
+        </a>
 
     </div>
 </section>

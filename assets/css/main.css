@@ -211,6 +211,15 @@ nav.site-nav.scrolled {
     color: var(--ink-soft);
     line-height: 1.6;
 }
+.projects-section-sub a {
+    color: var(--accent);
+    font-weight: 500;
+    white-space: nowrap;
+    text-decoration: underline;
+    text-decoration-color: var(--accent-line);
+    text-underline-offset: 2px;
+}
+.projects-section-sub a:hover { text-decoration-color: var(--accent); }
 
 /* Grouped "hub" project pages (CMU / Rose-Hulman): many small projects per page */
 .coursework-group { margin: 2.5rem 0; }
@@ -635,18 +644,43 @@ nav.site-nav.scrolled {
     text-transform: uppercase;
     letter-spacing: 0.07em;
     color: var(--accent);
-    padding: 0.7rem 0.9rem 0;
+    background: var(--bg-elevated);
+    padding: 0.75rem 0.9rem 0.55rem;
+    border-bottom: 1px solid var(--border);
 }
-/* First column of a matrix: the factor being varied */
+/* First column of a matrix: the factor being varied. Shrink to content and
+   tint it so grouped rowspan cells read as labels rather than data. */
 .data-table td.factor {
+    width: 1%;
     font-weight: 600;
     color: var(--ink);
     white-space: nowrap;
+    background: var(--bg-card);
+    border-right: 1px solid var(--border);
 }
+/* Stronger rule where a new factor group begins */
+.data-table tbody tr.group-start > td { border-top: 1px solid var(--border-strong); }
+/* The trained condition everything else is measured against */
 .data-table .baseline td { background: var(--accent-soft); }
-.pass { color: #2C7A4B; font-weight: 600; }
-.fail { color: #A93B26; font-weight: 600; }
-.untested { color: var(--ink-faint); }
+.data-table .baseline td.factor { background: var(--accent-soft); }
+
+.data-table .outcome { white-space: nowrap; }
+.data-table .cell-note {
+    display: block;
+    font-family: var(--sans);
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: var(--ink-muted);
+    white-space: normal;
+    margin-top: 0.2rem;
+}
+.pass, .fail, .untested { font-weight: 600; }
+.pass { color: #2C7A4B; }
+.fail { color: #A93B26; }
+.untested { color: var(--ink-faint); font-weight: 500; }
+.pass::before     { content: '✓ '; }
+.fail::before     { content: '✗ '; }
+.untested::before { content: '○ '; }
 
 .callout {
     padding: 1.25rem 1.5rem;
