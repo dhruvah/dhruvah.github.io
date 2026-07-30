@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__paper-lantern__explore_approaches",
+      "mcp__paper-lantern__compare_approaches",
+      "mcp__paper-lantern__check_feasibility",
+      "mcp__paper-lantern__deep_dive",
+      "Bash(sips -g *)"
+    ]
+  }
+}
