@@ -132,6 +132,13 @@ Solve AᵀA x = Aᵀb   →   x = (AᵀA)⁻¹ Aᵀb</div>
         self-similar, the error is genuinely low at that wrong alignment, and nothing in the objective
         can tell the difference.
     </p>
+    <p>
+        This is the known trade-off of the point-to-plane metric rather than bad luck. It converges
+        faster than point-to-point when the clouds start close together, but its convergence basin is
+        narrower, precisely because its zero-set is planar patches. Started far apart, it tends to
+        oscillate or settle into a wrong minimum, which is exactly the regime a 90-frame gap puts it
+        in.
+    </p>
 
     <div class="fig-row">
         <figure>
