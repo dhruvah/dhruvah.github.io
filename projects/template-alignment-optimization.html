@@ -50,7 +50,40 @@
     </div>
 
     <section>
-        <h2>The problem</h2>
+        <h2>What the task looks like</h2>
+        <p>
+            Before any of the optimization, it helps to see what is actually being computed. You draw a
+            box around an object in the first frame. That patch is the <strong>template</strong>. For
+            every frame after it, the tracker has to work out where that patch went.
+        </p>
+        <p>
+            Below, the red box is the template and the object is a coke can being moved by hand. The
+            box stays on the can as it moves, and that is the entire visible output of the algorithm.
+            What is hidden is that <em>each frame is a separate optimization</em>: solve for the warp
+            that best maps the template onto this frame, apply it, move on. A 290-frame video is 290
+            optimizations, which is why the choice of optimizer is not an academic question here.
+        </p>
+    </section>
+
+    <div class="fig-row">
+        <figure>
+            <img src="../assets/media/optimization/gaussnewton-frame35.png" alt="Frame 35 with the red template box on the coke can">
+            <figcaption>Frame 35: the template box on the can.</figcaption>
+        </figure>
+        <figure>
+            <img src="../assets/media/optimization/gaussnewton-frame40.png" alt="Frame 40 with the template box still on the coke can after it has moved">
+            <figcaption>Frame 40: the can has moved, and the box has followed it.</figcaption>
+        </figure>
+    </div>
+
+    <p>
+        Those five frames are also where the methods separate. The gap between 35 and 40 is fast
+        motion, which means a large change to solve for, and it is exactly there that one of the five
+        optimizers loses the can entirely.
+    </p>
+
+    <section>
+        <h2>The problem, stated as optimization</h2>
         <p>
             Image alignment consists of moving and deforming a template to minimize the difference
             between the template and an image. It underpins optical flow, tracking and mosaicing, and
