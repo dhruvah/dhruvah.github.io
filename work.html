@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Work · Harsh Dhruva</title>
+    <meta name="description" content="Every project in one place: professional robotics work, ongoing home lab experiments, graduate research and coursework at CMU, and undergraduate projects at Rose-Hulman.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/css/main.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<article class="project-page hub">
+    <a href="./index.html" class="project-back">Home</a>
+
+    <header class="project-page-header">
+        <div class="project-page-category">Index · 28 projects</div>
+        <h1>All work.</h1>
+        <p class="project-page-summary">
+            Everything on one page. Start typing to filter.
+        </p>
+    </header>
+
+    <input type="search" id="work-search" class="work-search" placeholder="Filter by name, topic or place…" autocomplete="off" aria-label="Filter projects">
+
+    <div class="work-columns">
+
+        <div class="work-col">
+            <h2>Professional</h2>
+            <ul>
+                <li><a href="./projects/peanut.html"><span class="wi-title">Peanut Robotics</span><span class="wi-note">Arm software for a deployed hotel cleaning robot. TOPPRA, ICP, live trajectory recording.</span></a></li>
+                <li><a href="./projects/autoroboto.html"><span class="wi-title">Automated biometric testing for Pixel</span><span class="wi-note">Google and Autoroboto. ROS2 migration, xArm, MoveIt.</span></a></li>
+            </ul>
+
+            <h2 style="margin-top:2rem">Home lab · ongoing</h2>
+            <ul>
+                <li><a href="./projects/home-lab.html"><span class="wi-title">Home lab overview</span><span class="wi-note">SO-101 arms, learned policies, what they actually learn.</span></a></li>
+                <li><a href="./projects/home-toasting.html"><span class="wi-title">Toasting bread</span><span class="wi-note">Weekend hackathon. ACT and SmolVLA.</span></a></li>
+                <li><a href="./projects/home-library.html"><span class="wi-title">Library robot: stacking books</span><span class="wi-note">ACT generalizing to unseen books and occlusion.</span></a></li>
+                <li><a href="./projects/home-desk-cleanup.html"><span class="wi-title">Desk cleanup: the pen task</span><span class="wi-note">Five policies. MolmoAct, diffusion, π0.5, shortcut learning.</span></a></li>
+            </ul>
+        </div>
+
+        <div class="work-col">
+            <h2>Rose-Hulman · undergrad</h2>
+            <ul>
+                <li><a href="./projects/capstone.html"><span class="wi-title">Automated eating apparatus</span><span class="wi-note">Senior capstone for a quadriplegic client. Represented Rose-Hulman and the USA at the E²Festa in South Korea.</span></a></li>
+                <li><a href="./projects/distal-teacher-ik.html"><span class="wi-title">Inverse kinematics with a distal teacher</span><span class="wi-note">Neural networks, MATLAB from scratch.</span></a></li>
+                <li><a href="./projects/fuzzy-parking.html"><span class="wi-title">Fuzzy-logic parking controllers</span><span class="wi-note">Mamdani rules, back and parallel parking, Simulink.</span></a></li>
+                <li><a href="./projects/taj-mahal-cad.html"><span class="wi-title">Taj Mahal CAD and OpenGL</span><span class="wi-note">Freshman CAD competition, then redrawn in C++.</span></a></li>
+                <li><a href="./projects/rose-hulman.html"><span class="wi-title">All Rose-Hulman projects</span><span class="wi-note">The hub page.</span></a></li>
+            </ul>
+        </div>
+
+        <div class="work-col">
+            <h2>CMU · graduate</h2>
+            <ul>
+                <li><a href="./projects/research.html"><span class="wi-title">Robotic post-processing of AM parts</span><span class="wi-note">NASA ULI research at CERLAB. Coverage planning.</span></a></li>
+                <li><a href="./projects/moonranger.html"><span class="wi-title">MoonRanger</span><span class="wi-note">Lunar micro-rover perception, stereo pipeline, NASA cFS.</span></a></li>
+                <li><a href="./projects/tripawd.html"><span class="wi-title">Tripawd, the three-legged robot dog</span><span class="wi-note">Bio-inspired locomotion, trajectory optimization.</span></a></li>
+                <li><a href="./projects/diabetic-retinopathy.html"><span class="wi-title">Diabetic retinopathy detection</span><span class="wi-note">VGG16, ResNet, AlexNet on retinal images.</span></a></li>
+                <li><a href="./projects/template-alignment-optimization.html"><span class="wi-title">Template alignment optimization</span><span class="wi-note">24-785. Gauss-Newton vs BFGS vs Levenberg-Marquardt.</span></a></li>
+                <li><a href="./projects/slam-comparison.html"><span class="wi-title">Visual and lidar SLAM comparison</span><span class="wi-note">ORB-SLAM2, RTAB-Map, Cartographer, CARLA.</span></a></li>
+                <li><a href="./projects/cmu.html"><span class="wi-title">All CMU projects</span><span class="wi-note">The hub page.</span></a></li>
+            </ul>
+        </div>
+
+        <div class="work-col">
+            <h2>CMU · mini projects</h2>
+            <ul>
+                <li><a href="./projects/computer-vision.html"><span class="wi-title">Computer vision · 16-720</span><span class="wi-note">Six mini projects.</span></a>
+                    <ul class="work-sub">
+                        <li><a href="./projects/cv-scene-classification.html"><span class="wi-title">Spatial pyramid scene classification</span></a></li>
+                        <li><a href="./projects/cv-augmented-reality.html"><span class="wi-title">Augmented reality with homographies</span></a></li>
+                        <li><a href="./projects/cv-lucas-kanade.html"><span class="wi-title">Lucas-Kanade tracking</span></a></li>
+                        <li><a href="./projects/cv-3d-reconstruction.html"><span class="wi-title">Two-view 3D reconstruction</span></a></li>
+                        <li><a href="./projects/cv-neural-networks.html"><span class="wi-title">Neural nets for character recognition</span></a></li>
+                        <li><a href="./projects/cv-photometric-stereo.html"><span class="wi-title">Photometric stereo</span></a></li>
+                    </ul>
+                </li>
+                <li><a href="./projects/slam-mini-projects.html"><span class="wi-title">SLAM · 16-833</span><span class="wi-note">Four mini projects.</span></a>
+                    <ul class="work-sub">
+                        <li><a href="./projects/particle-filter.html"><span class="wi-title">Particle filter localization</span></a></li>
+                        <li><a href="./projects/ekf-slam.html"><span class="wi-title">EKF-SLAM</span></a></li>
+                        <li><a href="./projects/slam-solvers.html"><span class="wi-title">Linear and nonlinear solvers</span></a></li>
+                        <li><a href="./projects/dense-slam.html"><span class="wi-title">Dense SLAM with point-based fusion</span></a></li>
+                    </ul>
+                </li>
+                <li><a href="./projects/planning.html"><span class="wi-title">Planning · 16-782</span><span class="wi-note">Three mini projects.</span></a>
+                    <ul class="work-sub">
+                        <li><a href="./projects/planning-catch-target.html"><span class="wi-title">Catch me if you can</span></a></li>
+                        <li><a href="./projects/planning-highdof-arm.html"><span class="wi-title">Planning for a high-DOF arm</span></a></li>
+                        <li><a href="./projects/planning-symbolic.html"><span class="wi-title">Symbolic planning</span></a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+    <p class="work-empty" id="work-empty">Nothing matches that. Try another word.</p>
+</article>
+
+<div id="site-footer"></div>
+
+<script src="./assets/js/main.js"></script>
+<script>
+(function () {
+    var box = document.getElementById('work-search');
+    var empty = document.getElementById('work-empty');
+    if (!box) return;
+    var rows = Array.prototype.slice.call(document.querySelectorAll('.work-col li'));
+    rows.forEach(function (li) {
+        var a = li.querySelector(':scope > a');
+        li.dataset.hay = (a ? a.textContent : '').toLowerCase();
+    });
+    box.addEventListener('input', function () {
+        var q = box.value.trim().toLowerCase();
+        var any = false;
+        rows.forEach(function (li) {
+            // a parent stays visible if it matches, or if any child does
+            var self = li.dataset.hay.indexOf(q) !== -1;
+            var kid = Array.prototype.some.call(li.querySelectorAll('li'), function (c) {
+                return c.dataset.hay.indexOf(q) !== -1;
+            });
+            var show = !q || self || kid;
+            li.style.display = show ? '' : 'none';
+            if (show) any = true;
+        });
+        document.querySelectorAll('.work-col > h2').forEach(function (h) {
+            var list = h.nextElementSibling;
+            var visible = list && Array.prototype.some.call(list.children, function (c) {
+                return c.style.display !== 'none';
+            });
+            h.style.display = visible ? '' : 'none';
+            if (list) list.style.display = visible ? '' : 'none';
+        });
+        empty.style.display = any ? 'none' : 'block';
+    });
+})();
+</script>
+</body>
+</html>

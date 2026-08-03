@@ -15,7 +15,8 @@
         <span></span><span></span><span></span>
     </button>
     <ul class="nav-links">
-        <li><a href="${basePath}index.html">Work</a></li>
+        <li><a href="${basePath}index.html">Home</a></li>
+        <li><a href="${basePath}work.html">All work</a></li>
         <li><a href="${basePath}about.html">About</a></li>
         <li><a href="https://linkedin.com/in/harshdhruva" target="_blank">LinkedIn</a></li>
         <li><a href="https://github.com/dhruvah" target="_blank">GitHub</a></li>
