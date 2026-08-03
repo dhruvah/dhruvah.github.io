@@ -16,6 +16,7 @@
     </button>
     <ul class="nav-links">
         <li><a href="${basePath}index.html">Work</a></li>
+        <li><a href="${basePath}timeline.html">Timeline</a></li>
         <li><a href="${basePath}about.html">About</a></li>
         <li><a href="https://linkedin.com/in/harshdhruva" target="_blank">LinkedIn</a></li>
         <li><a href="https://github.com/dhruvah" target="_blank">GitHub</a></li>
