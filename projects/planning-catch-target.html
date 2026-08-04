@@ -49,6 +49,11 @@
         </div>
     </div>
 
+    <figure class="fig-row one">
+        <img src="../assets/media/planning-target/map1-astar.jpg" alt="A grid cost map with the target trajectory in magenta and the planned robot path in green">
+        <figcaption>The whole problem in one picture. The target walks the magenta path. The robot starts somewhere else on the map and has to plan the green path so that it arrives at a point on that magenta line before the target passes it.</figcaption>
+    </figure>
+
     <section>
         <h2>The problem</h2>
         <p>
@@ -141,10 +146,6 @@ return TARGET_G_VAL.top()</div>
 6     2D A*      Dijkstra       yes     141       0      2820       0.039</div>
 
     <div class="fig-row">
-        <figure>
-            <img src="../assets/media/planning-target/map1-astar.jpg" alt="Map 1 with the robot path in green and the target trajectory in magenta">
-            <figcaption>Map 1: robot path in green, target trajectory in magenta.</figcaption>
-        </figure>
         <figure>
             <img src="../assets/media/planning-target/map2-astar.jpg" alt="Map 2 robot path and target trajectory">
             <figcaption>Map 2, the most expensive path at a cost of 4.46 million.</figcaption>
