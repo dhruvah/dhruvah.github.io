@@ -169,9 +169,10 @@
                 the places a joystick-jogged path handles badly, because approximating a curve through
                 sparse captured joint positions rounds off exactly the detail that matters at a
                 boundary.</li>
-            <li><strong>Trajectories became something you could prototype.</strong> When a path takes
-                hours to author, you get one attempt and you live with it; when it takes ten minutes,
-                you can try a variation and throw it away.</li>
+            <li><strong>Trajectories became something you could prototype.</strong> Cheap paths meant we
+                could try the same task across different surfaces, swap in different end effectors, and
+                run quick experiments like pressure testing, rather than committing to one authored
+                path.</li>
             <li><strong>Human-intuitive wrist motion became expressible.</strong> Guiding the arm by
                 hand lets an operator apply pressure and roll the wrist the way a person actually
                 scrubs, which is difficult to specify through a joystick at all.</li>
@@ -191,10 +192,6 @@
         </ul>
 
         <h3>Where it fell short</h3>
-        <p>
-            Worth being honest about, since these were real constraints operators worked around rather
-            than theoretical concerns:
-        </p>
         <ul>
             <li>Recording had to start from zero velocity.</li>
             <li>It required near-perfect choreography from the operator, since any hesitation was
