@@ -321,17 +321,12 @@
 
     <section>
         <h2>What the data said before any policy ran</h2>
-        <p>
-            Later I went back to the recorded episodes on Hugging Face and analysed them directly,
-            rather than judging the policies by watching the robot. Two results, and one warning.
-        </p>
 
         <h3>Grasp success is detectable without a force sensor</h3>
         <p>
-            The arm has no force sensing. But every frame stores what the gripper was
-            <em>commanded</em> to do and where it <em>actually</em> got to, and if it is told to shut
-            but cannot, something is in the way. That detects a grasp in <strong>99 of 100
-            episodes</strong>. The one miss is the episode whose grasp genuinely failed.
+            Every frame records what the gripper was told to do and where it actually got to. Told to
+            shut but unable to, something is in the way. That finds the grasp in <strong>99 of 100
+            episodes</strong>, and the one miss is the episode whose grasp failed.
         </p>
     </section>
 
@@ -350,18 +345,25 @@
         </figure>
     </div>
 
+    <figure class="fig-row one" style="max-width: 460px; margin: 2rem auto;">
+        <video controls muted playsinline preload="none" poster="../assets/media/home-lab/grasp-ep91-poster.jpg">
+            <source src="../assets/media/home-lab/grasp-ep91.mp4" type="video/mp4">
+        </video>
+        <figcaption>Episode 91: a thinner marker, held 4.0 seconds.</figcaption>
+    </figure>
+
     <figure class="fig-row one">
         <img src="../assets/media/home-lab/analysis-grasp_detection.png" alt="Gripper commanded and actual position traces for three episodes, with detected holds shaded and their durations labelled">
-        <figcaption>Where actual sits above both the empty-gripper stop and the commanded position, the gripper is blocked. Episode 91 is a thinner marker, held 4.0s.</figcaption>
+        <figcaption>Shaded where the gripper is blocked by an object.</figcaption>
     </figure>
 
     <section>
         <h3>The memorization was in the data before training</h3>
         <p>
-            Taking every episode's joint positions at the grasp and at the release,
-            <code>shoulder_pan</code> (base rotation) varies <strong>12.7 units at pick and 1.2 at
-            place</strong>, <strong>10.3x tighter</strong> at the container than at the object. The pen
-            moved; the pouch did not. Figures are LeRobot normalised joint units, not degrees.
+            Across every episode, <code>shoulder_pan</code> varies <strong>12.7 units at pick and 1.2
+            at place</strong>: <strong>10.3x tighter</strong> at the container than at the object. The
+            pen moved, the pouch did not. ACT's memorized drop location was measurable in the training
+            data before any policy ran. Units are LeRobot normalised, not degrees.
         </p>
     </section>
 
@@ -372,34 +374,9 @@
 
     <section>
         <p>
-            So ACT's memorized drop location was measurable in the training data before any policy ran.
-            The later dataset's own task label says it outright: <em>"same pouch position."</em> A
-            deliberate scoping decision whose cost only showed up when I removed the pouch.
-        </p>
-
-        <h3>The analysis was wrong twice first</h3>
-        <p>
-            Worth recording, because each wrong version looked like a result:
-        </p>
-        <ul>
-            <li><strong>Detector v1</strong> fired on 40 of 40 episodes, which felt like success. It
-                was really an over-squeeze detector, and missed the thin marker entirely. Caught by a
-                ground-truth label I happened to have.</li>
-            <li><strong>Detector v2</strong> counted the gripper parked part-open after the drop as a
-                second grasp, inflating regrasps from 3 episodes to about 19. Caught by looking at a
-                plot.</li>
-            <li><strong>The empty-gripper stop drifts between sessions</strong>, 1.65 against 2.33.
-                Hard-coding it silently corrupted a cross-dataset comparison. Nothing errored; the
-                numbers were just wrong.</li>
-        </ul>
-        <p>
-            Each was caught by a different mechanism, which is the point. An analysis that only ever
-            agreed with itself would have shipped the first version.
-        </p>
-        <p>
-            One more caveat on the 10.3x: every episode in that dataset is exactly 19.7 seconds because
-            it was recorded on a fixed timer, so the arm parks at the end of each one. Some of that
-            tightness is the task, and some is the recording method.
+            One caveat on that number: every episode in the first dataset is exactly 19.7 seconds,
+            recorded on a fixed timer, so the arm parks at the end of each one. Some of the tightness
+            is the task and some is the recording method.
         </p>
     </section>
 
