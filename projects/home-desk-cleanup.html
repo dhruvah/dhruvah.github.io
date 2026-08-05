@@ -39,7 +39,7 @@
         </div>
         <div class="project-meta-item">
             <span class="label">Data</span>
-            <span class="value">100 teleoperated episodes</span>
+            <span class="value">200 teleoperated episodes, 3 sessions</span>
         </div>
         <div class="project-meta-item">
             <span class="label">Policies</span>
@@ -59,26 +59,32 @@
         <ul>
             <li><strong>40 episodes</strong> with a single pen dropped into a bin, varying the pen's
                 location.</li>
-            <li><strong>60 episodes</strong> with multiple pens on the table, still picking up only
-                one of them.</li>
+            <li><strong>60 episodes</strong> with several differently coloured pens on the table at
+                varied positions, picking up one of them, and with the pouch shifted slightly between
+                episodes.</li>
         </ul>
         <p>
             I merged the two and trained three policies on the combined set: <strong>SmolVLA</strong>,
             a <strong>diffusion policy</strong>, and <strong>π0.5</strong>.
         </p>
         <p>
-            The results were poor across the board. None of the three performed well. My working
-            hypothesis is that the merge itself was the problem: mixing single-pen and multi-pen scenes
-            gives the policy two visually different situations that demand the same behavior, and with
-            this little data that ambiguity is more likely to confuse it than to teach it robustness.
-            More data would probably help; a cleaner task definition seemed more likely to.
+            The results were poor across the board. None of the three performed well. Looking at what
+            actually differs between the two sets, the problem is not one changed variable but four:
+            going from the first to the second, the number of objects, their colour, their position
+            and the pouch location all moved at once. Merging them produces 100 episodes with no
+            controlled axis, so there is nothing for a policy to isolate. Every factor it might key on
+            varies, and none of them varies alone.
         </p>
         <p>
-            I also could not properly evaluate π0.5, for an unglamorous reason: my GPU has 8 GB of
-            VRAM and the model is too large to comfortably run inference on, never mind train. π0.5 is
-            a 3.3B-parameter model, and reported inference for its π0 predecessor sits around 13.6 GB
-            of VRAM, so this is a hard wall rather than a tuning problem. Worth stating plainly,
-            because it rules out an entire class of model from a home setup.
+            That is a different diagnosis from "not enough data", and it points somewhere else. More
+            episodes of the same mixture would not have fixed it. Holding everything still except one
+            factor would, which is what I did next.
+        </p>
+        <p>
+            I also could not properly evaluate π0.5 on the machine the robot runs on, for an
+            unglamorous reason: it has 8 GB of VRAM. π0.5 is a 3.3B-parameter model, and reported
+            inference for its π0 predecessor sits around 13.6 GB, so it does not fit. A larger
+            training box exists, but the point stands for anything meant to run beside the robot.
         </p>
 
         <div class="data-table-wrap">
@@ -104,7 +110,7 @@
                         <td class="factor">π0.5</td>
                         <td>merged, 100 ep</td>
                         <td class="outcome"><span class="untested">Not evaluated</span></td>
-                        <td>Too large to run inference on 8 GB VRAM</td>
+                        <td>Does not fit the 8 GB box the robot runs on</td>
                     </tr>
                 </tbody>
             </table>
@@ -314,6 +320,173 @@
     </figure>
 
     <section>
+        <h2>What the data said before any policy ran</h2>
+        <p>
+            Everything above came from watching the robot. Later I went back to the recorded episodes
+            themselves, on Hugging Face, and analysed them directly: the 40-episode
+            <code>desk_cleanup_v1_pen_single</code> set, and a later 100-episode session,
+            <code>cleandesk_pen_in_pouch</code>, recorded after the ones the policies above were
+            trained on. Two things came out of it. The first is that the pouch failure was sitting in
+            the training data all along. The second, and the more useful one, is that my method for
+            finding it was wrong twice before it was right.
+        </p>
+
+        <h3>The memorization was measurable before training</h3>
+        <p>
+            For every episode I took the arm's joint positions at two moments: when the gripper closes
+            on the pen, and when it opens over the container. Then I measured how much each joint
+            varies across episodes at each of those moments. If the pen moves around and the container
+            does not, the spread at pick should be large and the spread at place should be small.
+        </p>
+        <p>
+            It is, and not subtly. <code>shoulder_pan</code>, the base rotation that decides which
+            direction the arm is pointing, varies <strong>12.7 units at pick and 1.2 at place</strong>
+            in the first dataset. That is <strong>10.3x tighter</strong> at the container than at the
+            object. In the later 100-episode set it is 11.9 against 3.3, still 3.6x. All figures are
+            LeRobot normalised joint units, roughly -100 to 100 per joint, not degrees.
+        </p>
+    </section>
+
+    <figure class="fig-row one">
+        <img src="../assets/media/home-lab/analysis-memorization.png" alt="Bar chart of per-joint spread at pick versus at place for both datasets, with shoulder_pan 10.3 times tighter at place in the first dataset">
+        <figcaption>Spread of each joint across episodes, at the moment of grasp versus the moment of release. The gap at <code>shoulder_pan</code> is the memorization, visible before a single policy was trained.</figcaption>
+    </figure>
+
+    <section>
+        <p>
+            This is what ACT learned, stated in the training data rather than inferred from the robot's
+            behaviour. The container sat in the same place in nearly every demonstration, so "go to
+            these coordinates" and "put it in the pouch" were indistinguishable to anything learning
+            from that data. The later dataset's own task label says so outright:
+            <em>"Pen/marker at varied positions across full workspace, same pouch position."</em> It
+            was a deliberate scoping decision, not an oversight. The cost of it only became visible
+            when I took the pouch away.
+        </p>
+
+        <h3>Grasp success is recoverable without a force sensor</h3>
+        <p>
+            The arm has no force or tactile sensing. But every recorded frame stores two things: the
+            <code>action</code>, meaning where the leader arm was commanded to be, and the
+            <code>observation.state</code>, meaning where the follower actually got to. On the gripper,
+            the difference between those two is information. If the gripper is commanded shut but
+            cannot reach shut, something is in the way.
+        </p>
+        <p>A hold requires three conditions at once:</p>
+        <ol>
+            <li>Commanded near shut, so the operator is actually trying to close.</li>
+            <li>Actual position above the empty-gripper stop, so something is between the fingers.</li>
+            <li>Actual exceeding commanded, so the gripper is genuinely blocked rather than parked
+                part-open.</li>
+        </ol>
+        <p>
+            That detects a grasp in <strong>99 of 100 episodes</strong>. The single miss is episode 7,
+            which is the episode whose grasp actually failed.
+        </p>
+    </section>
+
+    <figure class="fig-row one">
+        <img src="../assets/media/home-lab/analysis-grasp_detection.png" alt="Gripper commanded and actual position traces for three episodes, with detected holds shaded and their durations labelled">
+        <figcaption>Commanded against actual gripper position for three episodes. Where actual sits above the empty-gripper stop and above commanded, the gripper is blocked by an object.</figcaption>
+    </figure>
+
+    <div class="fig-row">
+        <figure>
+            <video controls muted playsinline preload="none" poster="../assets/media/home-lab/grasp-ep0-poster.jpg">
+                <source src="../assets/media/home-lab/grasp-ep0.mp4" type="video/mp4">
+            </video>
+            <figcaption>Episode 0: the pen is held for 2.8 seconds.</figcaption>
+        </figure>
+        <figure>
+            <video controls muted playsinline preload="none" poster="../assets/media/home-lab/grasp-ep7-poster.jpg">
+                <source src="../assets/media/home-lab/grasp-ep7.mp4" type="video/mp4">
+            </video>
+            <figcaption>Episode 7: the same task, and the gripper never holds anything at all.</figcaption>
+        </figure>
+    </div>
+
+    <p>
+        Same task, same operator, same robot. One holds the pen for 2.8 seconds and one never holds it,
+        and the gripper trace under each video says which without anyone watching the footage.
+    </p>
+
+    <figure class="fig-row one" style="max-width: 460px; margin: 2rem auto;">
+        <video controls muted playsinline preload="none" poster="../assets/media/home-lab/grasp-ep91-poster.jpg">
+            <source src="../assets/media/home-lab/grasp-ep91.mp4" type="video/mp4">
+        </video>
+        <figcaption>Episode 91, a thinner marker held for 4.0 seconds. This is the episode that broke the first version of the detector.</figcaption>
+    </figure>
+
+    <section>
+        <h3>The detector was wrong twice first</h3>
+        <p>
+            This is the part I would rather record than tidy away, because each wrong version failed in
+            a way that looked like success.
+        </p>
+        <p>
+            <strong>Attempt one: position tracking error.</strong> Flag contact whenever the actual
+            position lags the commanded one. It fired on 40 of 40 episodes in the first dataset, which
+            felt like a result. It is not a grasp detector. It detects <em>squeezing harder than the
+            object allows</em>, so it missed episode 91's thinner marker completely: a thin object lets
+            the gripper reach a position it can actually achieve, so there is no lag to find. I only
+            caught it because I knew from watching that episode 91 succeeded.
+        </p>
+        <p>
+            <strong>Attempt two: absolute gripper position.</strong> Flag whenever the gripper settles
+            above the empty-gripper stop while commanded shut. That fixed the thin marker, and
+            introduced two false positives: the gripper resting slightly high at the start of an
+            episode, and the gripper parked part-open <em>after</em> the drop. The second one read as a
+            second grasp and inflated the regrasp count from 3 episodes to about 19. I caught that one
+            by looking at a rendered plot and a video, not by reasoning about it.
+        </p>
+        <p>
+            <strong>Attempt three: both conditions, plus an approach.</strong> A hold has to be preceded
+            by the gripper opening, because a grasp implies reaching for something, and has to show
+            actual exceeding commanded. That matches the human labels on both test episodes and
+            reconciles two independent methods that had disagreed by 3x. It stands until something
+            breaks it.
+        </p>
+        <p>
+            The pattern worth noticing is that each error was caught by a different mechanism: the
+            first by a ground-truth label I happened to have, the second by looking at a picture. An
+            analysis that only ever agreed with itself would have shipped the first version.
+        </p>
+
+        <h3>The calibration drifts between sessions</h3>
+        <p>
+            The empty-gripper stop, the position the gripper settles at when it closes on nothing, is
+            not a constant. It reads <strong>1.65</strong> in the first dataset and <strong>2.33</strong>
+            in the later one. Same robot, different recording sessions, about 0.7 units apart.
+        </p>
+        <p>
+            Hard-coding it silently corrupts any comparison across datasets, which it did during this
+            analysis. Nothing errored. The numbers simply came out wrong, and the only reason I caught
+            it was that a result looked implausible. Anything reading absolute gripper positions has to
+            derive that stop per session rather than assume it.
+        </p>
+        <p>
+            Once it is derived correctly, the same signal measures the held object: the median gripper
+            opening while holding sits <strong>1.32 units</strong> above the empty stop (p10 1.13,
+            p90 1.45), with episode 91's thin marker at the low end. It is a crude calliper, built
+            from data that was already being recorded for another purpose.
+        </p>
+
+        <h3>What I would record differently</h3>
+        <p>
+            Every episode in the first dataset is exactly 19.7 seconds. It was recorded on a fixed
+            timer, so episodes end when the clock runs out rather than when the task finishes, and the
+            arm parks and waits at the end of every one. That parked pose is itself a contributor to
+            the tight spread at place: some of that 10.3x is the task, and some of it is the recording
+            method. The later dataset varies between 12 and 15 seconds, which is the better habit.
+        </p>
+        <p>
+            Regrasps turned out to be rare, 3 episodes in 100, once the false positives were removed.
+            The earlier estimate of roughly 19% was an artefact of the detector, not a property of the
+            robot, which is a good reminder that a measurement can be confidently wrong and look like a
+            finding.
+        </p>
+    </section>
+
+    <section>
         <h2>Where it goes next</h2>
         <p>
             Adding variation back onto the single-pen task in a controlled way, orientation and
@@ -334,6 +507,7 @@
             <span class="tag">LeRobot</span>
         </div>
         <div class="project-links">
+            <a href="https://huggingface.co/datasets/hdhruva/cleandesk_pen_in_pouch" target="_blank" class="btn">Dataset: pen in pouch, 100 ep ↗</a>
             <a href="https://huggingface.co/hdhruva" target="_blank" class="btn">All datasets and models ↗</a>
         </div>
     </section>
