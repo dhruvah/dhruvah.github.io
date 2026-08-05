@@ -25,10 +25,8 @@
         <div class="project-page-category">Home Robotics · Ongoing</div>
         <h1>Desk cleanup: the pen task.</h1>
         <p class="project-page-summary">
-            Pick a pen off the desk and drop it in the bin. This is the experiment I have pushed
-            hardest on and learned the most from, largely by not working. The most useful result was
-            discovering that a policy which looked like it had solved the task had done nothing of
-            the kind.
+            Pick a pen off the desk and drop it in the bin. Five policies, and the most useful result
+            was finding that the one which looked like it had solved the task had not.
         </p>
     </header>
 
@@ -68,23 +66,14 @@
             a <strong>diffusion policy</strong>, and <strong>π0.5</strong>.
         </p>
         <p>
-            The results were poor across the board. None of the three performed well. Looking at what
-            actually differs between the two sets, the problem is not one changed variable but four:
-            going from the first to the second, the number of objects, their colour, their position
-            and the pouch location all moved at once. Merging them produces 100 episodes with no
-            controlled axis, so there is nothing for a policy to isolate. Every factor it might key on
-            varies, and none of them varies alone.
+            All three performed poorly. Four things change between the two sets at once: object count,
+            colour, position and pouch location. Merged, that gives 100 episodes with no controlled
+            axis, so more of the same mixture would not have helped. Holding everything still except
+            one factor would.
         </p>
         <p>
-            That is a different diagnosis from "not enough data", and it points somewhere else. More
-            episodes of the same mixture would not have fixed it. Holding everything still except one
-            factor would, which is what I did next.
-        </p>
-        <p>
-            I also could not properly evaluate π0.5 on the machine the robot runs on, for an
-            unglamorous reason: it has 8 GB of VRAM. π0.5 is a 3.3B-parameter model, and reported
-            inference for its π0 predecessor sits around 13.6 GB, so it does not fit. A larger
-            training box exists, but the point stands for anything meant to run beside the robot.
+            π0.5 went unevaluated: at 3.3B parameters it does not fit the 8 GB box the robot runs on,
+            with reported inference for π0 around 13.6 GB.
         </p>
 
         <div class="data-table-wrap">
@@ -131,13 +120,9 @@
     <section>
         <h2>Simplify: one orange pen</h2>
         <p>
-            So I cut the task down to its simplest honest version: a single orange pen, 40 recorded
-            episodes of picking it up and dropping it into a pouch. Get that solid, then add variation
-            back one axis at a time.
-        </p>
-        <p>
-            And it worked. Which is where it gets interesting, because a policy that works is the
-            hardest kind to learn anything from until you start deliberately breaking assumptions.
+            So I cut it to the simplest version: a single orange pen, 40 episodes, into a pouch. It
+            worked, which is the hardest case to learn anything from until you start breaking
+            assumptions deliberately.
         </p>
     </section>
 
@@ -151,13 +136,8 @@
     <section>
         <h2>The factor sweep</h2>
         <p>
-            With a working baseline, the useful move is to change exactly one thing at a time and see
-            what survives. The baseline is the trained condition: a single orange pen, in a trained
-            orientation, dropped into the pouch it was demonstrated with.
-        </p>
-        <p>
-            Both policies below were trained on the <em>same</em> 40 episodes. Nothing about the data
-            differs between the two columns, only the model.
+            Change one thing at a time from the trained condition. Both policies below saw the
+            <em>same</em> 40 episodes: only the model differs between the columns.
         </p>
     </section>
 
@@ -225,60 +205,32 @@
     <section>
         <h2>What the sweep says</h2>
         <p>
-            Three things fall out of that table, and together they are fairly damning about what ACT
-            had really picked up.
+            Three things fall out of that table.
         </p>
         <ul>
-            <li><strong>Color is doing more work than it should.</strong> Orange and purple pass, green
-                and blue and brown fail. Same shape, same task, same location. The visual feature the
-                policy locked onto does not transfer across color, which means it is keying on
-                appearance rather than on the object.</li>
-            <li><strong>It memorized the drop location, not the target.</strong> Remove the pouch
-                entirely and the robot still travels to where the pouch used to be and releases the pen
-                over empty table. It never learned "put it in the pouch". It learned "go here and open
-                the gripper".</li>
+            <li><strong>Colour is doing the work.</strong> Orange and purple pass; green, blue and brown
+                fail. Same shape, same task, same location, so it is keying on appearance rather than
+                on the object.</li>
+            <li><strong>It memorized the drop location, not the target.</strong> Remove the pouch and the
+                robot still goes to where it was and opens the gripper over empty table. It learned
+                "go here", not "put it in the pouch".</li>
             <li><strong>Orientation is brittle.</strong> Significant rotation of the pen causes
                 failures, even in positions the policy otherwise handles.</li>
         </ul>
         <p>
-            The pouch row is the one I keep coming back to. The policy was confidently wrong, and
-            nothing inside it could detect that. It has no representation of the goal, only of the
-            motion that usually satisfies the goal.
-        </p>
-        <p>
-            The gaps in the right-hand column are the honest state of things: MolmoAct has been swept
-            across color and object count, not yet across the drop target or orientation. Those are the
-            next runs, and the pouch-removal test in particular is the one I most want its answer to.
+            The pouch row matters most: the policy is confidently wrong with no way to detect it. It
+            holds no representation of the goal, only of the motion that usually satisfies it. The
+            untested cells are the next runs.
         </p>
     </section>
 
     <section>
-        <h3>This is a known failure mode, which is reassuring</h3>
+        <h3>Both failures have names</h3>
         <p>
-            I went looking afterwards for whether any of this was documented, partly to check I had not
-            simply trained something badly. It is, and both results have names.
-        </p>
-        <p>
-            The color result is <strong>shortcut learning</strong>: a policy relying on correlations
-            between actions and task-irrelevant parts of the observation instead of the causal
-            structure of the task. What surprised me is how specific the published finding is. Work
-            analyzing factor bias in robot policies reports that <em>color is the dominant factor
-            policies over-rely on</em>, which is exactly the axis my sweep broke on. That my orange
-            policy transferred to purple but not to green is a small local instance of a general
-            result.
-        </p>
-        <p>
-            The pouch result is <strong>causal confusion</strong>: the policy learned a correlate of
-            the goal (the gripper opens at these coordinates) rather than the goal itself (the pen ends
-            up in the container), and cannot tell the two apart because in every training episode they
-            coincided. Nothing in 40 demonstrations distinguishes them, so there is nothing for the
-            policy to be wrong about until the pouch moves.
-        </p>
-        <p>
-            The literature also suggests the fix I stumbled into is one of the recognized ones:
-            reallocating a fixed demonstration budget toward under-grounded factors, rather than simply
-            collecting more of the same. Which is a more precise version of what the merged-dataset run
-            taught me the hard way.
+            The colour result is <strong>shortcut learning</strong>, and published work on factor bias
+            reports <em>colour is the dominant factor policies over-rely on</em>. The pouch result is
+            <strong>causal confusion</strong>: across 40 demonstrations "open the gripper here" and
+            "put it in the pouch" always coincided, so nothing separates them until the pouch moves.
         </p>
     </section>
 
@@ -292,23 +244,14 @@
     <section>
         <h2>MolmoAct: swapping in a VLM backbone</h2>
         <p>
-            The color result was the interesting thread to pull. If the policy fails on a green pen
-            purely because it has never seen green, then a model carrying real visual-semantic priors
-            should not have that problem, since it already knows what a pen is independently of this
-            dataset.
+            If a policy fails on green only because it has never seen green, a model that already
+            knows what a pen is should not. <strong>MolmoAct 2</strong>, Ai2's action-reasoning model
+            on the Molmo2-ER VLM backbone, trained on the same 40 episodes: no new demonstrations, only
+            the model changed. It handled green, blue and the rest, so the limitation was in the
+            representation, not the data.
         </p>
         <p>
-            So I trained <strong>MolmoAct 2</strong> on the exact same dataset. It is Ai2's
-            action-reasoning model, built on the Molmo2-ER embodied-reasoning vision-language backbone
-            with an action expert on top, so it arrives already carrying visual-semantic priors that a
-            policy trained only on my 40 episodes cannot have. No new demonstrations, no relabeling,
-            just a different model over identical data. It handled green, blue and the other pens
-            quite well, which makes this a clean controlled result: the limitation was in the
-            representation, not in the data.
-        </p>
-        <p>
-            The best run so far came out of this. With two pens placed on the table, the robot picked
-            them up one at a time and placed each in the bin.
+            Best run so far: two pens on the table, picked up one at a time and placed in the bin.
         </p>
     </section>
 
@@ -383,10 +326,9 @@
     <section>
         <h2>Where it goes next</h2>
         <p>
-            Adding variation back onto the single-pen task in a controlled way, orientation and
-            location before color, and then moving to multiple pens once the simple case is genuinely
-            solid rather than apparently solid. The distinction between those two is the whole lesson
-            of this experiment.
+            Variation back onto the single-pen task one axis at a time, orientation and location
+            before colour, then multiple pens once the simple case is genuinely solid rather than
+            apparently solid.
         </p>
     </section>
 
