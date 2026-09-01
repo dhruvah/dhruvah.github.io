@@ -11,10 +11,10 @@
     const headerHTML = `
 <nav class="site-nav">
     <a href="${basePath}index.html" class="nav-logo">Harsh Dhruva</a>
-    <button class="nav-mobile-toggle" aria-label="Menu">
+    <button class="nav-mobile-toggle" aria-label="Menu" aria-controls="nav-links" aria-expanded="false">
         <span></span><span></span><span></span>
     </button>
-    <ul class="nav-links">
+    <ul class="nav-links" id="nav-links">
         <li><a href="${basePath}index.html">Work</a></li>
         <li><a href="${basePath}timeline.html">Timeline</a></li>
         <li><a href="${basePath}about.html">About</a></li>
@@ -54,27 +54,34 @@
         const toggle = navbar.querySelector('.nav-mobile-toggle');
         const links = navbar.querySelector('.nav-links');
         if (toggle && links) {
-            toggle.addEventListener('click', () => links.classList.toggle('open'));
+            const setOpen = (open) => {
+                links.classList.toggle('open', open);
+                toggle.setAttribute('aria-expanded', String(open));
+            };
+            toggle.addEventListener('click', () => setOpen(!links.classList.contains('open')));
             links.querySelectorAll('a').forEach(a => {
-                a.addEventListener('click', () => links.classList.remove('open'));
+                a.addEventListener('click', () => setOpen(false));
             });
         }
 
         // Highlight active nav link based on current path
         const path = window.location.pathname;
-        navbar.querySelectorAll('.nav-links a').forEach(a => {
-            const href = a.getAttribute('href');
-            if (!href) return;
-            if (
-                (path.endsWith('/') || path.endsWith('/index.html')) && href.endsWith('index.html')
-            ) {
-                a.classList.add('active');
-            } else if (path.includes('/projects/') && href.includes('index.html#projects')) {
-                a.classList.add('active');
-            } else if (href.includes('about.html') && path.endsWith('about.html')) {
-                a.classList.add('active');
-            }
-        });
+        let activeFile = null;
+        if (path.endsWith('/about.html')) {
+            activeFile = 'about.html';
+        } else if (path.endsWith('/timeline.html')) {
+            activeFile = 'timeline.html';
+        } else if (path.includes('/projects/') || path.endsWith('/') || path.endsWith('/index.html')) {
+            activeFile = 'index.html';
+        }
+        if (activeFile) {
+            navbar.querySelectorAll('.nav-links a').forEach(a => {
+                const href = a.getAttribute('href');
+                if (href && href.endsWith(activeFile)) {
+                    a.classList.add('active');
+                }
+            });
+        }
     }
 
     // Reveal-on-scroll animation for any .reveal elements

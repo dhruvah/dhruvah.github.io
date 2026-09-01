@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Harsh Dhruva · Robotics Engineer</title>
-    <meta name="description" content="Selected robotics work: manipulation, motion planning, learned policies. Currently at Google.">
+    <meta name="description" content="Selected robotics work: manipulation, motion planning, learned policies. Currently a Robotics Systems Engineer at Google (via AutoRoboto).">
     <meta property="og:title" content="Harsh Dhruva · Robotics Engineer">
     <meta property="og:description" content="Selected robotics work: manipulation, motion planning, learned policies.">
     <meta property="og:type" content="website">
@@ -33,13 +33,13 @@
 <section class="home-hero">
     <div class="home-hero-status">
         <span class="dot"></span>
-        Open to conversations · Bay Area, CA
+        Bay Area, CA · Interested in robotics software, manipulation, robot learning, and systems roles.
     </div>
 
-    <h1>Robotics engineer trying to get robots from the lab to the real world.</h1>
+    <h1>Robotics engineer building manipulation, perception, and automation systems that move from prototype to real-world deployment.</h1>
 
     <p>
-        I'm Harsh, currently a Robotics Systems Engineer at <strong>Google</strong>,
+        I'm Harsh, currently a Robotics Systems Engineer at <strong>Google</strong> (via AutoRoboto),
         previously at <strong>Peanut Robotics</strong>. Rose-Hulman and CMU trained, focused on the
         intersection of classical robotics and learned policies.
     </p>
@@ -59,6 +59,27 @@
     </div>
 
     <div class="projects-grid">
+
+        <a href="./projects/autoroboto.html" class="project-card">
+            <div class="project-thumb thumb-logo-pair">
+                <img src="./assets/media/about/google-logo.png" alt="Google" loading="lazy">
+                <img src="./assets/media/about/autoroboto-logo.jpeg" alt="AutoRoboto" loading="lazy">
+            </div>
+            <div class="project-body">
+                <div class="project-category">System Integration · Google (via AutoRoboto)</div>
+                <div class="project-title">Automated biometric testing for Pixel</div>
+                <div class="project-desc">
+                    Robotic system for hardware security testing on Pixel devices. Led ROS1→ROS2 migration
+                    and refactored the node architecture for tight robot/camera synchronization.
+                </div>
+                <div class="project-tags">
+                    <span class="tag">ROS2</span>
+                    <span class="tag">xArm</span>
+                    <span class="tag">MoveIt</span>
+                    <span class="tag">System Design</span>
+                </div>
+            </div>
+        </a>
 
         <a href="./projects/peanut.html" class="project-card featured">
             <div class="project-thumb thumb-mosaic">
@@ -88,27 +109,6 @@
                     <span class="tag">ICP / RANSAC</span>
                     <span class="tag">C++</span>
                     <span class="tag">OpenCV</span>
-                </div>
-            </div>
-        </a>
-
-        <a href="./projects/autoroboto.html" class="project-card">
-            <div class="project-thumb thumb-logo-pair">
-                <img src="./assets/media/about/google-logo.png" alt="Google" loading="lazy">
-                <img src="./assets/media/about/autoroboto-logo.jpeg" alt="Autoroboto" loading="lazy">
-            </div>
-            <div class="project-body">
-                <div class="project-category">System Integration · Google</div>
-                <div class="project-title">Automated biometric testing for Pixel</div>
-                <div class="project-desc">
-                    Robotic system for hardware security testing on Pixel devices. Led ROS1→ROS2 migration
-                    and refactored the node architecture for tight robot/camera synchronization.
-                </div>
-                <div class="project-tags">
-                    <span class="tag">ROS2</span>
-                    <span class="tag">xArm</span>
-                    <span class="tag">MoveIt</span>
-                    <span class="tag">System Design</span>
                 </div>
             </div>
         </a>
@@ -165,7 +165,7 @@
     </div>
     <p class="projects-section-sub">
         SO-101 arms on my living-room table, learned policies, and ordinary household jobs. The
-        interesting part is never that a policy works, it is finding out what it actually learned when
+        interesting question is not merely whether a policy works, but what it actually learned when
         it does. <a href="./projects/home-lab.html">The setup and what I've learned so far →</a>
     </p>
 
@@ -219,7 +219,7 @@
                 <div class="project-desc">
                     Five policies on one task. ACT looked like it had solved it, until removing the pouch
                     showed it had memorized a drop location rather than learned the goal. A VLM backbone
-                    fixed what more data could not.
+                    generalized where the initial data and policies did not.
                 </div>
                 <div class="project-tags">
                     <span class="tag">MolmoAct</span>

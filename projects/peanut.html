@@ -28,7 +28,7 @@
         </div>
         <h1>My first job out of grad school was building robots that clean hotel bathrooms.</h1>
         <p class="project-page-summary">
-            1.75 years at Peanut Robotics as a Robotics Engineer, owning the manipulation subsystem,
+            July 2022 to April 2024 at Peanut Robotics as a Robotics Engineer, owning the manipulation subsystem,
             sensor integration, perception, and operator tooling on a mobile manipulator deployed in real hotels.
         </p>
     </header>
@@ -52,6 +52,17 @@
         </div>
     </div>
 
+    <div class="callout">
+        <strong>What came out of it:</strong>
+        <ul>
+            <li>Shipped into <strong>2 hotels</strong> with <strong>10 active robots</strong> cleaning on a paid hourly contract.</li>
+            <li>Operator training for a new surface dropped from <strong>2 to 4 hours</strong> to <strong>15 minutes</strong>.</li>
+            <li>Evaluated <strong>six depth-camera systems</strong> across Orbbec, RealSense, Luxonis, and ZED, and chose on specular performance.</li>
+            <li>Robust <strong>four-camera bringup</strong> with a heartbeat and automatic recovery.</li>
+            <li><strong>Point-cloud registration</strong> that measures room-to-room geometric variation so one taught trajectory transfers.</li>
+        </ul>
+    </div>
+
     <!-- HERO -->
     <div class="video-embed">
         <iframe
@@ -68,13 +79,12 @@
             I joined Peanut right out of CMU. The office was a single room in San Francisco -
             around 19 people, and a lot of robots. Peanut built custom mobile manipulators tasked
             for cleaning bathrooms in commercial hotels. We were deployed in 2 hotels, with 10
-            active robot cleaning and getting paid by the hour.
+            active robots cleaning and getting paid by the hour.
         </p>
         <p>
-            As a Robotics Engineer, I worked cross functionally across the manipulation stack,
+            As a Robotics Engineer, I worked cross-functionally across the manipulation stack,
             navigation, hardware, testing and sensor integration. My main ownership was the robot
-            arm and manipulation stack, and main projects are centered around problems with
-            manipulation.
+            arm and manipulation stack. My primary projects focused on manipulation.
         </p>
     </section>
 
@@ -135,13 +145,13 @@
 
     <div class="fig-row">
         <figure>
-            <video controls muted playsinline>
+            <video controls muted playsinline preload="none" poster="../assets/media/peanut/live-recording-wrist-poster.jpg">
                 <source src="../assets/media/peanut/live-recording-wrist.mp4" type="video/mp4">
             </video>
             <figcaption>Live trajectory recording, guiding the wrist by hand.</figcaption>
         </figure>
         <figure>
-            <video controls muted playsinline>
+            <video controls muted playsinline preload="none" poster="../assets/media/peanut/live-recording-scrubber-poster.jpg">
                 <source src="../assets/media/peanut/live-recording-scrubber.mp4" type="video/mp4">
             </video>
             <figcaption>Live trajectory: scrubber actuation (sped up).</figcaption>
@@ -149,7 +159,7 @@
     </div>
 
     <figure class="fig-row one">
-        <video controls muted playsinline>
+        <video controls muted playsinline preload="none" poster="../assets/media/peanut/live-scrubbing-poster.jpg">
             <source src="../assets/media/peanut/live-scrubbing.mp4" type="video/mp4">
         </video>
         <figcaption>Result: the robot scrubbing a surface using a live-recorded trajectory.</figcaption>
@@ -162,7 +172,7 @@
             effects came out of it:
         </p>
         <ul>
-            <li><strong>Training time collapsed.</strong> About 10 minutes against 2 to 4 hours, and
+            <li><strong>Training time collapsed.</strong> 15 minutes against 2 to 4 hours, and
                 not only on the easy surfaces. It held up on complex geometries too, which is where
                 joystick teaching cost the most time in the first place.</li>
             <li><strong>Cleaning quality improved on edges and corners.</strong> These are precisely
@@ -277,8 +287,8 @@
         <div class="pa">
             <div class="pa-label">What I did</div>
             <p>
-                Ran a careful evaluation of four depth systems (<strong>Orbbec, RealSense, Luxonis, and
-                ZEDx</strong>), weighing specular performance, range, width, and software tradeoffs, and
+                Evaluated six depth-camera systems across <strong>Orbbec, RealSense, Luxonis, and
+                ZED</strong>, weighing specular performance, range, width, and software tradeoffs, and
                 chose the Orbbec, which had the best filtering for the bouncing light. Then built the
                 integration: <strong>robust bringup of four cameras</strong> with a system heartbeat and an
                 <strong>auto-recovery</strong> system, plus easy toggling and selection of depth streams to
@@ -296,8 +306,8 @@
     <div class="fig-row">
         <figure>
             <img src="../assets/media/peanut/depth-cameras.jpg"
-                 alt="All four depth cameras evaluated: ZED, Luxonis, RealSense, Orbbec, laid out side by side">
-            <figcaption>The four systems evaluated: ZED, Luxonis, RealSense, and Orbbec.</figcaption>
+                 alt="Four of the depth cameras evaluated: ZED, Luxonis, RealSense, Orbbec, laid out side by side">
+            <figcaption>Four of the systems evaluated: ZED, Luxonis, RealSense, and Orbbec.</figcaption>
         </figure>
         <figure>
             <img src="../assets/media/peanut/specularity.png"
@@ -390,7 +400,7 @@
 
         <div class="fig-row one">
             <figure>
-                <video controls muted playsinline>
+                <video controls muted playsinline preload="none" poster="../assets/media/peanut/arm-calibration-poster.jpg">
                     <source src="../assets/media/peanut/arm-calibration.mp4" type="video/mp4">
                 </video>
                 <figcaption>The arm calibration script running (sped up).</figcaption>
@@ -409,7 +419,7 @@
         </div>
 
         <figure class="portrait-single">
-            <video controls muted playsinline>
+            <video controls muted playsinline preload="none" poster="../assets/media/peanut/arm-vibration-poster.jpg">
                 <source src="../assets/media/peanut/arm-vibration.mp4" type="video/mp4">
             </video>
             <figcaption>Tuning controllers to fix an arm vibration issue, the kind of bug you only find on real hardware.</figcaption>
@@ -425,13 +435,13 @@
 
         <div class="fig-row">
             <figure>
-                <video controls muted playsinline>
+                <video controls muted playsinline preload="none" poster="../assets/media/peanut/nav2-outside-poster.jpg">
                     <source src="../assets/media/peanut/nav2-outside.mp4" type="video/mp4">
                 </video>
                 <figcaption>Nav2 testing outside the office.</figcaption>
             </figure>
             <figure>
-                <video controls muted playsinline>
+                <video controls muted playsinline preload="none" poster="../assets/media/peanut/nav-obstacle-poster.jpg">
                     <source src="../assets/media/peanut/nav-obstacle.mp4" type="video/mp4">
                 </video>
                 <figcaption>Obstacle avoidance test (sped up).</figcaption>
@@ -455,25 +465,25 @@
                 <figcaption>Dynamixel joint, end effector.</figcaption>
             </figure>
             <figure>
-                <video controls muted playsinline>
+                <video controls muted playsinline preload="none" poster="../assets/media/peanut/hall-sensor-poster.jpg">
                     <source src="../assets/media/peanut/hall-sensor.mp4" type="video/mp4">
                 </video>
                 <figcaption>Hall sensor, end effector feedback.</figcaption>
             </figure>
             <figure>
-                <video controls muted playsinline>
+                <video controls muted playsinline preload="none" poster="../assets/media/peanut/elevator-stepper-poster.jpg">
                     <source src="../assets/media/peanut/elevator-stepper.mp4" type="video/mp4">
                 </video>
                 <figcaption>Elevator stepper motor.</figcaption>
             </figure>
             <figure>
-                <video controls muted playsinline>
+                <video controls muted playsinline preload="none" poster="../assets/media/peanut/bldc-motor-poster.jpg">
                     <source src="../assets/media/peanut/bldc-motor.mp4" type="video/mp4">
                 </video>
                 <figcaption>BLDC motor, base.</figcaption>
             </figure>
             <figure>
-                <video controls muted playsinline>
+                <video controls muted playsinline preload="none" poster="../assets/media/peanut/limit-switch-poster.jpg">
                     <source src="../assets/media/peanut/limit-switch.mp4" type="video/mp4">
                 </video>
                 <figcaption>Limit switch, arm position.</figcaption>
@@ -522,7 +532,7 @@
         </a>
         <a href="./autoroboto.html" class="next">
             <div class="nav-label">Next →</div>
-            <div class="nav-title">Autoroboto · Google</div>
+            <div class="nav-title">Google (via AutoRoboto)</div>
         </a>
     </nav>
 </article>
