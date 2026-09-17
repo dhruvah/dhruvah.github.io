@@ -129,7 +129,25 @@ nav.site-nav.scrolled {
     padding: 8rem 2rem 4rem;
     max-width: var(--max-w);
     margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 4rem;
+    align-items: center;
 }
+
+.home-hero-photo { margin: 0; }
+.home-hero-photo img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 20px;
+    border: 3px solid var(--ink);
+    box-shadow: 8px 8px 0 var(--accent);
+    transform: rotate(1.5deg);
+    transition: transform 0.4s var(--ease);
+}
+.home-hero-photo img:hover { transform: rotate(0deg); }
 
 .home-hero-status {
     display: inline-flex;
@@ -158,8 +176,8 @@ nav.site-nav.scrolled {
 }
 
 .home-hero h1 {
-    font-size: clamp(2.6rem, 5.5vw, 4.2rem);
-    line-height: 1.05;
+    font-size: clamp(2.1rem, 4vw, 3.1rem);
+    line-height: 1.1;
     letter-spacing: -0.04em;
     margin-bottom: 1.5rem;
     font-weight: 700;
@@ -1164,7 +1182,9 @@ footer.site-footer a:hover { color: var(--accent); }
     .nav-links.open { display: flex; }
     .nav-mobile-toggle { display: block; }
 
-    .home-hero { padding: 6rem 1.25rem 3rem; }
+    .home-hero { padding: 6rem 1.25rem 3rem; grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
+    .home-hero-status { display: flex; }
+    .home-hero-photo { order: -1; max-width: 220px; }
     .projects-section { padding: 3rem 1.25rem 4rem; }
     .project-page, .about-page { padding: 6rem 1.25rem 4rem; }
 }
