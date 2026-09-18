@@ -16,7 +16,6 @@
     </button>
     <ul class="nav-links" id="nav-links">
         <li><a href="${basePath}index.html">Work</a></li>
-        <li><a href="${basePath}timeline.html">Timeline</a></li>
         <li><a href="${basePath}about.html">About</a></li>
         <li><a href="${basePath}assets/harsh-dhruva-resume.pdf" target="_blank">Resume</a></li>
         <li><a href="https://linkedin.com/in/harshdhruva" target="_blank">LinkedIn</a></li>
@@ -67,10 +66,9 @@
         // Highlight active nav link based on current path
         const path = window.location.pathname;
         let activeFile = null;
-        if (path.endsWith('/about.html')) {
+        if (path.endsWith('/about.html') || path.endsWith('/timeline.html')) {
+            // Timeline is linked from About, not the nav
             activeFile = 'about.html';
-        } else if (path.endsWith('/timeline.html')) {
-            activeFile = 'timeline.html';
         } else if (path.includes('/projects/') || path.endsWith('/') || path.endsWith('/index.html')) {
             activeFile = 'index.html';
         }
