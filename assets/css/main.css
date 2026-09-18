@@ -1200,7 +1200,7 @@ footer.site-footer a:hover { color: var(--accent); }
 
     .home-hero { padding: 6rem 1.25rem 3rem; grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
     .home-hero-status { display: flex; }
-    .home-hero-photo { order: -1; max-width: 220px; }
+    .home-hero-photo { order: -1; width: 100%; max-width: 220px; justify-self: center; }
     .projects-section { padding: 3rem 1.25rem 4rem; }
     .project-page, .about-page { padding: 6rem 1.25rem 4rem; }
 }

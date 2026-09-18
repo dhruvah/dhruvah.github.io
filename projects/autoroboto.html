@@ -29,9 +29,9 @@
         </div>
         <h1>Automated biometric testing for Pixel.</h1>
         <p class="project-page-summary">
-            Robotic system for hardware security testing on Pixel devices. I built the trajectory
-            system, led a full ROS1→ROS2 migration now running across 10 robot labs, and refactored
-            the node architecture for tight robot/camera synchronization.
+            Robotics lab automation for evaluation of Google Pixel biometric face authentication
+            models. I built the trajectory system and led the ROS1→ROS2 migration, deployed on 10
+            robot labs.
         </p>
     </header>
 
@@ -50,7 +50,7 @@
         </div>
         <div class="project-meta-item">
             <span class="label">Stack</span>
-            <span class="value">ROS2 · xArm · MoveIt · Python · C++</span>
+            <span class="value">ROS2 · xArm · MoveIt · Python · C++ · IMU</span>
         </div>
     </div>
 
@@ -60,42 +60,13 @@
     </div>
 
     <section>
-        <h2>Context</h2>
-        <p>
-            Modern phone biometrics (face unlock, fingerprint) need to be tested against a wide
-            range of physical attack vectors. Doing that by hand is slow, inconsistent, and
-            limited in coverage. AutoRoboto automates this, using a robotic arm to systematically
-            test biometric security across a large attack space.
-        </p>
-    </section>
-
-    <section>
         <h2>What I work on</h2>
         <ul>
-            <li><strong>Trajectory libraries:</strong> Designed a two-phase approach to robot motion: broad calibration sweeps to map the test space, followed by targeted motions at high-priority points. The system combines arm motion with lighting and background variation, which widened the range of setups the team can test against, and it mirrors how a human security researcher would systematically explore vulnerabilities.</li>
-            <li><strong>ROS1 → ROS2 migration:</strong> Led the full upgrade of the system to ROS2 for modern tooling and long-term support, now deployed across <strong>10 robot labs</strong>. Tackled threading model changes, REST API integration, motion planner setup, and launch file rewrites.</li>
-            <li><strong>Node architecture refactor:</strong> Separated motion planning from motion execution to eliminate idle wait time, since phone camera recording was starting before the robot moved. The new architecture ensures tight synchronization across robot and camera.</li>
-            <li><strong>Capture-frame precision:</strong> Mapped robot position and velocity onto the exact camera capture frame, so every frame a test produces is tied to a known robot state. That is what makes a result diagnosable rather than merely a pass or fail.</li>
-            <li><strong>Human motion on the robot:</strong> Measured human movement with an IMU and integrated those motions onto the arm, extending coverage beyond what a fixed synthetic trajectory can represent.</li>
-            <li><strong>System integration:</strong> Integrated the robot, vision pipeline, device under test, and orchestration layer.</li>
+            <li><strong>Trajectory system:</strong> Built a trajectory system that uses a robotic arm in combination with lighting and background to search a broad range of setups that expose model vulnerabilities.</li>
+            <li><strong>Capture-frame precision:</strong> Improved system precision by mapping robot position and velocity to the exact camera capture frame, which enabled deeper evaluation insights and higher precision attacks on the models.</li>
+            <li><strong>Human motion on the robot:</strong> Measured human movements using an IMU and integrated those motions on the robot, broadening the range of authentication modalities the system could evaluate.</li>
+            <li><strong>ROS1 → ROS2 migration:</strong> Led the system-wide architecture migration: a threading architecture rewrite and improved motion planning, deployed on <strong>10 robot labs</strong>.</li>
         </ul>
-    </section>
-
-    <section>
-        <h2>Themes I think about</h2>
-        <p>
-            Building test infrastructure forces a different mindset than building product robotics.
-            The robot isn't the deliverable; <strong>reliable coverage of an attack space is the
-            deliverable.</strong> That changes how I think about determinism, repeatability,
-            and what "good enough" means for trajectory quality.
-        </p>
-        <p>
-            Most of the work is in the seams between subsystems: the robot, the device under test,
-            the camera capture, and the orchestration layer all run on different clocks, and a test
-            is only as trustworthy as the weakest synchronization point between them. A lot of my
-            time goes into making the system deterministic enough that a failed test means a real
-            finding, not a timing artifact.
-        </p>
     </section>
 
     <section>
@@ -106,7 +77,7 @@
             <span class="tag">MoveIt</span>
             <span class="tag">Python</span>
             <span class="tag">C++</span>
-            <span class="tag">System Integration</span>
+            <span class="tag">IMU</span>
         </div>
     </section>
 
