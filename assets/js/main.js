@@ -98,4 +98,19 @@
         }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
         revealEls.forEach(el => observer.observe(el));
     });
+
+    // Home hero: the cartoon photo plays the toasting loop on hover (tap on touch)
+    document.addEventListener('DOMContentLoaded', () => {
+        const fig = document.querySelector('.home-hero-photo');
+        const video = fig && fig.querySelector('video');
+        if (!video) return;
+        const play = () => { fig.classList.add('playing'); video.play().catch(() => {}); };
+        const stop = () => { fig.classList.remove('playing'); video.pause(); };
+        if (window.matchMedia('(hover: hover)').matches) {
+            fig.addEventListener('mouseenter', play);
+            fig.addEventListener('mouseleave', stop);
+        } else {
+            fig.addEventListener('click', () => fig.classList.contains('playing') ? stop() : play());
+        }
+    });
 })();
