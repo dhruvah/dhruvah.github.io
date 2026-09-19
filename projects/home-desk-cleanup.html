@@ -201,6 +201,12 @@
         </table>
     </div>
 
+    <div class="project-links" style="margin: 1.25rem 0 2.5rem;">
+        <a href="https://huggingface.co/datasets/hdhruva/cleandesk_20260626_131109" target="_blank" class="btn">Dataset: 40 episodes ↗</a>
+        <a href="https://huggingface.co/hdhruva/act_cleandesk_20260626" target="_blank" class="btn">Model: ACT ↗</a>
+        <a href="https://huggingface.co/hdhruva/molmoact2_cleandesk_20260627" target="_blank" class="btn">Model: MolmoAct 2 ↗</a>
+    </div>
+
     <section>
         <h2>What the sweep says</h2>
         <p>
@@ -302,25 +308,20 @@
     <section>
         <h3>The memorization was in the data before training</h3>
         <p>
-            Across every episode, <code>shoulder_pan</code> varies <strong>12.7 units at pick and 1.2
-            at place</strong>: <strong>10.3x tighter</strong> at the container than at the object. The
-            pen moved, the pouch did not. ACT's memorized drop location was measurable in the training
-            data before any policy ran. Units are LeRobot normalised, not degrees.
+            In the 40 episodes ACT trained on, <code>shoulder_pan</code> (base rotation) spreads
+            <strong>10.2 units at pick and 2.3 at place</strong>: <strong>4.5x tighter</strong> at the
+            container than at the object. Every release lands between −8.5 and −1.3. The pen moved,
+            the pouch did not. ACT's memorized drop location was measurable in its training data
+            before it ever ran.
         </p>
     </section>
 
     <figure class="fig-row one">
-        <img src="../assets/media/home-lab/analysis-memorization.png" alt="Bar chart of per-joint spread at pick versus at place for both datasets, with shoulder_pan 10.3 times tighter at place in the first dataset">
-        <figcaption>Spread of each joint across episodes, at grasp versus at release.</figcaption>
+        <img src="../assets/media/home-lab/analysis-memorization.png" alt="Bar chart of per-joint spread at pick versus at place in the 40 episodes ACT trained on, with shoulder_pan 4.5 times tighter at place">
+        <figcaption>Spread of each joint across episodes, at grasp versus at release. Spread is the
+            interquartile range over the 31 episodes where both were cleanly detected. Units are
+            LeRobot normalised, not degrees.</figcaption>
     </figure>
-
-    <section>
-        <p>
-            One caveat on that number: every episode in the first dataset is exactly 19.7 seconds,
-            recorded on a fixed timer, so the arm parks at the end of each one. Some of the tightness
-            is the task and some is the recording method.
-        </p>
-    </section>
 
     <section>
         <h2>Where it goes next</h2>
