@@ -173,7 +173,7 @@
     </figure>
 
     <section>
-        <h3>Impact</h3>
+        <h3>Outcome and impact</h3>
         <ul>
             <li><strong>Reduced operator training from 2 to 4 hours to about 15 minutes</strong> for
                 complex surfaces such as toilet bowls and sinks with faucets.</li>
@@ -220,19 +220,19 @@
         <div class="pa">
             <div class="pa-label">The solution</div>
             <p>
-                Built a <strong>point cloud registration</strong> pipeline that measures how far the
-                toilet has shifted in a given bathroom, then applies that delta to the cleaning
-                trajectory, either by moving the base or by shifting the arm trajectory itself. Used
-                passive stereo depth (ZEDx) for the scan, and experimented with Cartesian planning through
-                mission control to apply the correction.
+                I built a <strong>point cloud registration</strong> pipeline to measure how far the
+                toilet pose shifted from a reference bathroom. The system used that offset to reposition
+                the mobile base or shift the arm trajectory. I used passive stereo depth from a ZED X
+                camera for the scan and experimented with Cartesian planning through mission control to
+                apply the correction.
             </p>
         </div>
 
-        <h3>Impact</h3>
+        <h3>Outcome and impact</h3>
         <div class="callout">
-            <strong>One taught trajectory could be adapted across rooms.</strong> Instead of re-teaching
-            every bathroom, the robot measured the fixture shift and applied the correction to the base
-            or arm trajectory.
+            <strong>One taught trajectory could be adapted to multiple rooms.</strong> Instead of
+            re-teaching the complete trajectory in every bathroom, the robot measured the toilet pose
+            offset and corrected the base or arm trajectory.
         </div>
 
         <h3>Limitations and improvements</h3>
@@ -279,10 +279,11 @@
             </p>
         </div>
 
-        <h3>Impact</h3>
+        <h3>Outcome and impact</h3>
         <div class="callout">
-            <strong>Four cameras could run together and recover automatically.</strong> A camera failure
-            no longer silently degraded the perception stack or required restarting the full system.
+            <strong>Added four depth cameras to a robot that previously had none.</strong> The integration
+            gave the perception stack simultaneous views around the robot, monitored each camera with a
+            heartbeat, and automatically recovered a camera after a failure.
         </div>
 
         <h3>Limitations and improvements</h3>
@@ -330,7 +331,7 @@
             </p>
         </div>
 
-        <h3>Impact</h3>
+        <h3>Outcome and impact</h3>
         <div class="callout">
             <strong>A corrected kinematic model improved arm accuracy and simulation fidelity.</strong>
             The OptiTrack rig also became a ground-truth tool for controller tracking, joint and end
@@ -384,7 +385,7 @@
             </p>
         </div>
 
-        <h3>Impact</h3>
+        <h3>Outcome and impact</h3>
         <div class="callout">
             <strong>Operators could diagnose and calibrate robots in the field.</strong> The tools
             reduced triage time and dependence on an engineer for routine diagnosis and arm calibration.
