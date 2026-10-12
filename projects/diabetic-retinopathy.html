@@ -78,10 +78,10 @@
     </figure>
 
     <p>
-        Reading these images takes a trained clinician, and human error is a real concern in
-        image-based diagnosis. A reliable automated grader would cut that error, reduce the need for
-        scarce specialist labor, and potentially catch the disease earlier. That is the case for
-        pointing a CNN at the problem.
+        Reading these images requires clinical expertise. Automated grading systems may eventually
+        support screening and help prioritize cases, but they require careful validation before they
+        can be used in clinical decisions. This project explored how established CNN architectures
+        behaved on the grading task.
     </p>
 
     <section>
@@ -101,12 +101,11 @@
         <p>
             We relied on two public sources. <strong>Messidor-2</strong> is 1,748 right and left
             fundus images from 874 examinations, shot at very high resolution with consistent
-            equipment and field of view, labeled by retina specialists. <strong>Kaggle</strong> gave
-            us 88,704 images combining the 2015 Diabetic Retinopathy Detection competition (EyePACS)
-            with the APTOS 2019 Blindness Detection set. The Kaggle images are far less consistent in
-            quality and framing, ranging from 2612 x 1964 pixels down to 221 x 205, but the sheer size
-            of the dataset is attractive, since CNNs generally need a lot of data to train well. We
-            also used a Gaussian-filtered 3,632-image subset of it.
+            equipment and field of view, labeled by retina specialists. The 2015 Kaggle Diabetic
+            Retinopathy Detection competition used the much larger EyePACS image collection, while
+            the separate APTOS 2019 training set contains 3,662 labeled images. These images vary
+            substantially in quality, framing and resolution. For one set of experiments, we used a
+            Gaussian-filtered 3,632-image subset after preprocessing.
         </p>
         <p>
             One honest caveat we recorded in the paper: results can only ever be as good as the

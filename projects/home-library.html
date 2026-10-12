@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Library Robot: Picking and Stacking Books · Harsh Dhruva</title>
-    <meta name="description" content="Teaching a low-cost arm to pick up and stack books with an ACT policy, and finding that it generalized to unseen books and held up under partial occlusion.">
+    <meta name="description" content="Informal home experiments using an ACT policy to pick up and stack books, including a few unseen books and a partially occluded setup.">
     <link rel="icon" href="../favicon.svg" type="image/svg+xml">
     <link rel="icon" href="../favicon-32x32.png" sizes="32x32" type="image/png">
     <link rel="icon" href="../favicon-16x16.png" sizes="16x16" type="image/png">
@@ -25,9 +25,8 @@
         <div class="project-page-category">Home Robotics · Ongoing</div>
         <h1>Library robot: picking and stacking books.</h1>
         <p class="project-page-summary">
-            After the hackathon we bought the robot and started building library applications on it.
-            The headline result is a good one: a plain ACT policy generalized further than I expected,
-            to books it had never seen and to books it could only partly see.
+            In the trials shown here, a plain ACT policy picked up the demonstrated book, a few books
+            that were not in the demonstrations, and a book that was partially occluded.
         </p>
     </header>
 
@@ -53,11 +52,9 @@
     <section>
         <h2>Why books</h2>
         <p>
-            Books are a sensible step up from bread. They are rigid, which removes the
-            deformable-grasp problem entirely, but they introduce variety in its place: books differ
-            enormously in size, thickness, cover design and how they sit on a surface. That makes them
-            a good instrument for asking whether a policy has learned <em>the task</em> or just
-            memorized <em>the demonstration</em>.
+            Books are rigid, but they vary in size, thickness, cover design and how they sit on a
+            surface. That makes them an interesting household object for observing how a policy
+            behaves when its inputs differ from the demonstrations.
         </p>
     </section>
 
@@ -77,44 +74,43 @@
     </div>
 
     <section>
-        <h2>How far it generalized</h2>
+        <h2>Conditions tried</h2>
         <p>
-            Same approach as the pen task: hold the policy fixed and change one thing at a time. Both
-            of these are tests that usually break a policy which has simply latched onto a visual
-            template.
+            These are qualitative observations from a small number of informal trials, not measured
+            success rates.
         </p>
     </section>
 
     <div class="data-table-wrap">
         <table class="data-table">
-            <caption>Factor sweep · ACT on book pickup</caption>
+            <caption>Informal trials · ACT on book pickup</caption>
             <thead>
-                <tr><th>Factor</th><th>Condition</th><th>ACT</th></tr>
+                <tr><th>Variation</th><th>Condition</th><th>Observed behavior</th></tr>
             </thead>
             <tbody>
                 <tr class="baseline">
                     <td class="factor">Baseline</td>
                     <td>Trained book, fully visible</td>
-                    <td class="outcome"><span class="pass">Works</span></td>
+                    <td class="outcome"><span class="pass">Completed pickup</span></td>
                 </tr>
                 <tr class="group-start">
                     <td class="factor">Book identity</td>
                     <td>Unseen book, different cover and proportions</td>
-                    <td class="outcome"><span class="pass">Works</span></td>
+                    <td class="outcome"><span class="pass">Completed pickup</span></td>
                 </tr>
                 <tr class="group-start">
                     <td class="factor">Visibility</td>
                     <td>Book partially occluded</td>
-                    <td class="outcome"><span class="pass">Works</span></td>
+                    <td class="outcome"><span class="pass">Completed pickup</span></td>
                 </tr>
             </tbody>
         </table>
     </div>
 
     <p>
-        The occlusion row is the more interesting of the two. A policy keyed to a memorized appearance
-        tends to fail as soon as that appearance is incomplete, so surviving partial occlusion suggests
-        it picked up something closer to the shape and the graspable edge than to a specific cover.
+        The policy also completed the partially occluded trial shown here. One possible explanation is
+        that it relied on features beyond the full cover appearance, but these trials are too limited
+        to determine which visual features it used.
     </p>
 
     <div class="fig-row">
@@ -122,28 +118,28 @@
             <video controls muted playsinline preload="none" poster="../assets/media/home-lab/act-different-book-poster.jpg">
                 <source src="../assets/media/home-lab/act-different-book.mp4" type="video/mp4">
             </video>
-            <figcaption>A different book: ACT still works.</figcaption>
+            <figcaption>ACT completing a pickup with a different book.</figcaption>
         </figure>
         <figure>
             <video controls muted playsinline preload="none" poster="../assets/media/home-lab/act-book-occlusion-poster.jpg">
                 <source src="../assets/media/home-lab/act-book-occlusion.mp4" type="video/mp4">
             </video>
-            <figcaption>Partial occlusion: still works.</figcaption>
+            <figcaption>ACT completing the partially occluded trial shown here.</figcaption>
         </figure>
     </div>
 
     <p>
-        Worth holding this next to the <a href="./home-desk-cleanup.html">desk cleanup experiment</a>,
-        where the same architecture on a smaller object failed to generalize across something as
-        simple as color. ACT is not uniformly brittle or uniformly robust; what it latches onto
-        depends on the task and the data, which is exactly why probing it matters.
+        ACT behaved differently in the <a href="./home-desk-cleanup.html">desk cleanup experiments</a>,
+        where its behavior was more sensitive to changes in pen color and orientation. These are
+        observations from two small, different datasets rather than a controlled comparison of the
+        tasks.
     </p>
 
     <section>
         <div class="project-page-tags">
             <span class="tag">ACT</span>
             <span class="tag">Imitation Learning</span>
-            <span class="tag">Generalization</span>
+            <span class="tag">Informal Trials</span>
             <span class="tag">Occlusion</span>
             <span class="tag">LeRobot</span>
         </div>

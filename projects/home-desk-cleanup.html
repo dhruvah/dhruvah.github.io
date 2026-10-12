@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Desk Cleanup: The Pen Task · Harsh Dhruva</title>
-    <meta name="description" content="Comparing SmolVLA, diffusion, pi0.5, ACT and MolmoAct on a desk-cleanup pen task, and discovering that ACT had memorized the drop location rather than learned the goal.">
+    <meta name="description" content="Ongoing home experiments with ACT, SmolVLA, diffusion and MolmoAct on a desk-cleanup pen task, documenting behavior across several informal trials.">
     <link rel="icon" href="../favicon.svg" type="image/svg+xml">
     <link rel="icon" href="../favicon-32x32.png" sizes="32x32" type="image/png">
     <link rel="icon" href="../favicon-16x16.png" sizes="16x16" type="image/png">
@@ -25,8 +25,8 @@
         <div class="project-page-category">Home Robotics · Ongoing</div>
         <h1>Desk cleanup: the pen task.</h1>
         <p class="project-page-summary">
-            Pick a pen off the desk and drop it in the bin. Five policies, and the most useful result
-            was finding that the one which looked like it had solved the task had not.
+            Pick a pen off the desk and drop it in the bin. I tried several policies and observed how
+            their behavior changed with the pen, its orientation, and the drop target.
         </p>
     </header>
 
@@ -41,16 +41,16 @@
         </div>
         <div class="project-meta-item">
             <span class="label">Policies</span>
-            <span class="value">ACT · SmolVLA · Diffusion · MolmoAct · π0.5</span>
+            <span class="value">ACT · SmolVLA · Diffusion · MolmoAct</span>
         </div>
         <div class="project-meta-item">
-            <span class="label">Best result</span>
-            <span class="value">MolmoAct 2, two pens in sequence</span>
+            <span class="label">Notable observation</span>
+            <span class="value">MolmoAct 2 picked up two pens in the run shown</span>
         </div>
     </div>
 
     <section>
-        <h2>First attempt: more data, three policies, poor results</h2>
+        <h2>Merged dataset</h2>
         <p>
             I collected two datasets, both teleoperated on the same table:
         </p>
@@ -62,23 +62,18 @@
                 episodes.</li>
         </ul>
         <p>
-            I merged the two and trained three policies on the combined set: <strong>SmolVLA</strong>,
-            a <strong>diffusion policy</strong>, and <strong>π0.5</strong>.
+            I merged the two and trained <strong>SmolVLA</strong> and a <strong>diffusion
+            policy</strong> on the combined set.
         </p>
         <p>
-            All three performed poorly. Four things change between the two sets at once: object count,
-            colour, position and pouch location. Merged, that gives 100 episodes with no controlled
-            axis, so more of the same mixture would not have helped. Holding everything still except
-            one factor would.
-        </p>
-        <p>
-            π0.5 went unevaluated: at 3.3B parameters it does not fit the 8 GB box the robot runs on,
-            with reported inference for π0 around 13.6 GB.
+            Neither policy completed the task reliably in the trials I ran. Object count, colour,
+            position and pouch location all differ between the two datasets, which makes the resulting
+            behavior difficult to interpret.
         </p>
 
         <div class="data-table-wrap">
             <table class="data-table">
-                <caption>Run 1 · policy sweep on the merged dataset</caption>
+                <caption>Informal trials · merged dataset</caption>
                 <thead>
                     <tr><th>Policy</th><th>Training data</th><th>Outcome</th><th>Note</th></tr>
                 </thead>
@@ -86,20 +81,14 @@
                     <tr>
                         <td class="factor">SmolVLA</td>
                         <td>merged, 100 ep</td>
-                        <td class="outcome"><span class="fail">Poor</span></td>
+                        <td class="outcome"><span class="fail">Observed failure</span></td>
                         <td>Did not reliably complete the task</td>
                     </tr>
                     <tr>
                         <td class="factor">Diffusion policy</td>
                         <td>merged, 100 ep</td>
-                        <td class="outcome"><span class="fail">Poor</span></td>
+                        <td class="outcome"><span class="fail">Observed failure</span></td>
                         <td>Did not reliably complete the task</td>
-                    </tr>
-                    <tr>
-                        <td class="factor">π0.5</td>
-                        <td>merged, 100 ep</td>
-                        <td class="outcome"><span class="untested">Not evaluated</span></td>
-                        <td>Does not fit the 8 GB box the robot runs on</td>
                     </tr>
                 </tbody>
             </table>
@@ -117,11 +106,10 @@
     </section>
 
     <section>
-        <h2>Simplify: one orange pen</h2>
+        <h2>Single orange pen</h2>
         <p>
-            So I cut it to the simplest version: a single orange pen, 40 episodes, into a pouch. It
-            worked, which is the hardest case to learn anything from until you start breaking
-            assumptions deliberately.
+            In another experiment, I used a single orange pen, 40 demonstrations, and one pouch. ACT
+            completed the task in the baseline setup shown below.
         </p>
     </section>
 
@@ -133,16 +121,17 @@
     </figure>
 
     <section>
-        <h2>The factor sweep</h2>
+        <h2>Conditions tried</h2>
         <p>
-            Change one thing at a time from the trained condition. Both policies below saw the
-            <em>same</em> 40 episodes: only the model differs between the columns.
+            I also tried several variations around this setup. Both policies below used the
+            <em>same</em> 40 demonstrations. Each cell summarizes a small number of informal trials,
+            not a measured success rate.
         </p>
     </section>
 
     <div class="data-table-wrap">
         <table class="data-table">
-            <caption>Run 2 · one factor at a time, 40 episodes, single orange pen</caption>
+            <caption>Informal trials · 40 demonstrations, single orange pen</caption>
             <thead>
                     <tr><th>Factor</th><th>Condition</th><th>ACT</th><th>MolmoAct 2</th></tr>
                 </thead>
@@ -150,52 +139,52 @@
                     <tr class="baseline">
                         <td class="factor">Baseline</td>
                         <td>Orange pen, trained orientation, trained pouch</td>
-                        <td class="outcome"><span class="pass">Works</span></td>
-                        <td class="outcome"><span class="pass">Works</span></td>
+                        <td class="outcome"><span class="pass">Observed success</span></td>
+                        <td class="outcome"><span class="pass">Observed success</span></td>
                     </tr>
                     <tr class="group-start">
                         <td class="factor" rowspan="4">Pen color</td>
                         <td>Purple</td>
-                        <td class="outcome"><span class="pass">Works</span></td>
-                        <td class="outcome"><span class="pass">Works</span></td>
+                        <td class="outcome"><span class="pass">Observed success</span></td>
+                        <td class="outcome"><span class="pass">Observed success</span></td>
                     </tr>
                     <tr>
                         <td>Green</td>
-                        <td class="outcome"><span class="fail">Fails</span></td>
-                        <td class="outcome"><span class="pass">Works</span></td>
+                        <td class="outcome"><span class="fail">Observed failure</span></td>
+                        <td class="outcome"><span class="pass">Observed success</span></td>
                     </tr>
                     <tr>
                         <td>Blue</td>
-                        <td class="outcome"><span class="fail">Fails</span></td>
-                        <td class="outcome"><span class="pass">Works</span></td>
+                        <td class="outcome"><span class="fail">Observed failure</span></td>
+                        <td class="outcome"><span class="pass">Observed success</span></td>
                     </tr>
                     <tr>
                         <td>Brown</td>
-                        <td class="outcome"><span class="fail">Fails</span></td>
+                        <td class="outcome"><span class="fail">Observed failure</span></td>
                         <td class="outcome"><span class="untested">Not tested</span></td>
                     </tr>
                     <tr class="group-start">
                         <td class="factor" rowspan="2">Drop target</td>
                         <td>Different pouch</td>
-                        <td class="outcome"><span class="fail">Fails</span></td>
+                        <td class="outcome"><span class="fail">Observed failure</span></td>
                         <td class="outcome"><span class="untested">Not tested</span></td>
                     </tr>
                     <tr>
                         <td>Pouch removed entirely</td>
-                        <td class="outcome"><span class="fail">Fails</span><span class="cell-note">Drops at the learned location</span></td>
+                        <td class="outcome"><span class="fail">Observed failure</span><span class="cell-note">Released near the original location</span></td>
                         <td class="outcome"><span class="untested">Not tested</span></td>
                     </tr>
                     <tr class="group-start">
                         <td class="factor">Pen orientation</td>
                         <td>Significantly rotated</td>
-                        <td class="outcome"><span class="fail">Fails</span></td>
+                        <td class="outcome"><span class="fail">Observed failure</span></td>
                         <td class="outcome"><span class="untested">Not tested</span></td>
                     </tr>
                     <tr class="group-start">
                         <td class="factor">Object count</td>
                         <td>Two pens, picked sequentially</td>
                         <td class="outcome"><span class="untested">Not tested</span></td>
-                        <td class="outcome"><span class="pass">Works</span></td>
+                        <td class="outcome"><span class="pass">Observed success</span></td>
                     </tr>
             </tbody>
         </table>
@@ -208,34 +197,37 @@
     </div>
 
     <section>
-        <h2>What the sweep says</h2>
+        <h2>What I observed</h2>
         <p>
-            Three things fall out of that table.
+            These trials produced three behaviors worth noting.
         </p>
         <ul>
-            <li><strong>Colour is doing the work.</strong> Orange and purple pass; green, blue and brown
-                fail. Same shape, same task, same location, so it is keying on appearance rather than
-                on the object.</li>
-            <li><strong>It memorized the drop location, not the target.</strong> Remove the pouch and the
-                robot still goes to where it was and opens the gripper over empty table. It learned
-                "go here", not "put it in the pouch".</li>
-            <li><strong>Orientation is brittle.</strong> Significant rotation of the pen causes
-                failures, even in positions the policy otherwise handles.</li>
+            <li>ACT completed the task with the orange and purple pens in the conditions tried, but
+                failed with the green, blue and brown pens. This is consistent with sensitivity to
+                visual appearance, although these trials do not establish which image features the
+                policy relied on.</li>
+            <li>When I removed or changed the pouch, ACT still released the pen near the original drop
+                location. This is consistent with learning a location-specific action rather than
+                responding to the visible container.</li>
+            <li>ACT also failed in the significantly rotated-pen condition I tried. More trials would
+                be needed to characterize how sensitive it is to orientation.</li>
         </ul>
         <p>
-            The pouch row matters most: the policy is confidently wrong with no way to detect it. It
-            holds no representation of the goal, only of the motion that usually satisfies it. The
-            untested cells are the next runs.
+            In the pouch-removed trial, the policy continued executing without an obvious indication
+            that the target was missing. From this behavior alone, I cannot determine what internal
+            representation it learned.
         </p>
     </section>
 
     <section>
-        <h3>Both failures have names</h3>
+        <h3>Related ideas from the literature</h3>
         <p>
-            The colour result is <strong>shortcut learning</strong>, and published work on factor bias
-            reports <em>colour is the dominant factor policies over-rely on</em>. The pouch result is
-            <strong>causal confusion</strong>: across 40 demonstrations "open the gripper here" and
-            "put it in the pouch" always coincided, so nothing separates them until the pouch moves.
+            The color sensitivity resembles what the literature describes as <strong>shortcut
+            learning</strong>: a policy may rely on a feature that correlates with success in the
+            demonstrations but is not central to the intended task. The fixed drop behavior is also
+            reminiscent of <strong>causal confusion</strong> in imitation learning. These concepts
+            offer possible interpretations of what I observed, rather than diagnoses established by
+            the current experiments.
         </p>
     </section>
 
@@ -243,20 +235,19 @@
         <video controls muted playsinline preload="none" poster="../assets/media/home-lab/act-different-pouch-poster.jpg">
             <source src="../assets/media/home-lab/act-different-pouch.mp4" type="video/mp4">
         </video>
-        <figcaption>ACT with a different pouch. The drop point is learned as a location, not as a container.</figcaption>
+        <figcaption>ACT with a different pouch, releasing near the original drop location.</figcaption>
     </figure>
 
     <section>
         <h2>MolmoAct: swapping in a VLM backbone</h2>
         <p>
-            If a policy fails on green only because it has never seen green, a model that already
-            knows what a pen is should not. <strong>MolmoAct 2</strong>, Ai2's action-reasoning model
-            on the Molmo2-ER VLM backbone, trained on the same 40 episodes: no new demonstrations, only
-            the model changed. It handled green, blue and the rest, so the limitation was in the
-            representation, not the data.
+            <strong>MolmoAct 2</strong>, Ai2's action-reasoning model on the Molmo2-ER VLM backbone,
+            used the same 40 demonstrations as ACT. In the conditions I tried, it completed the task
+            with additional pen colors that ACT failed on. Because the models differ in more than just
+            their visual backbones, these trials do not isolate the reason for the difference.
         </p>
         <p>
-            Best run so far: two pens on the table, picked up one at a time and placed in the bin.
+            In the run shown below, it also picked up two pens one at a time and placed them in the bin.
         </p>
     </section>
 
@@ -264,17 +255,18 @@
         <video controls muted playsinline preload="none" poster="../assets/media/home-lab/molmoact-pen-pickup-poster.jpg">
             <source src="../assets/media/home-lab/molmoact-pen-pickup.mp4" type="video/mp4">
         </video>
-        <figcaption>MolmoAct 2 on the pen pickup task, generalizing across pen colors.</figcaption>
+        <figcaption>MolmoAct 2 completing the task with several pen colors tried here.</figcaption>
     </figure>
 
     <section>
-        <h2>What the data said before any policy ran</h2>
+        <h2>Observations from the demonstrations</h2>
 
-        <h3>Grasp success is detectable without a force sensor</h3>
+        <h3>A possible grasp signal from gripper position</h3>
         <p>
             Every frame records what the gripper was told to do and where it actually got to. Told to
-            shut but unable to, something is in the way. That finds the grasp in <strong>99 of 100
-            episodes</strong>, and the one miss is the episode whose grasp failed.
+            shut but unable to, something may be in the way. In this dataset, that heuristic identified
+            the apparent grasp interval in <strong>99 of 100 episodes</strong>. The remaining episode
+            was also the one in which the grasp visibly failed.
         </p>
     </section>
 
@@ -306,13 +298,14 @@
     </figure>
 
     <section>
-        <h3>The memorization was in the data before training</h3>
+        <h3>The demonstrations contained less variation at placement</h3>
         <p>
             In the 40 episodes ACT trained on, <code>shoulder_pan</code> (base rotation) spreads
             <strong>10.2 units at pick and 2.3 at place</strong>: <strong>4.5x tighter</strong> at the
-            container than at the object. Every release lands between −8.5 and −1.3. The pen moved,
-            the pouch did not. ACT's memorized drop location was measurable in its training data
-            before it ever ran.
+            container than at the object. Every release lands between −8.5 and −1.3. The release
+            configurations were more tightly clustered than the grasp configurations. This does not
+            establish what ACT learned, but it offers a possible explanation for the location-specific
+            release behavior observed later.
         </p>
     </section>
 
@@ -324,21 +317,11 @@
     </figure>
 
     <section>
-        <h2>Where it goes next</h2>
-        <p>
-            Variation back onto the single-pen task one axis at a time, orientation and location
-            before colour, then multiple pens once the simple case is genuinely solid rather than
-            apparently solid.
-        </p>
-    </section>
-
-    <section>
         <div class="project-page-tags">
             <span class="tag">ACT</span>
             <span class="tag">SmolVLA</span>
             <span class="tag">Diffusion Policy</span>
             <span class="tag">MolmoAct</span>
-            <span class="tag">π0.5</span>
             <span class="tag">VLA</span>
             <span class="tag">LeRobot</span>
         </div>
@@ -354,10 +337,8 @@
             <li>Zhao et al., <a href="https://arxiv.org/abs/2304.13705" target="_blank">Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware</a>, RSS 2023.
                 <span class="ref-note">The ACT policy: action chunking with a CVAE and transformer.</span></li>
             <li>Hugging Face LeRobot, <a href="https://huggingface.co/lerobot/smolvla_base" target="_blank">SmolVLA</a>.
-                <span class="ref-note">450M-parameter vision-language-action model, SmolVLM-2 backbone plus a 100M action expert.</span></li>
+                <span class="ref-note">Roughly 450M parameters in total, including an approximately 100M-parameter action expert.</span></li>
             <li>Chi et al., <a href="https://arxiv.org/abs/2303.04137" target="_blank">Diffusion Policy: Visuomotor Policy Learning via Action Diffusion</a>, RSS 2023.</li>
-            <li>Physical Intelligence, <a href="https://www.physicalintelligence.company/blog/pi05" target="_blank">π0.5</a>.
-                <span class="ref-note">3.3B parameters, which is what puts it out of reach on 8 GB of VRAM.</span></li>
             <li>Ai2, <a href="https://allenai.org/blog/molmoact2" target="_blank">MolmoAct 2: An open foundation for robots that work in the real world</a>.
                 <span class="ref-note">Action reasoning model on the Molmo2-ER embodied-reasoning VLM backbone.</span></li>
             <li>Geirhos et al., <a href="https://arxiv.org/abs/2004.07780" target="_blank">Shortcut Learning in Deep Neural Networks</a>, Nature Machine Intelligence 2020.

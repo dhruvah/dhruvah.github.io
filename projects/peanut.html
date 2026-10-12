@@ -53,13 +53,23 @@
     </div>
 
     <div class="callout">
-        <strong>What came out of it:</strong>
+        <strong>Impact and ownership</strong>
         <ul>
-            <li>Shipped into <strong>2 hotels</strong> with <strong>10 active robots</strong> cleaning on a paid hourly contract.</li>
-            <li>Operator training for a new surface dropped from <strong>2 to 4 hours</strong> to <strong>15 minutes</strong>.</li>
-            <li>Evaluated <strong>six depth-camera systems</strong> across Orbbec, RealSense, Luxonis, and ZED, and chose on specular performance.</li>
-            <li>Robust <strong>four-camera bringup</strong> with a heartbeat and automatic recovery.</li>
-            <li><strong>Point-cloud registration</strong> that measures room-to-room geometric variation so one taught trajectory transfers.</li>
+            <li><strong>Owned the arm software stack</strong> for a commercially deployed cleaning
+                robot fleet: TOPPRA trajectory generation, ros_control execution, synchronized tool
+                control, perception integration and operator tooling.</li>
+            <li><strong>Designed, prototyped and shipped live trajectory recording</strong>, reducing
+                operator training for a new surface from <strong>2 to 4 hours</strong> to about
+                <strong>15 minutes</strong>.</li>
+            <li><strong>Built an ICP and RANSAC point-cloud registration pipeline</strong> to measure
+                room-to-room geometric variation and adapt taught cleaning trajectories.</li>
+            <li><strong>Evaluated six depth-camera systems</strong> across Orbbec, RealSense, Luxonis
+                and ZED, then engineered the C++ bringup layer for <strong>four simultaneous
+                cameras</strong> with heartbeat monitoring and automatic recovery.</li>
+            <li><strong>Deployed an OptiTrack ground-truth system</strong> to quantify arm droop,
+                validate calibration accuracy and support controller and tracking investigations.</li>
+            <li>The work supported a fleet of <strong>10 active robots across 2 hotels</strong>,
+                cleaning under a paid hourly contract.</li>
         </ul>
     </div>
 
@@ -82,9 +92,8 @@
             active robots cleaning and getting paid by the hour.
         </p>
         <p>
-            As a Robotics Engineer, I worked cross-functionally across the manipulation stack,
-            navigation, hardware, testing and sensor integration. My main ownership was the robot
-            arm and manipulation stack. My primary projects focused on manipulation.
+            I owned the arm software and manipulation stack, while working across navigation,
+            hardware, testing and sensor integration to make the complete robot reliable in hotels.
         </p>
     </section>
 
@@ -117,15 +126,13 @@
         </div>
 
         <div class="pa">
-            <div class="pa-label">What I did</div>
+            <div class="pa-label">The solution</div>
             <p>
-                Built a <strong>live trajectory</strong> system that let operators teleoperate the arm
-                <strong>by hand</strong>, physically guiding it through the cleaning motion while it
-                recorded the trajectory directly. The work wasn't just capture: I had to plug into the
-                existing system's recovery behaviors for failure cases, spraying logic, and more. Under
-                the hood the captured path is time-parameterized with <strong>TOPPRA</strong> and executed
-                through <strong>ros_control</strong> with the tool actuating in sync. Getting it right meant
-                going deep on the operators' actual pain points and building something they would genuinely use.
+                I built a <strong>live trajectory</strong> system that let operators guide the arm
+                <strong>by hand</strong> through a cleaning motion while recording the trajectory. I
+                integrated it with the robot's recovery behaviors, spraying logic and synchronized
+                tool control. The recorded path was time-parameterized with <strong>TOPPRA</strong> and
+                executed through <strong>ros_control</strong>.
             </p>
         </div>
 
@@ -167,62 +174,31 @@
 
     <section>
         <h3>Impact</h3>
-        <p>
-            The training-time number is the headline, but it was not the only thing that changed. Four
-            effects came out of it:
-        </p>
         <ul>
-            <li><strong>Training time collapsed.</strong> 15 minutes against 2 to 4 hours, and
-                not only on the easy surfaces. It held up on complex geometries too, which is where
-                joystick teaching cost the most time in the first place.</li>
-            <li><strong>Cleaning quality improved on edges and corners.</strong> These are precisely
-                the places a joystick-jogged path handles badly, because approximating a curve through
-                sparse captured joint positions rounds off exactly the detail that matters at a
-                boundary.</li>
-            <li><strong>Trajectories became something you could prototype.</strong> Cheap paths meant we
-                could try the same task across different surfaces, swap in different end effectors, and
-                run quick experiments like pressure testing, rather than committing to one authored
-                path.</li>
-            <li><strong>Human-intuitive wrist motion became expressible.</strong> Guiding the arm by
-                hand lets an operator apply pressure and roll the wrist the way a person actually
-                scrubs, which is difficult to specify through a joystick at all.</li>
+            <li><strong>Reduced operator training from 2 to 4 hours to about 15 minutes</strong> for
+                complex surfaces such as toilet bowls and sinks with faucets.</li>
+            <li><strong>Improved paths along edges and corners.</strong> Hand guidance captured the
+                surface contour directly instead of approximating it from sparse joystick keyframes.</li>
+            <li><strong>Made trajectories fast enough to use for prototyping.</strong> The team used
+                them to compare cleaning tools, test contact quality, corners and ledges, vary scrubber
+                RPM, evaluate flat surfaces, and run pressure tests on mirrors.</li>
+            <li><strong>Captured natural cleaning motions.</strong> Operators could demonstrate wrist
+                roll and applied pressure directly instead of specifying them one joint position at a
+                time.</li>
         </ul>
 
-        <p>
-            That third point is the one with the longest tail. Cheap trajectories turned into a testing
-            instrument for the rest of the robot, and the team used it to run:
-        </p>
+        <h3>Limitations and improvements</h3>
         <ul>
-            <li>Cleaning tests, checking scrubber contact quality against the surface</li>
-            <li>Comparisons between different cleaning tools</li>
-            <li>Corner and ledge tests</li>
-            <li>Scrubber RPM tests</li>
-            <li>Flat-surface behavior</li>
-            <li>Pressure tests on difficult surfaces such as mirrors</li>
-        </ul>
-
-        <h3>Where it fell short</h3>
-        <ul>
-            <li>Recording had to start from zero velocity.</li>
-            <li>It required near-perfect choreography from the operator, since any hesitation was
-                faithfully recorded as a pause in the trajectory.</li>
-            <li>Manipulating the arm by hand was awkward in tight spaces, which a bathroom has plenty
-                of.</li>
-            <li>Operators could record physically "illegal" moves, such as accelerations the arm should
-                not reproduce.</li>
-            <li>Resume functionality broke on live-recorded paths.</li>
-        </ul>
-
-        <h3>Where it was going next</h3>
-        <ul>
-            <li><strong>Trajectory stitching</strong>, so separately recorded segments could be joined
-                instead of choreographed in one take.</li>
-            <li><strong>Post-processing to strip out pauses</strong>, which removes the choreography
-                burden rather than asking operators to be perfect.</li>
-            <li><strong>Remote-control arm operation</strong>, sidestepping the tight-space problem.</li>
-            <li><strong>Partially torquing the wrist motors</strong> to limit wrist movement and keep
-                recordings within what the arm can safely execute.</li>
-            <li><strong>Resuming with TOPPRA trajectories</strong>, to fix the broken resume path.</li>
+            <li><strong>Single-take recording:</strong> recording had to start from zero velocity, and
+                pauses or hesitation became part of the trajectory. Planned improvements included
+                trajectory stitching and post-processing to remove pauses.</li>
+            <li><strong>Tight spaces:</strong> physically guiding the arm was awkward inside bathrooms.
+                Remote arm control was the proposed alternative.</li>
+            <li><strong>Invalid motions:</strong> operators could demonstrate accelerations or wrist
+                movements the arm should not reproduce. Partially torquing the wrist motors would
+                constrain those recordings.</li>
+            <li><strong>Resume behavior:</strong> existing resume functionality did not work with
+                live-recorded paths. The planned fix was to support resuming TOPPRA trajectories.</li>
         </ul>
     </section>
 
@@ -242,7 +218,7 @@
         </div>
 
         <div class="pa">
-            <div class="pa-label">What I did</div>
+            <div class="pa-label">The solution</div>
             <p>
                 Built a <strong>point cloud registration</strong> pipeline that measures how far the
                 toilet has shifted in a given bathroom, then applies that delta to the cleaning
@@ -252,11 +228,18 @@
             </p>
         </div>
 
+        <h3>Impact</h3>
         <div class="callout">
-            <strong>Outcome: one taught trajectory generalizes across rooms.</strong>
-            Instead of re-teaching every bathroom, the robot measures the shift and adapts, turning the
-            operator-taught approach into something that can actually scale across a hotel.
+            <strong>One taught trajectory could be adapted across rooms.</strong> Instead of re-teaching
+            every bathroom, the robot measured the fixture shift and applied the correction to the base
+            or arm trajectory.
         </div>
+
+        <h3>Limitations and improvements</h3>
+        <p>
+            Registration depended on reliable depth, which was difficult on glossy plastic and
+            porcelain. The depth-camera evaluation and integration below addressed that constraint.
+        </p>
     </section>
 
     <figure class="fig-row one">
@@ -285,7 +268,7 @@
         </div>
 
         <div class="pa">
-            <div class="pa-label">What I did</div>
+            <div class="pa-label">The solution</div>
             <p>
                 Evaluated six depth-camera systems across <strong>Orbbec, RealSense, Luxonis, and
                 ZED</strong>, weighing specular performance, range, width, and software tradeoffs, and
@@ -296,11 +279,18 @@
             </p>
         </div>
 
+        <h3>Impact</h3>
         <div class="callout">
-            <strong>Outcome: four cameras the perception stack could trust.</strong>
-            Reliable multi-camera depth that recovered on its own when a camera failed, instead of taking
-            the system down with it.
+            <strong>Four cameras could run together and recover automatically.</strong> A camera failure
+            no longer silently degraded the perception stack or required restarting the full system.
         </div>
+
+        <h3>Limitations and improvements</h3>
+        <p>
+            Four simultaneous depth streams increased compute load, and failures inside the camera SDK
+            were difficult to diagnose. Stream selection reduced unnecessary processing, while the
+            heartbeat and automatic recovery handled dropped cameras.
+        </p>
     </section>
 
     <div class="fig-row">
@@ -331,7 +321,7 @@
         </div>
 
         <div class="pa">
-            <div class="pa-label">What I did</div>
+            <div class="pa-label">The solution</div>
             <p>
                 Set up an <strong>Optitrack motion capture</strong> rig on the arm in-house and connected
                 it to ROS, building out the kinematic chain, a lot of transform and frame math, and URDF
@@ -340,18 +330,19 @@
             </p>
         </div>
 
+        <h3>Impact</h3>
         <div class="callout">
-            <strong>Outcome: a corrected kinematic model that improved accuracy everywhere downstream, including simulation.</strong>
-            More accurate motion meant more accurate cleaning, and a model that downstream tooling could
-            actually rely on.
+            <strong>A corrected kinematic model improved arm accuracy and simulation fidelity.</strong>
+            The OptiTrack rig also became a ground-truth tool for controller tracking, joint and end
+            effector error, vibration, elevator motion, and base drift and repeatability.
         </div>
 
+        <h3>Limitations and improvements</h3>
         <p>
-            Optitrack didn't stay a one-off droop fix. Once the rig was up, it became our ground-truth
-            measurement tool across a whole range of arm, elevator, and base work: end effector and joint
-            errors, controller and tracking accuracy, arm vibration, tower vibration on the elevator, and
-            base drift and repeatability. The board below was our running list of things to measure with
-            it, and the highlighted cells are the ones I dug into.
+            OptiTrack was an in-house measurement system rather than an onboard sensor. Its measurements
+            were used to improve the robot's kinematic model and investigate errors that the robot could
+            not measure accurately on its own. The board below lists the follow-up measurements; the
+            highlighted cells are the ones I worked on.
         </p>
     </section>
 
@@ -383,7 +374,7 @@
         </div>
 
         <div class="pa">
-            <div class="pa-label">What I did</div>
+            <div class="pa-label">The solution</div>
             <p>
                 Built a <strong>manufacturing test suite</strong> operators could run as scripts to get a
                 clear report of what was and wasn't working, from the low level (individual arm motors,
@@ -393,10 +384,18 @@
             </p>
         </div>
 
+        <h3>Impact</h3>
         <div class="callout">
-            <strong>Outcome: operators could self-diagnose a robot in the field.</strong>
-            Faster triage of broken robots, and far less dependence on an engineer to figure out what went wrong.
+            <strong>Operators could diagnose and calibrate robots in the field.</strong> The tools
+            reduced triage time and dependence on an engineer for routine diagnosis and arm calibration.
         </div>
+
+        <h3>Limitations and improvements</h3>
+        <p>
+            Component-level checks were not enough to capture failures that appeared only during full
+            robot motion. I expanded the suite from individual devices and configuration checks to
+            complete motion, current, spike and end-effector tests at multiple scales.
+        </p>
 
         <div class="fig-row one">
             <figure>
@@ -489,12 +488,6 @@
                 <figcaption>Limit switch, arm position.</figcaption>
             </figure>
         </div>
-    </section>
-
-    <!-- ── CLOSING ── -->
-    <section>
-        <h2>[INSERT: title for your reflection]</h2>
-        <p>[INSERT: in your own words. What this place meant to you, what you learned, what surprised you about building robots for the real world. This is also where you can acknowledge that Peanut ran out of funding and wound down, an honest, human part of the story.]</p>
     </section>
 
     <figure class="fig-row one">

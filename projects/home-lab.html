@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Lab · Harsh Dhruva</title>
-    <meta name="description" content="Ongoing home robotics experiments with low-cost arms and learned policies: a weekend hackathon toasting bread, a library robot stacking books, and a desk-cleanup pen task comparing ACT, SmolVLA, diffusion and MolmoAct.">
+    <meta name="description" content="Ongoing home robotics experiments with low-cost arms and learned policies: informal observations from toasting bread, handling books, and picking up pens.">
     <link rel="icon" href="../favicon.svg" type="image/svg+xml">
     <link rel="icon" href="../favicon-32x32.png" sizes="32x32" type="image/png">
     <link rel="icon" href="../favicon-16x16.png" sizes="16x16" type="image/png">
@@ -25,9 +25,8 @@
         <div class="project-page-category">Home Robotics · Ongoing</div>
         <h1>Home lab.</h1>
         <p class="project-page-summary">
-            A running set of experiments with cheap arms on my living-room table, pointed at ordinary
-            household jobs. The interesting part is not that the policies work, it is finding out
-            exactly what they have and have not learned when they do.
+            A running collection of experiments with low-cost arms on ordinary household tasks. I am
+            particularly interested in how learned policies behave when the objects or setup change.
         </p>
     </header>
 
@@ -42,7 +41,7 @@
         </div>
         <div class="project-meta-item">
             <span class="label">Policies</span>
-            <span class="value">ACT · SmolVLA · Diffusion · MolmoAct · π0.5</span>
+            <span class="value">ACT · SmolVLA · Diffusion · MolmoAct</span>
         </div>
         <div class="project-meta-item">
             <span class="label">Stack</span>
@@ -62,8 +61,8 @@
                     <div class="project-title">Toasting bread</div>
                     <div class="project-desc">
                         Four people, one weekend: bread into the toaster, press the button, retrieve the
-                        toast. Three manipulation problems chained together, solved with ACT and
-                        SmolVLA.
+                        toast. Three manipulation problems chained together in a demonstration using
+                        ACT and SmolVLA.
                     </div>
                     <div class="project-tags">
                         <span class="tag">ACT</span>
@@ -81,12 +80,12 @@
                     <div class="project-category">Library robot · Ongoing</div>
                     <div class="project-title">Picking and stacking books</div>
                     <div class="project-desc">
-                        A plain ACT policy generalized further than expected: it kept working on books
-                        it had never seen, and kept working when the book was partly occluded.
+                        In the experiments so far, an ACT policy picked up a few unseen books and a
+                        book that was partly occluded.
                     </div>
                     <div class="project-tags">
                         <span class="tag">ACT</span>
-                        <span class="tag">Generalization</span>
+                        <span class="tag">Informal Trials</span>
                         <span class="tag">Occlusion</span>
                     </div>
                 </div>
@@ -100,14 +99,12 @@
                     <div class="project-category">Desk cleanup · Ongoing</div>
                     <div class="project-title">The pen task</div>
                     <div class="project-desc">
-                        Five policies on one task. ACT looked like it had solved it, until removing the
-                        pouch showed it had memorized a drop location rather than learned the goal. A
-                        VLM backbone generalized where the initial data and policies did not.
+                        I tried several policies on a pen-pickup task. Their behavior changed when I
+                        varied the pen, its orientation, or the drop target.
                     </div>
                     <div class="project-tags">
                         <span class="tag">MolmoAct</span>
                         <span class="tag">Diffusion Policy</span>
-                        <span class="tag">π0.5</span>
                         <span class="tag">VLA</span>
                     </div>
                 </div>
@@ -117,18 +114,24 @@
     </div>
 
     <section>
+        <p>
+            These are ongoing home experiments with small datasets and informal trials. I am
+            documenting what I observed under the conditions tried so far, not presenting controlled
+            evaluations or broad conclusions about the policies.
+        </p>
+    </section>
+
+    <section>
         <h2>Why I'm doing this</h2>
         <p>
-            I spent July 2022 to April 2024 on a real cleaning manipulator at Peanut Robotics using almost entirely
-            classical methods: trajectory generation, ICP, state machines. This is the inverse
-            experiment. Start from learned policies, fall back to classical control only where it earns
-            its place, and find the principled boundary between the two by running into it.
+            I spent July 2022 to April 2024 on a real cleaning manipulator at Peanut Robotics using
+            mostly classical methods: trajectory generation, ICP and state machines. At home, I have
+            been exploring learned policies on lower-cost hardware.
         </p>
         <p>
-            Contact-rich manipulation is the interesting arena for that question, because it is exactly
-            where pure learned policies struggle and pure classical control is too brittle. The useful
-            question is not which one is better, it is what the right architecture for combining them
-            looks like.
+            These projects are not a formal comparison between classical and learned robotics. They
+            are a way for me to build with newer policy architectures, observe how they behave in my
+            setup, and develop better intuition for how they might fit into larger robotic systems.
         </p>
     </section>
 
@@ -137,14 +140,12 @@
         <p>
             Everything here runs on SO-101 arms from my XLeRobot setup, driven by the LeRobot stack:
             teleoperate the arm to record demonstrations, push the dataset to Hugging Face, train a
-            policy on it, then run that policy back on the same hardware. No motion planner, no
-            hand-written controller. The robot learns the task from the demonstrations or it does not
-            do the task.
+            policy on it, then run that policy back on the same hardware. There is no motion planner or
+            hand-written task controller in these experiments.
         </p>
         <p>
-            That makes the failure modes unusually informative, which is really why these pages exist.
-            When a classical pipeline fails you can trace it to a line of code. When a learned policy
-            fails, you have to design an experiment to find out what it actually learned.
+            The successful runs are useful, but changes in behavior are often more informative. These
+            pages collect both without treating the small number of trials as a formal evaluation.
         </p>
     </section>
 
@@ -156,26 +157,19 @@
     </figure>
 
     <section>
-        <h2>What I take from it so far</h2>
+        <h2>Observations so far</h2>
         <ul>
-            <li><strong>A working demo tells you very little.</strong> ACT picking up the orange pen
-                looks identical to ACT understanding the task. The difference only shows up when you
-                deliberately break an assumption, which is why removing the pouch was the most useful
-                five minutes of the whole project.</li>
-            <li><strong>More data was the wrong instinct.</strong> My first move on poor results was to
-                merge datasets and train bigger models. Cutting the task down to one pen taught me
-                considerably more than the merged set did.</li>
-            <li><strong>Backbone priors buy generalization that data collection would have to pay
-                for.</strong> Same 40 episodes, same task; the VLM-backed policy generalized across
-                colors where ACT could not. Collecting demonstrations in every pen color would have
-                worked too, and would have cost far more.</li>
-            <li><strong>Generalization is task-dependent, not architecture-dependent.</strong> The same
-                ACT that shrugged off an unseen book and partial occlusion could not handle a pen in a
-                different color. What a policy latches onto depends on the task and the data, which is
-                the argument for probing every one of them.</li>
-            <li><strong>Hardware sets the ceiling.</strong> 8 GB of VRAM quietly rules out an entire
-                class of model, which is a real constraint on what a home lab can evaluate rather than
-                a footnote.</li>
+            <li>A successful demonstration does not reveal how robust the behavior is. Changing an
+                object or part of the setup often produces more informative behavior.</li>
+            <li>The merged pen dataset was difficult to interpret because several conditions varied at
+                once. The smaller single-pen setup was easier to inspect.</li>
+            <li>In the pen trials, MolmoAct 2 worked with more of the colors I tried than ACT did. The
+                experiments are too limited to attribute that difference to any single architectural
+                feature.</li>
+            <li>ACT behaved differently across the book and pen tasks. This is one reminder that
+                behavior depends on the task, demonstrations, objects and setup, not only the policy
+                architecture.</li>
+            <li>Available hardware affects which models I can practically try at home.</li>
         </ul>
     </section>
 
@@ -186,14 +180,13 @@
             the classical layers it needs to be trusted: a state machine for task orchestration
             (approach, engage, clean, retract, recover), force feedback in the inner loop to bound
             contact forces regardless of what the policy outputs, and recovery behaviors for when the
-            policy goes outside its envelope. The questions these experiments are meant to answer:
+            policy goes outside its envelope. Some of the questions I am interested in:
         </p>
         <ul>
             <li>How small a demonstration dataset can produce a genuinely useful contact-rich policy?</li>
             <li>Where does the principled boundary between learned and classical actually sit?</li>
-            <li>What does recovery look like for a learned policy that has no built-in concept of
-                "I don't know"? The pouch experiment is a small version of this: the policy was
-                confidently wrong, and nothing in it could detect that.</li>
+            <li>What does recovery look like for a learned policy when the task or environment differs
+                from its demonstrations?</li>
             <li>How do you expose enough hooks that someone else can plug in their own policy and
                 fallback behaviors?</li>
         </ul>

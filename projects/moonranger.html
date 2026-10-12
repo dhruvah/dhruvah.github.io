@@ -25,9 +25,9 @@
         <div class="project-page-category">Space Robotics · CMU</div>
         <h1>MoonRanger: lunar micro-rover perception.</h1>
         <p class="project-page-summary">
-            Software perception for one of the first truly autonomous micro-rovers targeted for the
-            lunar surface. I worked on the stereo reconstruction pipeline, getting disparity data
-            saved and inspectable so the team could debug failures offline.
+            Software perception for a suitcase-sized lunar rover designed to autonomously search for
+            evidence of water ice near the lunar pole. I worked on the stereo reconstruction pipeline,
+            getting disparity data saved and inspectable so the team could debug failures offline.
         </p>
     </header>
 
@@ -68,9 +68,11 @@
     <section>
         <h2>My contribution</h2>
         <p>
-            I worked on the perception team, on the data side of the stereo reconstruction pipeline:
-            getting disparity and image data flowing, saved, and inspectable so the rest of the team
-            could debug the pipeline.
+            I worked on the perception team during the migration from ROS to NASA's core Flight System
+            (cFS). A bridge connected the ROS development tools and perception components to the cFS
+            flight-software stack. My work focused on the data side of the stereo reconstruction
+            pipeline: getting disparity and image data flowing, saved and inspectable so the rest of
+            the team could debug the pipeline.
         </p>
         <p>
             Concretely, I added the ability to write disparity-map data to disk, storing it as a
@@ -95,9 +97,9 @@
             scene, and the disparity between a point's position in the two images gives its depth by
             triangulation. MoonRanger's pipeline builds on ROS <code>stereo_image_proc</code>, using
             block matching to compute the disparity map after a careful stereo camera calibration,
-            since stereo depth is only ever as good as the calibration behind it. The perception
-            software runs on NASA's core Flight System (cFS), the flight-software framework the rover
-            is built on.
+            since stereo depth is only ever as good as the calibration behind it. During this work,
+            ROS components connected through a bridge to cFS, the flight-software framework the rover
+            was migrating toward.
         </p>
     </section>
 
