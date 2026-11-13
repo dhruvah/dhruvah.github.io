@@ -77,7 +77,6 @@
         </div>
         <p>
             No link to the console: only the arm on the plastic, and a camera on the TV as proof.
-            Guardrails: capped torque, small steps, heartbeat dead-man, stall and CPU temperature stops.
         </p>
     </section>
 
@@ -103,16 +102,16 @@
     </section>
 
     <section>
-        <h2>What worked</h2>
-        <div class="data-table-wrap">
-            <table class="data-table">
-                <tbody>
-                    <tr><td class="factor">Head camera aiming</td><td class="fail">40 to 150 px off</td></tr>
-                    <tr><td class="factor">Wrist camera aiming</td><td class="pass">Stick under the jaw becomes an image check</td></tr>
-                    <tr><td class="factor">Sideways swipe</td><td class="fail">Slides off the cap</td></tr>
-                    <tr><td class="factor">Push from behind, pull from in front</td><td class="pass">Touch-down sensed from joint load, then stroke: 8 of 8</td></tr>
-                </tbody>
-            </table>
+        <h2>What the arm actually did</h2>
+        <p>
+            The robot logs every joint position it reaches. Replaying that log shows the two strokes
+            behaved very differently.
+        </p>
+        <div class="fig-row one">
+            <figure>
+                <img src="../assets/media/home-lab/xbox-jaw-path.jpg" alt="Plot of the jaw's height against its position along the reach: push touch-downs sit at stick height, pull touch-downs sit 3 cm higher and 4 cm further out" loading="lazy">
+                <figcaption>Every logged pose from the best run.</figcaption>
+            </figure>
         </div>
         <div class="fig-row one">
             <figure>
@@ -125,8 +124,9 @@
     <section>
         <h2>Not yet</h2>
         <p>
-            Runs ranged from 0 of 8 to 8 of 8 as the arm drifted, and a held stroke can skip two tabs.
-            Next is fine motor control: short, aimed taps to reach a specific item in the menu.
+            From run to run, the menu moved anywhere from 0 to 8 times out of 8, because the arm slowly
+            drifted out of position. Holding the stick too long also made the menu jump two tabs instead
+            of one. Next: small, precise taps that land on a specific menu item.
         </p>
     </section>
 
