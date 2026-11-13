@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>One Night, One Thumbstick · Harsh Dhruva</title>
-    <meta name="description" content="An overnight, unattended experiment: my XLeRobot's arm learns to push an Xbox controller's thumbstick and drive the FIFA 20 menu, run by a coding agent while I slept.">
+    <meta name="description" content="Overnight and unattended, a robot arm pushes an Xbox thumbstick to drive the FIFA 20 menu.">
     <link rel="icon" href="../favicon.svg" type="image/svg+xml">
     <link rel="icon" href="../favicon-32x32.png" sizes="32x32" type="image/png">
     <link rel="icon" href="../favicon-16x16.png" sizes="16x16" type="image/png">
@@ -25,9 +25,8 @@
         <div class="project-page-category">Home Robotics · One night, November 2026</div>
         <h1>One night, one thumbstick.</h1>
         <p class="project-page-summary">
-            I went to bed with an Xbox controller taped to the table and one goal for the robot: push
-            the left thumbstick left and right, consistently, and prove it on the TV. A coding agent
-            ran the experiments on its own until morning.
+            Goal: push an Xbox thumbstick left and right and prove it on the TV. A coding agent ran
+            the arm unattended overnight.
         </p>
     </header>
 
@@ -36,118 +35,68 @@
             <video controls muted playsinline preload="none" poster="../assets/media/home-lab/xbox-pingpong-poster.jpg">
                 <source src="../assets/media/home-lab/xbox-pingpong.mp4" type="video/mp4">
             </video>
-            <figcaption>The best run, at 2x: head camera, wrist camera, TV camera. Eight strokes, eight menu changes.</figcaption>
+            <figcaption>Best run, 2x: 8 strokes, 8 menu changes.</figcaption>
         </figure>
     </div>
 
     <div class="project-meta">
         <div class="project-meta-item">
-            <span class="label">When</span>
-            <span class="value">About 23:30 to 01:40, unattended after midnight</span>
-        </div>
-        <div class="project-meta-item">
             <span class="label">Hardware</span>
-            <span class="value">XLeRobot left arm (SO-101) · wrist and TV cameras</span>
+            <span class="value">XLeRobot arm · wrist and TV cameras</span>
         </div>
         <div class="project-meta-item">
             <span class="label">Operator</span>
-            <span class="value">Claude Code, through the robot's own API</span>
+            <span class="value">Claude Code, unattended</span>
         </div>
         <div class="project-meta-item">
             <span class="label">Best result</span>
-            <span class="value">8 of 8 strokes moved the menu</span>
+            <span class="value">8 of 8 strokes</span>
         </div>
     </div>
 
     <section>
-        <h2>The task and the setup</h2>
+        <h2>Setup</h2>
         <div class="fig-row">
             <figure>
-                <img src="../assets/media/home-lab/xbox-setup.jpg" alt="The robot's left arm hovering over a white Xbox controller taped to the table, with FIFA on the TV behind" loading="lazy">
-                <figcaption>The arm over the taped controller, FIFA 20 on the TV.</figcaption>
+                <img src="../assets/media/home-lab/xbox-setup.jpg" alt="The robot's left arm over a white Xbox controller taped to the table, FIFA on the TV behind" loading="lazy">
+                <figcaption>Controller taped down, FIFA 20 on the TV.</figcaption>
             </figure>
             <figure>
-                <img src="../assets/media/home-lab/xbox-wrist.jpg" alt="The wrist camera looking down at the controller: left stick, D-pad and the A, B, X, Y buttons" loading="lazy">
-                <figcaption>What the wrist camera sees when it tilts down past the jaw.</figcaption>
+                <img src="../assets/media/home-lab/xbox-wrist.jpg" alt="The wrist camera looking down at the controller's left stick and buttons" loading="lazy">
+                <figcaption>The wrist camera's view.</figcaption>
             </figure>
         </div>
         <p>
-            A wired Xbox controller, taped down, plugged into the console; FIFA 20 on its main menu.
-            The robot never talks to the console. The only way in is the arm pressing plastic, and the
-            only proof is a camera pointed at the TV. Moving the left stick left or right steps the
-            menu, so a changed screen means the stick was really pushed.
-        </p>
-        <p>
-            The agent worked through the same <a href="./home-xlerobot.html">dashboard service</a>
-            I use: arm a joint, send small moves, keep a heartbeat alive. Before I went to sleep we
-            agreed the guardrails: capped torque, 5 degree steps, motion stops half a second after the
-            heartbeat goes quiet, stall detection, and a stop if the laptop CPU passes 95°C. Every run
-            logged joint angles, loads and camera frames, and a lab notebook recorded each decision
-            and why.
+            No link to the console: only the arm on the plastic, and a camera on the TV as proof.
+            Guardrails: capped torque, small steps, heartbeat dead-man, stall and CPU temperature stops.
         </p>
     </section>
 
     <section>
-        <h2>How the night went</h2>
+        <h2>What worked</h2>
         <div class="data-table-wrap">
             <table class="data-table">
-                <thead>
-                    <tr><th>Tried</th><th>What happened</th></tr>
-                </thead>
                 <tbody>
-                    <tr><td class="factor">Aim with the head camera and the twin</td><td class="fail">Projection was 100 to 150 px off; calibrating it got to 40 px. Abandoned.</td></tr>
-                    <tr><td class="factor">Aim with the wrist camera</td><td class="pass">Tilt the wrist down and "the stick is under the jaw" becomes an image check. A detector finds the stick as a dark disc in a white ring.</td></tr>
-                    <tr><td class="factor">Swing sideways across the stick</td><td class="fail">Moved the stick in front of me, but the jaw kept sliding off the cap. The TV did not change.</td></tr>
-                    <tr><td class="factor">Push along the arm's reach</td><td class="pass">The reach direction is the controller's left-right axis. First menu change at 00:52, 3 of 4 pushes.</td></tr>
-                    <tr><td class="factor">Push from behind, pull from in front</td><td class="pass">Fresh touch-down before every stroke, contact sensed from joint lag and load. Best run 8 of 8.</td></tr>
+                    <tr><td class="factor">Head camera aiming</td><td class="fail">40 to 150 px off</td></tr>
+                    <tr><td class="factor">Wrist camera aiming</td><td class="pass">Stick under the jaw becomes an image check</td></tr>
+                    <tr><td class="factor">Sideways swipe</td><td class="fail">Slides off the cap</td></tr>
+                    <tr><td class="factor">Push from behind, pull from in front</td><td class="pass">Touch-down sensed from joint load, then stroke: 8 of 8</td></tr>
                 </tbody>
             </table>
         </div>
-        <p>
-            Two fixes mattered more than any clever idea. The servos are soft, so small steps against
-            gravity never moved them; steps now grow until the joint actually moves. And the first
-            "successes" on the TV were fake: the TV camera also sees the robot, so the arm's own motion
-            counted as a menu change. Measuring only inside the screen dropped a static menu to about
-            0.0001 of its pixels changing, against 0.1 to 0.4 for a real change.
-        </p>
-    </section>
-
-    <section>
-        <h2>The proof: the TV after each stroke</h2>
         <div class="fig-row one">
             <figure>
-                <img src="../assets/media/home-lab/xbox-tv-strokes.jpg" alt="Nine TV camera frames: the FIFA menu at the start and after each of eight strokes, each showing a different screen than the one before" loading="lazy">
-                <figcaption>Start, then the screen after each of the eight strokes in the best run.</figcaption>
+                <img src="../assets/media/home-lab/xbox-tv-strokes.jpg" alt="Nine TV frames: the FIFA menu at the start and after each of eight strokes" loading="lazy">
+                <figcaption>The TV after each stroke.</figcaption>
             </figure>
         </div>
     </section>
 
     <section>
-        <h2>What did not work</h2>
-        <ul>
-            <li>
-                <strong>Consistency across runs.</strong> Strokes that moved the menu, run by run:
-                3/4, 2/5, 3/6, 8/8, then 0/8. The arm and base creep, and a pose taught in joint
-                angles drifts off the stick.
-            </li>
-            <li>
-                <strong>Not a clean left, right, left, right.</strong> Holding the stick for half a
-                second triggers the menu's auto-repeat, so a stroke can jump two tabs.
-            </li>
-            <li>
-                <strong>The arm got stuck.</strong> Turning torque off at the end of a run let the arm
-                sag onto the controller, where the gripper hooked the stick. The agent freed it once,
-                then stopped at 01:41 rather than force it, and left a note for the morning.
-            </li>
-        </ul>
-    </section>
-
-    <section>
-        <h2>Next</h2>
+        <h2>Not yet</h2>
         <p>
-            Park folded up and clear of the controller, re-centre on the A, B, X, Y buttons before
-            every stroke, use short taps, and score direction by which tab is lit. Then press A and
-            navigate FIFA to kickoff.
+            Runs ranged from 0 of 8 to 8 of 8 as the arm drifted, and a held stroke can skip two tabs.
+            Next is fine motor control: short, aimed taps to reach a specific item in the menu.
         </p>
     </section>
 
