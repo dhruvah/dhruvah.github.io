@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google (via AutoRoboto) · Harsh Dhruva</title>
-    <meta name="description" content="Automated robotic system for hardware security testing on Pixel devices.">
+    <meta name="description" content="Robotic lab automation for adversarial testing of Google Pixel face authentication models.">
     <link rel="icon" href="../favicon.svg" type="image/svg+xml">
     <link rel="icon" href="../favicon-32x32.png" sizes="32x32" type="image/png">
     <link rel="icon" href="../favicon-16x16.png" sizes="16x16" type="image/png">
@@ -29,9 +29,10 @@
         </div>
         <h1>Automated biometric testing for Pixel.</h1>
         <p class="project-page-summary">
-            Robotics lab automation for evaluation of Google Pixel biometric face authentication
-            models. I built the trajectory system and led the ROS1→ROS2 migration, deployed across 10
-            internal lab installations.
+            Robotics lab automation for adversarial testing of Google Pixel face authentication
+            models: a human-robot collaborative alternative to tedious manual testing. I built an
+            adaptive search system that finds where the model is weakest, and led the ROS1→ROS2
+            migration, deployed across 10 robot labs.
         </p>
     </header>
 
@@ -62,10 +63,10 @@
     <section>
         <h2>What I work on</h2>
         <ul>
-            <li><strong>Trajectory system:</strong> Built a trajectory system that varied robot pose, lighting and background conditions to stress-test biometric authentication models under controlled conditions.</li>
-            <li><strong>Capture-frame precision:</strong> Mapped robot position and velocity to the exact camera capture frame, enabling more precise and reproducible evaluations.</li>
-            <li><strong>Human motion on the robot:</strong> Measured human movements using an IMU and integrated those motions on the robot, broadening the range of authentication modalities the system could evaluate.</li>
-            <li><strong>ROS1 → ROS2 migration:</strong> Led the system-wide architecture migration: a threading architecture rewrite and improved motion planning, deployed across <strong>10 internal lab installations</strong>.</li>
+            <li><strong>Adaptive search:</strong> Built a system where an xArm explores camera positions using live model feedback, systematically mapping vulnerabilities and pinpointing the positions where the model is weakest.</li>
+            <li><strong>Operator in the loop:</strong> Operators change backgrounds on the fly while the robot adapts in real time, cutting the time to find a strong test configuration from <strong>about 2 hours to about 30 minutes</strong>.</li>
+            <li><strong>Human motion on the robot:</strong> Captured human tapping motion with IMUs and reproduced it on the robot, broadening the range of authentication scenarios the system could test.</li>
+            <li><strong>ROS1 → ROS2 migration:</strong> Led the migration with improved motion planning, deployed across <strong>10 robot labs</strong>.</li>
         </ul>
     </section>
 
