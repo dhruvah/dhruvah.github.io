@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Home Robot I Can Reach From Anywhere · Harsh Dhruva</title>
+    <meta name="description" content="A dashboard for my XLeRobot at home: live cameras and servo health over Tailscale, a MuJoCo digital twin in the browser, safe one-joint driving, and a tab for trying computer vision on the robot's own cameras.">
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="../favicon-32x32.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="../favicon-16x16.png" sizes="16x16" type="image/png">
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<article class="project-page">
+    <a href="./home-lab.html" class="project-back">Home lab</a>
+
+    <header class="project-page-header">
+        <div class="project-page-category">Home Robotics · Ongoing</div>
+        <h1>A home robot I can reach from anywhere.</h1>
+        <p class="project-page-summary">
+            One service on the robot's laptop and a browser dashboard: see the robot from anywhere,
+            mirror it in simulation, move it safely, and run vision on its cameras.
+        </p>
+    </header>
+
+    <div class="fig-row one">
+        <figure>
+            <img src="../assets/media/home-lab/xle-algorithms.jpg" alt="The dashboard's Algorithms tab: a live camera feed next to the same feed with open-vocabulary detections" loading="lazy">
+            <figcaption>The Algorithms tab: the robot's front camera, and the same frame with open-vocabulary detection.</figcaption>
+        </figure>
+    </div>
+
+    <div class="project-meta">
+        <div class="project-meta-item">
+            <span class="label">Status</span>
+            <span class="value">Ongoing</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Hardware</span>
+            <span class="value">XLeRobot · 2 SO-101 arms · 4 USB cameras · Linux laptop</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Stack</span>
+            <span class="value">Python · FastAPI · React · MuJoCo (WASM) · three.js</span>
+        </div>
+        <div class="project-meta-item">
+            <span class="label">Access</span>
+            <span class="value">Tailscale, from any browser</span>
+        </div>
+    </div>
+
+    <section>
+        <h2>How it is wired</h2>
+        <figure style="margin: 1.5rem 0;">
+            <svg viewBox="0 0 656 190" role="img" aria-label="Browser connects over Tailscale to one service on the robot laptop, which owns the servo boards and cameras over USB" style="width:100%;height:auto;font-family:Geist,system-ui,sans-serif;font-size:12px">
+                <g fill="none" stroke="#999" stroke-width="1.2">
+                    <rect x="4" y="60" width="150" height="70" rx="8"/>
+                    <rect x="236" y="20" width="190" height="150" rx="8" stroke="#C41230"/>
+                    <rect x="508" y="20" width="144" height="40" rx="8"/>
+                    <rect x="508" y="75" width="144" height="40" rx="8"/>
+                    <rect x="508" y="130" width="144" height="40" rx="8"/>
+                    <path d="M154 95 H236" stroke-dasharray="4 3"/>
+                    <path d="M426 40 H508 M426 95 H508 M426 150 H508"/>
+                </g>
+                <g fill="currentColor">
+                    <text x="79" y="90" text-anchor="middle" font-weight="600">Browser</text>
+                    <text x="79" y="108" text-anchor="middle" fill="#888">office, phone, anywhere</text>
+                    <text x="195" y="86" text-anchor="middle" fill="#888">Tailscale</text>
+                    <text x="195" y="112" text-anchor="middle" fill="#888">WireGuard</text>
+                    <text x="331" y="44" text-anchor="middle" font-weight="600">xle-home service</text>
+                    <text x="331" y="64" text-anchor="middle" fill="#888">robot's Linux laptop</text>
+                    <text x="331" y="92" text-anchor="middle">FastAPI · one thread per</text>
+                    <text x="331" y="108" text-anchor="middle">board and camera</text>
+                    <text x="331" y="134" text-anchor="middle">serves the React UI</text>
+                    <text x="331" y="150" text-anchor="middle">and the API</text>
+                    <text x="467" y="34" text-anchor="middle" fill="#888">USB</text>
+                    <text x="580" y="44" text-anchor="middle">3 servo boards</text>
+                    <text x="580" y="99" text-anchor="middle">4 USB cameras</text>
+                    <text x="580" y="154" text-anchor="middle">CPU · GPU · temps</text>
+                </g>
+            </svg>
+        </figure>
+        <div class="data-table-wrap">
+            <table class="data-table">
+                <caption>The numbers</caption>
+                <tbody>
+                    <tr><td class="factor">Network</td><td>Tailscale (WireGuard) peer to peer, no port forwarding; 4 ms ping on the home network, about 30 ms from the office</td></tr>
+                    <tr><td class="factor">Robot state</td><td>WebSocket push at 5 Hz, about 6 KB per snapshot; servos read at 10 Hz</td></tr>
+                    <tr><td class="factor">Video</td><td>MJPEG, 640×480 at 15 fps, about 40 KB a frame (roughly 5 Mbit/s per camera)</td></tr>
+                    <tr><td class="factor">Twin</td><td>MuJoCo compiled to WebAssembly, simulated in the browser, so no load on the robot</td></tr>
+                    <tr><td class="factor">Safety</td><td>Arm only when healthy, lease per joint, 10 Hz heartbeat, motion stops 0.5 s after it goes quiet</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section>
+        <h2>See it, mirror it, move it</h2>
+        <div class="fig-row">
+            <figure>
+                <img src="../assets/media/home-lab/xle-twin.jpg" alt="The digital twin of the robot in the dashboard, with joint sliders and a STOP button" loading="lazy">
+                <figcaption>Pose a ghost in the twin, then Go.</figcaption>
+            </figure>
+            <figure>
+                <img src="../assets/media/home-lab/xle-first-move.jpg" alt="Wrist camera frames before and after the first remote gripper move" loading="lazy">
+                <figcaption>First remote move, from the wrist camera.</figcaption>
+            </figure>
+        </div>
+        <div class="fig-row one">
+            <figure>
+                <img src="../assets/media/home-lab/xle-twin-vs-real.jpg" alt="Simulated head camera view next to the real head camera as the wrist rolls" loading="lazy">
+                <figcaption>Simulated head camera next to the real one as the wrist rolls.</figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <section>
+        <h2>Algorithms on its own cameras</h2>
+        <div class="fig-row one">
+            <figure>
+                <img src="../assets/media/home-lab/xle-pointcloud.jpg" alt="A coloured 3D point cloud of the table built from one overhead camera image" loading="lazy">
+                <figcaption>A 3D point cloud from a single camera frame, no depth sensor.</figcaption>
+            </figure>
+        </div>
+        <div class="data-table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr><th>Algorithm</th><th>How it works</th><th>CPU time</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td class="factor">Detection</td><td>YOLOE-11s-seg; typed prompts become CLIP text embeddings that the detector matches regions against, so new objects need no retraining</td><td>80 to 110 ms</td></tr>
+                    <tr><td class="factor">Depth</td><td>Depth Anything V2: a DINOv2 encoder and DPT decoder predict metres per pixel from one image</td><td>under 1 s</td></tr>
+                    <tr><td class="factor">Point cloud</td><td>Each pixel back-projected through a pinhole model: x = (u − cx)·z / f</td><td>0.6 s, 77k points</td></tr>
+                    <tr><td class="factor">Optical flow</td><td>Farneback: polynomial fits to local patches give a motion vector per pixel</td><td>17 ms</td></tr>
+                    <tr><td class="factor">Feature tracks</td><td>ORB corners and binary descriptors matched frame to frame, the front end of visual SLAM</td><td>4 ms</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section>
+        <h2>Not right yet</h2>
+        <ul>
+            <li>Cameras are uncalibrated, so 3D scale is roughly right, not exact.</li>
+            <li>No GPU driver yet: every model runs on the CPU at a few frames per second.</li>
+            <li>Wrist flex shows a small drift I have not explained.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Next</h2>
+        <p>Drive the wheeled base, then map the house and let it navigate on its own.</p>
+    </section>
+
+    <nav class="project-nav">
+        <a href="./home-desk-cleanup.html">
+            <div class="nav-label">← Previous</div>
+            <div class="nav-title">Desk Cleanup: The Pen Task</div>
+        </a>
+        <a href="./home-lab.html" class="next">
+            <div class="nav-label">Next →</div>
+            <div class="nav-title">Home Lab</div>
+        </a>
+    </nav>
+</article>
+
+<div id="site-footer"></div>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
